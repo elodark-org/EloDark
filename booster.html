@@ -525,7 +525,10 @@
                 <thead><tr><th>#</th><th>Serviço</th><th>Cliente</th><th>Preço</th><th>Status</th><th>Data</th><th>Ações</th></tr></thead>
                 <tbody>${orders.map(o => `<tr>
                     <td><strong>#${o.id}</strong></td>
-                    <td>${serviceLabels[o.service_type] || o.service_type}</td>
+                    <td>
+                        ${serviceLabels[o.service_type] || o.service_type}
+                        <br><small style="color:var(--text-muted)">${o.config?.description || ''}</small>
+                    </td>
                     <td>${o.user_name || '—'}</td>
                     <td><strong style="color:var(--gold)">R$ ${parseFloat(o.price).toFixed(2).replace('.', ',')}</strong></td>
                     <td><span class="badge badge-${o.status}">${statusLabels[o.status] || o.status}</span></td>

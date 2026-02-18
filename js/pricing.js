@@ -222,3 +222,8 @@ function updatePrice() {
     // Buy button
     document.getElementById('btn-buy').querySelector('span').textContent = price > 0 ? `Contratar (R$ ${price.toFixed(2).replace('.', ',')})` : 'Selecione o serviço';
 }
+
+// Expose for auth.js checkout
+window.PricingState = currentState;
+window.ELO_DATA = ELO_DATA;
+window.DIV_NAMES = DIV_NAMES;

@@ -148,6 +148,32 @@ function initAuth() {
             const price = parseFloat(priceValue.replace('R$', '').replace('.', '').replace(',', '.').trim());
             if (price <= 0) { showToast('Configure o pedido antes de continuar.', 'error'); return; }
 
+            // Construct config from PricingState
+            const state = window.PricingState || {};
+            let config = {
+                raw_price: priceValue,
+                service: serviceType,
+                ...state
+            };
+
+            // Generate friendly description
+            let description = '';
+            if (serviceType === 'elo-boost' || serviceType === 'duo-boost') {
+                const cName = window.ELO_DATA?.[state.currentElo]?.name || state.currentElo;
+                const cDiv = state.currentElo !== 'master' ? window.DIV_NAMES?.[state.currentDiv] || state.currentDiv : '';
+                const dName = window.ELO_DATA?.[state.desiredElo]?.name || state.desiredElo;
+                const dDiv = state.desiredElo !== 'master' ? window.DIV_NAMES?.[state.desiredDiv] || state.desiredDiv : '';
+                description = `${cName} ${cDiv} ➔ ${dName} ${dDiv}`;
+            } else if (serviceType === 'md10') {
+                description = `MD10 (${state.md10Wins} vitórias)`;
+            } else if (serviceType === 'wins') {
+                description = `${state.winsCount} Vitórias (${state.winsElo})`;
+            } else if (serviceType === 'coach') {
+                description = `Coach (${state.coachHours} horas)`;
+            }
+
+            config.description = description;
+
             buyBtn.disabled = true;
             buyBtn.innerHTML = '<span>Processando...</span>';
 
@@ -156,7 +182,7 @@ function initAuth() {
                 body: JSON.stringify({
                     service_type: serviceType,
                     price: price,
-                    config: { raw_price: priceValue, service: serviceType }
+                    config: config
                 })
             });
 
@@ -280,6 +306,9 @@ function showLoggedInState(user) {
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
                         <strong style="font-family:'Orbitron',monospace;font-size:0.8rem;letter-spacing:1px">#${o.id} — ${serviceLabels[o.service_type] || o.service_type}</strong>
                         <span style="color:${statusColors[o.status]};font-size:0.82rem;font-weight:600">${statusLabels[o.status] || o.status}</span>
+                    </div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05)">
+                        ${o.config?.description || 'Detalhes não disponíveis'}
                     </div>
                     <div style="display:flex;justify-content:space-between;font-size:0.88rem;color:var(--text-secondary)">
                         <span>💰 <strong style="color:#f0b132">R$ ${parseFloat(o.price).toFixed(2).replace('.', ',')}</strong></span>

@@ -67,6 +67,25 @@ router.get('/', verifyToken, async (req, res) => {
     }
 });
 
+// GET /api/orders/available — List orders available for boosters to claim
+// NOTE: Must be BEFORE /:id to avoid Express matching 'available' as an id
+router.get('/available', verifyToken, requireRole('booster', 'admin'), async (req, res) => {
+    try {
+        const orders = await sql`
+            SELECT o.id, o.service_type, o.config, o.price, o.created_at,
+                   u.name as user_name
+            FROM orders o
+            LEFT JOIN users u ON u.id = o.user_id
+            WHERE o.status = 'available'
+            ORDER BY o.created_at ASC
+        `;
+        res.json({ orders });
+    } catch (err) {
+        console.error('Available orders error:', err);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
 // GET /api/orders/:id — Get single order
 router.get('/:id', verifyToken, async (req, res) => {
     try {
@@ -127,24 +146,6 @@ router.put('/:id/status', verifyToken, requireRole('booster', 'admin'), async (r
         res.json({ order });
     } catch (err) {
         console.error('Update order status error:', err);
-        res.status(500).json({ error: 'Erro interno do servidor' });
-    }
-});
-
-// GET /api/orders/available — List orders available for boosters to claim
-router.get('/available', verifyToken, requireRole('booster', 'admin'), async (req, res) => {
-    try {
-        const orders = await sql`
-            SELECT o.id, o.service_type, o.config, o.price, o.created_at,
-                   u.name as user_name
-            FROM orders o
-            LEFT JOIN users u ON u.id = o.user_id
-            WHERE o.status = 'available'
-            ORDER BY o.created_at ASC
-        `;
-        res.json({ orders });
-    } catch (err) {
-        console.error('Available orders error:', err);
         res.status(500).json({ error: 'Erro interno do servidor' });
     }
 });
