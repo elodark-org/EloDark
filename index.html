@@ -576,9 +576,20 @@
         </div>
     </div>
 
+    <!-- MODAL: Meus Pedidos -->
+    <div class="modal-overlay" id="modal-orders">
+        <div class="modal" style="max-width:680px">
+            <button class="modal-close" data-close="modal-orders">&times;</button>
+            <h2>📦 Meus Pedidos</h2>
+            <div id="my-orders-list" style="margin-top:20px;max-height:60vh;overflow-y:auto"></div>
+        </div>
+    </div>
+
     <!-- USER MENU (shown when logged in) -->
     <div class="user-menu-dropdown" id="user-menu-dropdown" style="display:none;">
         <a href="#" class="user-menu-item" id="menu-admin" style="display:none;color:var(--gold)">👑 Painel Admin</a>
+        <a href="#" class="user-menu-item" id="menu-booster" style="display:none;color:var(--cyan)">🎮 Painel
+            Booster</a>
         <a href="#" class="user-menu-item" id="menu-orders">📦 Meus Pedidos</a>
         <a href="#" class="user-menu-item" id="menu-profile">👤 Editar Perfil</a>
         <a href="#" class="user-menu-item" id="menu-logout">🚪 Sair</a>

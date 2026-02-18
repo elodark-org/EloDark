@@ -42,7 +42,7 @@ async function createTables() {
             service_type VARCHAR(30) NOT NULL CHECK (service_type IN ('elo-boost', 'duo-boost', 'md10', 'wins', 'coach')),
             config JSONB NOT NULL DEFAULT '{}',
             price DECIMAL(10,2) NOT NULL,
-            status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'active', 'in_progress', 'completed', 'cancelled')),
+            status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'active', 'available', 'in_progress', 'completed', 'cancelled')),
             notes TEXT,
             created_at TIMESTAMP DEFAULT NOW(),
             updated_at TIMESTAMP DEFAULT NOW()

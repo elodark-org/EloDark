@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EloDark | Painel Booster</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .booster-layout {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 70px
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-glass);
+            padding: 24px 16px;
+            position: fixed;
+            top: 70px;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 10
+        }
+
+        .sidebar-title {
+            font-family: var(--font-display);
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            padding: 0 12px
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-size: .9rem;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, .04);
+            color: var(--text-primary)
+        }
+
+        .sidebar-link.active {
+            background: rgba(0, 209, 178, .1);
+            color: var(--cyan);
+            border: 1px solid rgba(0, 209, 178, .15)
+        }
+
+        .sidebar-link span:first-child {
+            font-size: 1.2rem
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 32px
+        }
+
+        .booster-page {
+            display: none
+        }
+
+        .booster-page.active {
+            display: block
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px
+        }
+
+        .page-header h2 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px
+        }
+
+        /* Order cards */
+        .order-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px
+        }
+
+        .order-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden
+        }
+
+        .order-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cyan), var(--accent))
+        }
+
+        .order-card:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-2px)
+        }
+
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px
+        }
+
+        .order-card-id {
+            font-family: var(--font-display);
+            font-size: .85rem;
+            letter-spacing: 1px;
+            color: var(--cyan)
+        }
+
+        .order-card-price {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            color: var(--gold);
+            font-weight: 700
+        }
+
+        .order-card-service {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px
+        }
+
+        .order-card-meta {
+            font-size: .82rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .order-card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .order-card-actions {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px
+        }
+
+        /* My orders table */
+        .panel-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 24px
+        }
+
+        .panel-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-glass)
+        }
+
+        .panel-card-header h3 {
+            font-family: var(--font-display);
+            font-size: .9rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        .data-table th {
+            padding: 12px 20px;
+            text-align: left;
+            font-size: .75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-glass);
+            background: rgba(0, 0, 0, .2)
+        }
+
+        .data-table td {
+            padding: 14px 20px;
+            font-size: .88rem;
+            border-bottom: 1px solid var(--border-glass);
+            color: var(--text-secondary)
+        }
+
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, .02);
+            color: var(--text-primary)
+        }
+
+        .data-table .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: .72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .badge-in_progress {
+            background: rgba(192, 132, 252, .15);
+            color: var(--accent)
+        }
+
+        .badge-completed {
+            background: rgba(63, 185, 80, .15);
+            color: var(--green)
+        }
+
+        .badge-available {
+            background: rgba(0, 209, 178, .15);
+            color: var(--cyan)
+        }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px
+        }
+
+        .stat-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-align: center
+        }
+
+        .stat-card-value {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--cyan), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text
+        }
+
+        .stat-card-label {
+            font-size: .78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-muted)
+        }
+
+        .empty-state span {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 12px
+        }
+
+        .btn-claim {
+            background: linear-gradient(135deg, rgba(0, 209, 178, .2), rgba(0, 209, 178, .1));
+            color: var(--cyan);
+            border: 1px solid rgba(0, 209, 178, .3);
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: .88rem
+        }
+
+        .btn-claim:hover {
+            background: rgba(0, 209, 178, .3);
+            transform: scale(1.02)
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: .78rem;
+            border-radius: 8px
+        }
+
+        @media(max-width:900px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid var(--border-glass)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
+
+            .booster-layout {
+                flex-direction: column
+            }
+
+            .sidebar-nav {
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 8px
+            }
+
+            .order-grid {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header scrolled" id="header">
+        <div class="header-container">
+            <a href="/" class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">Elo<span class="logo-highlight">Dark</span></span>
+                <span
+                    style="font-size:0.7rem;color:var(--cyan);font-family:var(--font-display);letter-spacing:2px;margin-left:8px">BOOSTER</span>
+            </a>
+            <div class="header-actions">
+                <span id="booster-name" style="color:var(--text-secondary);font-size:.88rem"></span>
+                <a href="/" class="btn btn-ghost btn-sm">← Voltar ao Site</a>
+                <button class="btn btn-outline btn-sm" id="btn-booster-logout">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="booster-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Painel Booster</div>
+            <nav class="sidebar-nav">
+                <a class="sidebar-link active" data-page="available"><span>🔥</span> Disponíveis</a>
+                <a class="sidebar-link" data-page="my-orders"><span>📦</span> Meus Serviços</a>
+            </nav>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+            <!-- AVAILABLE -->
+            <div class="booster-page active" id="page-available">
+                <div class="page-header">
+                    <h2>🔥 Serviços Disponíveis</h2>
+                    <button class="btn btn-outline btn-sm" onclick="loadAvailable()">🔄 Atualizar</button>
+                </div>
+                <div id="available-orders" class="order-grid"></div>
+            </div>
+
+            <!-- MY ORDERS -->
+            <div class="booster-page" id="page-my-orders">
+                <div class="page-header">
+                    <h2>📦 Meus Serviços</h2>
+                </div>
+                <div class="stats-row" id="my-stats"></div>
+                <div class="panel-card">
+                    <div class="panel-card-header">
+                        <h3>Pedidos Atribuídos</h3>
+                    </div>
+                    <div id="my-orders-table"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        const API = '/api';
+        let boosterToken = localStorage.getItem('elodark_token');
+
+        // Auth check
+        async function checkBoosterAuth() {
+            if (!boosterToken) { window.location.href = '/'; return; }
+            try {
+                const res = await apiFetch('/auth/me');
+                if (res.user.role !== 'booster' && res.user.role !== 'admin') {
+                    showToast('Acesso negado. Apenas boosters.', 'error');
+                    setTimeout(() => window.location.href = '/', 2000);
+                    return;
+                }
+                document.getElementById('booster-name').textContent = `🎮 ${res.user.name}`;
+            } catch {
+                window.location.href = '/';
+            }
+        }
+
+        async function apiFetch(endpoint, opts = {}) {
+            const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${boosterToken}` };
+            const res = await fetch(`${API}${endpoint}`, { ...opts, headers });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Erro');
+            return data;
+        }
+
+        // Navigation
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                document.querySelectorAll('.booster-page').forEach(p => p.classList.remove('active'));
+                document.getElementById(`page-${link.dataset.page}`).classList.add('active');
+                if (link.dataset.page === 'available') loadAvailable();
+                else if (link.dataset.page === 'my-orders') loadMyOrders();
+            });
+        });
+
+        // AVAILABLE ORDERS
+        const serviceLabels = { 'elo-boost': 'Elo Boost', 'duo-boost': 'Duo Boost', 'md10': 'MD10', 'wins': 'Vitórias', 'coach': 'Coach' };
+        const serviceIcons = { 'elo-boost': '⚔️', 'duo-boost': '👥', 'md10': '🎯', 'wins': '🏆', 'coach': '🎓' };
+
+        async function loadAvailable() {
+            const container = document.getElementById('available-orders');
+            container.innerHTML = '<div class="empty-state"><span>⏳</span>Carregando...</div>';
+            try {
+                const { orders } = await apiFetch('/orders/available');
+                if (orders.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><span>😴</span>Nenhum serviço disponível no momento.<br><small>Novos serviços aparecerão aqui quando o admin liberar.</small></div>';
+                    return;
+                }
+                container.innerHTML = orders.map(o => `
+                    <div class="order-card">
+                        <div class="order-card-header">
+                            <span class="order-card-id">#${o.id}</span>
+                            <span class="order-card-price">R$ ${parseFloat(o.price).toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        <div class="order-card-service">${serviceIcons[o.service_type] || '🎮'} ${serviceLabels[o.service_type] || o.service_type}</div>
+                        <div class="order-card-meta">
+                            <span>👤 Cliente: ${o.user_name || 'Anônimo'}</span>
+                            <span>📅 ${new Date(o.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
+                        </div>
+                        <div class="order-card-actions">
+                            <button class="btn-claim" onclick="claimOrder(${o.id})">🎮 Pegar Serviço</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = `<div class="empty-state"><span>❌</span>${err.message}</div>`;
+            }
+        }
+
+        async function claimOrder(orderId) {
+            if (!confirm(`Deseja pegar o serviço #${orderId}? Você será responsável por este pedido.`)) return;
+            try {
+                await apiFetch(`/orders/${orderId}/claim`, { method: 'POST' });
+                showToast(`🎮 Serviço #${orderId} é seu! Bom trabalho!`, 'success');
+                loadAvailable();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // MY ORDERS
+        async function loadMyOrders() {
+            try {
+                const { orders } = await apiFetch('/orders');
+
+                // Stats
+                const total = orders.length;
+                const active = orders.filter(o => o.status === 'in_progress').length;
+                const completed = orders.filter(o => o.status === 'completed').length;
+                document.getElementById('my-stats').innerHTML = `
+                    <div class="stat-card"><div class="stat-card-value">${total}</div><div class="stat-card-label">Total</div></div>
+                    <div class="stat-card"><div class="stat-card-value">${active}</div><div class="stat-card-label">Em Andamento</div></div>
+                    <div class="stat-card"><div class="stat-card-value">${completed}</div><div class="stat-card-label">Concluídos</div></div>
+                `;
+
+                const container = document.getElementById('my-orders-table');
+                if (orders.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><span>📦</span>Nenhum serviço atribuído ainda.<br><small>Pegue um serviço na aba "Disponíveis"!</small></div>';
+                    return;
+                }
+
+                const statusLabels = { in_progress: 'Em Progresso', completed: 'Concluído', available: 'Disponível', active: 'Ativo' };
+                container.innerHTML = `<table class="data-table">
+                <thead><tr><th>#</th><th>Serviço</th><th>Cliente</th><th>Preço</th><th>Status</th><th>Data</th><th>Ações</th></tr></thead>
+                <tbody>${orders.map(o => `<tr>
+                    <td><strong>#${o.id}</strong></td>
+                    <td>${serviceLabels[o.service_type] || o.service_type}</td>
+                    <td>${o.user_name || '—'}</td>
+                    <td><strong style="color:var(--gold)">R$ ${parseFloat(o.price).toFixed(2).replace('.', ',')}</strong></td>
+                    <td><span class="badge badge-${o.status}">${statusLabels[o.status] || o.status}</span></td>
+                    <td><small>${new Date(o.created_at).toLocaleDateString('pt-BR')}</small></td>
+                    <td>
+                        ${o.status === 'in_progress' ? `<button class="btn btn-sm btn-primary" onclick="completeOrder(${o.id})">✅ Concluir</button>` : ''}
+                    </td>
+                </tr>`).join('')}</tbody></table>`;
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function completeOrder(orderId) {
+            if (!confirm(`Marcar serviço #${orderId} como concluído?`)) return;
+            try {
+                await apiFetch(`/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status: 'completed' })
+                });
+                showToast(`✅ Serviço #${orderId} concluído!`, 'success');
+                loadMyOrders();
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+
+        // Toast
+        function showToast(msg, type = 'info') {
+            const c = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.innerHTML = `${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'} ${msg}`;
+            c.appendChild(t);
+            setTimeout(() => t.remove(), 4000);
+        }
+
+        // Logout
+        document.getElementById('btn-booster-logout')?.addEventListener('click', () => {
+            localStorage.removeItem('elodark_token');
+            localStorage.removeItem('elodark_session');
+            window.location.href = '/';
+        });
+
+        // Init
+        checkBoosterAuth();
+        loadAvailable();
+    </script>
+</body>
+
+</html>

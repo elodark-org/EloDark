@@ -199,6 +199,11 @@
             color: var(--green)
         }
 
+        .badge-available {
+            background: rgba(192, 132, 252, 0.15);
+            color: var(--cyan)
+        }
+
         .badge-cancelled {
             background: rgba(248, 81, 73, 0.15);
             color: var(--red)
@@ -614,8 +619,10 @@
                 <td><small>${new Date(o.created_at).toLocaleDateString('pt-BR')}</small></td>
                 <td>
                     ${o.status === 'pending' ? `<button class="btn btn-sm btn-outline" onclick="openAssignModal(${o.id})">Atribuir</button>` : ''}
-                    ${['pending', 'active'].includes(o.status) ? `<button class="btn-icon" title="Cancelar" onclick="updateOrderStatus(${o.id},'cancelled')">❌</button>` : ''}
-                    ${o.status === 'active' ? `<button class="btn-icon" title="Concluir" onclick="updateOrderStatus(${o.id},'completed')">✅</button>` : ''}
+                    ${o.status === 'active' ? `<button class="btn btn-sm btn-primary" onclick="releaseOrder(${o.id})">📢 Liberar</button>` : ''}
+                    ${o.status === 'active' ? `<button class="btn btn-sm btn-outline" onclick="openAssignModal(${o.id})">Atribuir</button>` : ''}
+                    ${['pending', 'active', 'available'].includes(o.status) ? `<button class="btn-icon" title="Cancelar" onclick="updateOrderStatus(${o.id},'cancelled')">❌</button>` : ''}
+                    ${['active', 'in_progress'].includes(o.status) ? `<button class="btn-icon" title="Concluir" onclick="updateOrderStatus(${o.id},'completed')">✅</button>` : ''}
                 </td>
             </tr>`).join('')}</tbody></table>`;
         }
@@ -741,6 +748,16 @@
                 });
                 showToast(`Pedido #${orderId} — ${status}`, 'success');
                 loadOrders();
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+
+        async function releaseOrder(orderId) {
+            if (!confirm(`Liberar pedido #${orderId} para todos os boosters?`)) return;
+            try {
+                await apiFetch(`/admin/orders/${orderId}/release`, { method: 'PUT' });
+                showToast(`📢 Pedido #${orderId} liberado para boosters!`, 'success');
+                loadOrders();
+                loadDashboard();
             } catch (err) { showToast(err.message, 'error'); }
         }
 
