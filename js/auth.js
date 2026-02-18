@@ -1,8 +1,41 @@
-// ========== AUTH.JS - Login/Signup System ==========
+// ========== AUTH.JS - Login/Signup System (API-connected) ==========
+const API_BASE = '/api';
+
 document.addEventListener('DOMContentLoaded', () => {
     initAuth();
     checkSession();
 });
+
+function getToken() {
+    return localStorage.getItem('elodark_token');
+}
+
+function getSession() {
+    const data = localStorage.getItem('elodark_session');
+    return data ? JSON.parse(data) : null;
+}
+
+function saveSession(user, token) {
+    localStorage.setItem('elodark_session', JSON.stringify(user));
+    localStorage.setItem('elodark_token', token);
+}
+
+function clearSession() {
+    localStorage.removeItem('elodark_session');
+    localStorage.removeItem('elodark_token');
+}
+
+async function apiRequest(endpoint, options = {}) {
+    const token = getToken();
+    const headers = { 'Content-Type': 'application/json', ...options.headers };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}${endpoint}`, { ...options, headers });
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || 'Erro na requisição');
+    return data;
+}
 
 function initAuth() {
     const btnLogin = document.getElementById('btn-login');
@@ -35,55 +68,109 @@ function initAuth() {
     });
 
     // Login form
-    document.getElementById('form-login')?.addEventListener('submit', e => {
+    document.getElementById('form-login')?.addEventListener('submit', async e => {
         e.preventDefault();
         const email = document.getElementById('login-email').value.trim();
         const password = document.getElementById('login-password').value;
-        const users = JSON.parse(localStorage.getItem('elodark_users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
-        if (user) {
-            localStorage.setItem('elodark_session', JSON.stringify(user));
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+
+        try {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Entrando...';
+
+            const data = await apiRequest('/auth/login', {
+                method: 'POST',
+                body: JSON.stringify({ email, password })
+            });
+
+            saveSession(data.user, data.token);
             closeModal(modalLogin);
-            showLoggedInState(user);
-            showToast(`Bem-vindo de volta, ${user.name}!`, 'success');
-        } else {
-            showToast('Email ou senha incorretos.', 'error');
+            showLoggedInState(data.user);
+            showToast(`Bem-vindo de volta, ${data.user.name}!`, 'success');
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Entrar';
         }
     });
 
     // Signup form
-    document.getElementById('form-signup')?.addEventListener('submit', e => {
+    document.getElementById('form-signup')?.addEventListener('submit', async e => {
         e.preventDefault();
         const name = document.getElementById('signup-name').value.trim();
         const email = document.getElementById('signup-email').value.trim();
         const password = document.getElementById('signup-password').value;
         const confirm = document.getElementById('signup-confirm').value;
         const terms = document.getElementById('accept-terms').checked;
+        const submitBtn = e.target.querySelector('button[type="submit"]');
 
         if (password.length < 6) { showToast('A senha deve ter no mínimo 6 caracteres.', 'error'); return; }
         if (password !== confirm) { showToast('As senhas não coincidem.', 'error'); return; }
         if (!terms) { showToast('Aceite os termos para continuar.', 'error'); return; }
 
-        const users = JSON.parse(localStorage.getItem('elodark_users') || '[]');
-        if (users.find(u => u.email === email)) { showToast('Este email já está cadastrado.', 'error'); return; }
+        try {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Criando conta...';
 
-        const user = { name, email, password, createdAt: new Date().toISOString() };
-        users.push(user);
-        localStorage.setItem('elodark_users', JSON.stringify(users));
-        localStorage.setItem('elodark_session', JSON.stringify(user));
-        closeModal(modalSignup);
-        showLoggedInState(user);
-        showToast(`Conta criada com sucesso! Bem-vindo, ${name}!`, 'success');
+            const data = await apiRequest('/auth/register', {
+                method: 'POST',
+                body: JSON.stringify({ name, email, password })
+            });
+
+            saveSession(data.user, data.token);
+            closeModal(modalSignup);
+            showLoggedInState(data.user);
+            showToast(`Conta criada com sucesso! Bem-vindo, ${data.user.name}!`, 'success');
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Criar Conta';
+        }
     });
 
-    // Buy button
-    document.getElementById('btn-buy')?.addEventListener('click', () => {
-        const session = JSON.parse(localStorage.getItem('elodark_session'));
+    // Buy button — Stripe Checkout
+    document.getElementById('btn-buy')?.addEventListener('click', async () => {
+        const session = getSession();
         if (!session) {
             showToast('Faça login para continuar com a compra.', 'info');
             openModal(modalLogin);
-        } else {
-            showToast('Pedido registrado! Entraremos em contato em breve. 🚀', 'success');
+            return;
+        }
+
+        const buyBtn = document.getElementById('btn-buy');
+        const priceValue = document.getElementById('price-value')?.textContent || 'R$ 0,00';
+        const activeTab = document.querySelector('.pricing-tab.active');
+        const serviceType = activeTab?.dataset.tab || 'elo-boost';
+
+        try {
+            const price = parseFloat(priceValue.replace('R$', '').replace('.', '').replace(',', '.').trim());
+            if (price <= 0) { showToast('Configure o pedido antes de continuar.', 'error'); return; }
+
+            buyBtn.disabled = true;
+            buyBtn.innerHTML = '<span>Processando...</span>';
+
+            const data = await apiRequest('/checkout/create-session', {
+                method: 'POST',
+                body: JSON.stringify({
+                    service_type: serviceType,
+                    price: price,
+                    config: { raw_price: priceValue, service: serviceType }
+                })
+            });
+
+            // Redirect to Stripe Checkout
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                showToast('Erro ao redirecionar para o pagamento.', 'error');
+            }
+        } catch (err) {
+            showToast(err.message, 'error');
+        } finally {
+            buyBtn.disabled = false;
+            buyBtn.innerHTML = '<span>Contratar Agora</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
         }
     });
 }
@@ -99,8 +186,16 @@ function closeModal(modal) {
 }
 
 function checkSession() {
-    const session = JSON.parse(localStorage.getItem('elodark_session'));
-    if (session) showLoggedInState(session);
+    const session = getSession();
+    if (session) {
+        // Verify token is still valid
+        apiRequest('/auth/me').then(data => {
+            saveSession(data.user, getToken());
+            showLoggedInState(data.user);
+        }).catch(() => {
+            clearSession();
+        });
+    }
 }
 
 function showLoggedInState(user) {
@@ -117,7 +212,9 @@ function showLoggedInState(user) {
     const userBtn = document.createElement('button');
     userBtn.className = 'user-btn';
     userBtn.id = 'user-btn';
-    userBtn.innerHTML = `<span class="user-avatar-small">${user.name.charAt(0).toUpperCase()}</span><span>${user.name.split(' ')[0]}</span>`;
+
+    const roleBadge = user.role === 'admin' ? ' 👑' : user.role === 'booster' ? ' 🎮' : '';
+    userBtn.innerHTML = `<span class="user-avatar-small">${user.name.charAt(0).toUpperCase()}</span><span>${user.name.split(' ')[0]}${roleBadge}</span>`;
     actions.insertBefore(userBtn, document.getElementById('menu-toggle'));
 
     const dropdown = document.getElementById('user-menu-dropdown');
@@ -132,13 +229,34 @@ function showLoggedInState(user) {
 
     document.getElementById('menu-logout')?.addEventListener('click', e => {
         e.preventDefault();
-        localStorage.removeItem('elodark_session');
+        clearSession();
         location.reload();
     });
 
-    document.getElementById('menu-orders')?.addEventListener('click', e => {
+    // Show admin panel link for admins
+    if (user.role === 'admin') {
+        const adminLink = document.getElementById('menu-admin');
+        if (adminLink) {
+            adminLink.style.display = 'flex';
+            adminLink.addEventListener('click', e => {
+                e.preventDefault();
+                window.location.href = '/admin.html';
+            });
+        }
+    }
+
+    document.getElementById('menu-orders')?.addEventListener('click', async e => {
         e.preventDefault();
-        showToast('Painel de pedidos em breve!', 'info');
+        try {
+            const data = await apiRequest('/orders');
+            if (data.orders.length === 0) {
+                showToast('Você não tem pedidos ainda.', 'info');
+            } else {
+                showToast(`Você tem ${data.orders.length} pedido(s). Painel completo em breve!`, 'info');
+            }
+        } catch (err) {
+            showToast(err.message, 'error');
+        }
     });
 
     document.getElementById('menu-profile')?.addEventListener('click', e => {
@@ -146,3 +264,6 @@ function showLoggedInState(user) {
         showToast('Edição de perfil em breve!', 'info');
     });
 }
+
+// Export for use by other modules
+window.EloDarkAuth = { apiRequest, getToken, getSession, clearSession };

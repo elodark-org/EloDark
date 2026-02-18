@@ -216,4 +216,17 @@ router.get('/stats', async (req, res) => {
     }
 });
 
+// GET /api/admin/users — List all users
+router.get('/users', async (req, res) => {
+    try {
+        const users = await sql`
+            SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC
+        `;
+        res.json({ users });
+    } catch (err) {
+        console.error('List users error:', err);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
 module.exports = router;
