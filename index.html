@@ -630,17 +630,19 @@
 
     <script src="js/app.js"></script>
     <script src="js/pricing.js"></script>
+    <script src="js/chat.js"></script>
     <!-- MODAL CHAT -->
     <div class="modal-overlay" id="modal-chat">
         <div class="modal-content" style="max-width:500px">
             <button class="modal-close" onclick="closeModal(document.getElementById('modal-chat'))">×</button>
-            <h2 class="modal-title">💬 Chat com Booster</h2>
+            <h2 class="modal-title" id="modal-chat-title">💬 Chat com Booster</h2>
+            <p id="chat-order-info" style="font-size:0.85rem;color:var(--text-muted);margin:-8px 0 12px 0"></p>
             <div id="chat-status" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px"></div>
 
             <div class="chat-container">
-                <div class="chat-messages" id="chat-messages"></div>
+                <div class="chat-messages" id="chat-messages-order"></div>
                 <div class="chat-input-area">
-                    <input type="text" class="chat-input" id="chat-input" placeholder="Digite sua mensagem..."
+                    <input type="text" class="chat-input" id="chat-input-order" placeholder="Digite sua mensagem..."
                         onkeypress="if(event.key==='Enter') sendChatMessage()">
                     <button class="btn-send" onclick="sendChatMessage()">➤</button>
                 </div>

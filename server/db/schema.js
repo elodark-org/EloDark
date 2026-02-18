@@ -63,6 +63,19 @@ async function createTables() {
     `;
     console.log('  ✅ Tabela reviews criada');
 
+    // Messages table (chat cliente ↔ booster por pedido)
+    await sql`
+        CREATE TABLE IF NOT EXISTS messages (
+            id SERIAL PRIMARY KEY,
+            order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            content TEXT NOT NULL,
+            is_system BOOLEAN DEFAULT false,
+            created_at TIMESTAMP DEFAULT NOW()
+        )
+    `;
+    console.log('  ✅ Tabela messages criada');
+
     console.log('🎉 Todas as tabelas criadas com sucesso!');
 }
 

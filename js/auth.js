@@ -11,8 +11,12 @@ function getToken() {
 }
 
 function getSession() {
-    const data = localStorage.getItem('elodark_session');
-    return data ? JSON.parse(data) : null;
+    try {
+        const data = localStorage.getItem('elodark_session');
+        return data ? JSON.parse(data) : null;
+    } catch (e) {
+        return null;
+    }
 }
 
 function saveSession(user, token) {
@@ -212,15 +216,18 @@ function closeModal(modal) {
 }
 
 function checkSession() {
-    const session = getSession();
-    if (session) {
-        // Verify token is still valid
-        apiRequest('/auth/me').then(data => {
-            saveSession(data.user, getToken());
-            showLoggedInState(data.user);
-        }).catch(() => {
-            clearSession();
-        });
+    try {
+        const session = getSession();
+        if (session) {
+            apiRequest('/auth/me').then(data => {
+                saveSession(data.user, getToken());
+                showLoggedInState(data.user);
+            }).catch(() => {
+                clearSession();
+            });
+        }
+    } catch (e) {
+        clearSession();
     }
 }
 
@@ -283,6 +290,14 @@ function showLoggedInState(user) {
         }
     }
 
+    // Booster trata pedidos no painel booster.html — não mostra "Meus Pedidos" na home
+    const menuOrders = document.getElementById('menu-orders');
+    if (menuOrders && user.role === 'booster') {
+        menuOrders.style.display = 'none';
+    } else if (menuOrders) {
+        menuOrders.style.display = '';
+    }
+
     document.getElementById('menu-orders')?.addEventListener('click', async e => {
         e.preventDefault();
         const modalOrders = document.getElementById('modal-orders');
@@ -301,6 +316,14 @@ function showLoggedInState(user) {
             const statusLabels = { pending: '⏳ Pendente', active: '🟢 Ativo', in_progress: '🔄 Em Progresso', completed: '✅ Concluído', cancelled: '❌ Cancelado' };
             const statusColors = { pending: '#f0b132', active: '#58a6ff', in_progress: '#c084fc', completed: '#3fb950', cancelled: '#f85149' };
 
+            // Booster usa o painel booster.html para chat; em "Meus Pedidos" na home não vê o botão de chat
+            let isBooster = false;
+            try {
+                const session = getSession();
+                isBooster = !!(session && session.role === 'booster');
+            } catch (e) { /* ignora */ }
+            const showChatBtn = (order) => !isBooster && ['active', 'in_progress', 'completed'].includes(order.status);
+
             container.innerHTML = data.orders.map(o => `
                 <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px;margin-bottom:12px">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
@@ -314,7 +337,7 @@ function showLoggedInState(user) {
                         <span>💰 <strong style="color:#f0b132">R$ ${parseFloat(o.price).toFixed(2).replace('.', ',')}</strong></span>
                         <div style="display:flex;gap:8px">
                             <span>🎮 ${o.booster_name || 'Aguardando...'}</span>
-                            ${['active', 'in_progress', 'completed'].includes(o.status) ? `<button onclick="openChat(${o.id})" style="background:none;border:none;cursor:pointer;font-size:1.1rem" title="Chat com Booster">💬</button>` : ''}
+                            ${showChatBtn(o) ? `<button onclick="openChat(${o.id})" style="background:none;border:none;cursor:pointer;font-size:1.1rem" title="Chat com Booster">💬</button>` : ''}
                         </div>
                     </div>
                     <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">${new Date(o.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
@@ -332,6 +355,10 @@ function showLoggedInState(user) {
     window.openChat = async function (orderId) {
         window.currentChatOrderId = orderId;
         const modal = document.getElementById('modal-chat');
+        const titleEl = document.getElementById('modal-chat-title');
+        const orderInfoEl = document.getElementById('chat-order-info');
+        if (titleEl) titleEl.textContent = '💬 Chat com Booster';
+        if (orderInfoEl) orderInfoEl.textContent = 'Pedido #' + orderId + ' — mesma conversa que o booster vê no painel';
         openModal(modal);
         loadMessages();
 
@@ -341,7 +368,7 @@ function showLoggedInState(user) {
 
     async function loadMessages() {
         if (!window.currentChatOrderId) return;
-        const container = document.getElementById('chat-messages');
+        const container = document.getElementById('chat-messages-order') || document.getElementById('chat-messages');
         try {
             const data = await apiRequest(`/chat/${window.currentChatOrderId}`);
             const user = JSON.parse(localStorage.getItem('elodark_session') || '{}');
@@ -367,7 +394,8 @@ function showLoggedInState(user) {
     }
 
     window.sendChatMessage = async function () {
-        const input = document.getElementById('chat-input');
+        const input = document.getElementById('chat-input-order') || document.getElementById('chat-input');
+        if (!input) return;
         const content = input.value.trim();
         if (!content || !window.currentChatOrderId) return;
 

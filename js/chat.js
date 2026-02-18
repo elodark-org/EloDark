@@ -1,4 +1,5 @@
 // ========== CHAT.JS - Real-time Chat Widget ==========
+// Inicia o chat sempre que o site carregar (apenas em páginas que têm o widget)
 document.addEventListener('DOMContentLoaded', () => {
     initChat();
 });
@@ -19,8 +20,13 @@ const BOT_RESPONSES = [
 const GREETING = 'Olá! 👋 Sou o assistente da EloDark. Como posso te ajudar hoje?';
 
 function initChat() {
+    const widget = document.getElementById('chat-widget');
     const toggle = document.getElementById('chat-toggle');
     const window_ = document.getElementById('chat-window');
+    const messagesContainer = document.getElementById('chat-messages');
+    // Só inicializa na home: widget + container de mensagens do widget (não do modal de pedido)
+    if (!widget || !toggle || !window_ || !messagesContainer) return;
+
     const minimize = document.getElementById('chat-minimize');
     const form = document.getElementById('chat-form');
     const input = document.getElementById('chat-input');
@@ -29,9 +35,9 @@ function initChat() {
     let isOpen = false;
     let messages = JSON.parse(localStorage.getItem('elodark_chat') || '[]');
 
-    // Show badge after 3 seconds  
+    // Badge após 3s só se ainda não abriu e não tem mensagens
     setTimeout(() => {
-        if (!isOpen && messages.length === 0) {
+        if (!isOpen && messages.length === 0 && badge) {
             badge.style.display = 'flex';
             badge.textContent = '1';
         }
@@ -49,11 +55,12 @@ function initChat() {
         if (isOpen) input.focus();
     });
 
-    minimize.addEventListener('click', () => {
+    if (minimize) minimize.addEventListener('click', () => {
         isOpen = false;
         window_.classList.remove('open');
     });
 
+    if (!form || !input) return;
     form.addEventListener('submit', e => {
         e.preventDefault();
         const text = input.value.trim();
@@ -83,6 +90,7 @@ function initChat() {
 
     function renderMessages() {
         const container = document.getElementById('chat-messages');
+        if (!container) return;
         container.innerHTML = messages.map(m => `
             <div class="chat-msg ${m.type}">
                 ${m.text}
