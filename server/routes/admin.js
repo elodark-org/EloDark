@@ -173,7 +173,7 @@ router.put('/orders/:id/status', async (req, res) => {
         const { id } = req.params;
         const { status } = req.body;
 
-        const validStatuses = ['pending', 'active', 'in_progress', 'completed', 'cancelled'];
+        const validStatuses = ['pending', 'active', 'available', 'in_progress', 'completed', 'cancelled'];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ error: `Status inválido. Use: ${validStatuses.join(', ')}` });
         }
@@ -188,6 +188,28 @@ router.put('/orders/:id/status', async (req, res) => {
         res.json({ order });
     } catch (err) {
         console.error('Update order status error:', err);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
+// PUT /api/admin/orders/:id/release — Release order for boosters
+router.put('/orders/:id/release', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [order] = await sql`SELECT status FROM orders WHERE id = ${id}`;
+        if (!order) return res.status(404).json({ error: 'Pedido não encontrado' });
+        if (order.status !== 'active') {
+            return res.status(400).json({ error: 'Só pedidos pagos (active) podem ser liberados para boosters' });
+        }
+        const [updated] = await sql`
+            UPDATE orders SET status = 'available', booster_id = NULL, updated_at = NOW()
+            WHERE id = ${id}
+            RETURNING *
+        `;
+        console.log(`📢 Pedido #${id} liberado para boosters`);
+        res.json({ order: updated });
+    } catch (err) {
+        console.error('Release order error:', err);
         res.status(500).json({ error: 'Erro interno do servidor' });
     }
 });

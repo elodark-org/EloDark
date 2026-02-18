@@ -245,17 +245,51 @@ function showLoggedInState(user) {
         }
     }
 
+    // Show booster panel link for boosters
+    if (user.role === 'booster' || user.role === 'admin') {
+        const boosterLink = document.getElementById('menu-booster');
+        if (boosterLink) {
+            boosterLink.style.display = 'flex';
+            boosterLink.addEventListener('click', e => {
+                e.preventDefault();
+                window.location.href = '/booster.html';
+            });
+        }
+    }
+
     document.getElementById('menu-orders')?.addEventListener('click', async e => {
         e.preventDefault();
+        const modalOrders = document.getElementById('modal-orders');
+        const container = document.getElementById('my-orders-list');
+        container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:24px">Carregando...</p>';
+        openModal(modalOrders);
+
         try {
             const data = await apiRequest('/orders');
             if (data.orders.length === 0) {
-                showToast('Você não tem pedidos ainda.', 'info');
-            } else {
-                showToast(`Você tem ${data.orders.length} pedido(s). Painel completo em breve!`, 'info');
+                container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-muted)"><span style="font-size:3rem;display:block;margin-bottom:12px">📦</span>Você não tem pedidos ainda.<br><small>Contrate um serviço para começar!</small></div>';
+                return;
             }
+
+            const serviceLabels = { 'elo-boost': 'Elo Boost', 'duo-boost': 'Duo Boost', 'md10': 'MD10', 'wins': 'Vitórias', 'coach': 'Coach' };
+            const statusLabels = { pending: '⏳ Pendente', active: '🟢 Ativo', in_progress: '🔄 Em Progresso', completed: '✅ Concluído', cancelled: '❌ Cancelado' };
+            const statusColors = { pending: '#f0b132', active: '#58a6ff', in_progress: '#c084fc', completed: '#3fb950', cancelled: '#f85149' };
+
+            container.innerHTML = data.orders.map(o => `
+                <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px;margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                        <strong style="font-family:'Orbitron',monospace;font-size:0.8rem;letter-spacing:1px">#${o.id} — ${serviceLabels[o.service_type] || o.service_type}</strong>
+                        <span style="color:${statusColors[o.status]};font-size:0.82rem;font-weight:600">${statusLabels[o.status] || o.status}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.88rem;color:var(--text-secondary)">
+                        <span>💰 <strong style="color:#f0b132">R$ ${parseFloat(o.price).toFixed(2).replace('.', ',')}</strong></span>
+                        <span>🎮 ${o.booster_name || 'Aguardando booster...'}</span>
+                    </div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">${new Date(o.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+                </div>
+            `).join('');
         } catch (err) {
-            showToast(err.message, 'error');
+            container.innerHTML = `<p style="text-align:center;color:#f85149;padding:24px">Erro: ${err.message}</p>`;
         }
     });
 

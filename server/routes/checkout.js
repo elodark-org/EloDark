@@ -104,20 +104,59 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     res.json({ received: true });
 });
 
-// GET /api/checkout/verify/:sessionId — Verify payment status
+// GET /api/checkout/verify/:sessionId — Verify payment status + sync DB
 router.get('/verify/:sessionId', verifyToken, async (req, res) => {
     try {
         if (!stripe) return res.status(500).json({ error: 'Stripe não configurado' });
 
         const session = await stripe.checkout.sessions.retrieve(req.params.sessionId);
+        const orderId = session.metadata?.order_id;
+
+        // If paid, sync order status in DB
+        if (session.payment_status === 'paid' && orderId) {
+            const [order] = await sql`SELECT status FROM orders WHERE id = ${orderId}`;
+            if (order && order.status === 'pending') {
+                await sql`UPDATE orders SET status = 'active', updated_at = NOW() WHERE id = ${orderId}`;
+                console.log(`✅ Pedido #${orderId} sincronizado como pago via verify`);
+            }
+        }
+
         res.json({
             payment_status: session.payment_status,
             status: session.status,
-            order_id: session.metadata?.order_id
+            order_id: orderId
         });
     } catch (err) {
         console.error('Verify error:', err);
         res.status(500).json({ error: 'Erro ao verificar pagamento' });
+    }
+});
+
+// POST /api/checkout/sync — Sync all pending orders with Stripe
+router.post('/sync', verifyToken, async (req, res) => {
+    try {
+        if (!stripe) return res.status(500).json({ error: 'Stripe não configurado' });
+
+        // Get recent checkout sessions from Stripe
+        const sessions = await stripe.checkout.sessions.list({ limit: 50 });
+
+        let synced = 0;
+        for (const session of sessions.data) {
+            if (session.payment_status === 'paid' && session.metadata?.order_id) {
+                const orderId = session.metadata.order_id;
+                const [order] = await sql`SELECT status FROM orders WHERE id = ${orderId}`;
+                if (order && order.status === 'pending') {
+                    await sql`UPDATE orders SET status = 'active', updated_at = NOW() WHERE id = ${orderId}`;
+                    synced++;
+                    console.log(`✅ Pedido #${orderId} sincronizado`);
+                }
+            }
+        }
+
+        res.json({ message: `${synced} pedido(s) sincronizado(s)`, synced });
+    } catch (err) {
+        console.error('Sync error:', err);
+        res.status(500).json({ error: 'Erro ao sincronizar' });
     }
 });
 

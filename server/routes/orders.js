@@ -131,4 +131,53 @@ router.put('/:id/status', verifyToken, requireRole('booster', 'admin'), async (r
     }
 });
 
+// GET /api/orders/available — List orders available for boosters to claim
+router.get('/available', verifyToken, requireRole('booster', 'admin'), async (req, res) => {
+    try {
+        const orders = await sql`
+            SELECT o.id, o.service_type, o.config, o.price, o.created_at,
+                   u.name as user_name
+            FROM orders o
+            LEFT JOIN users u ON u.id = o.user_id
+            WHERE o.status = 'available'
+            ORDER BY o.created_at ASC
+        `;
+        res.json({ orders });
+    } catch (err) {
+        console.error('Available orders error:', err);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
+// POST /api/orders/:id/claim — Booster claims an available order
+router.post('/:id/claim', verifyToken, requireRole('booster', 'admin'), async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Get booster profile
+        const [booster] = await sql`SELECT id FROM boosters WHERE user_id = ${req.user.id}`;
+        if (!booster) return res.status(400).json({ error: 'Perfil de booster não encontrado' });
+
+        // Atomically claim (only if still available)
+        const [order] = await sql`
+            UPDATE orders SET
+                booster_id = ${booster.id},
+                status = 'in_progress',
+                updated_at = NOW()
+            WHERE id = ${id} AND status = 'available'
+            RETURNING *
+        `;
+
+        if (!order) {
+            return res.status(409).json({ error: 'Este pedido não está mais disponível' });
+        }
+
+        console.log(`🎮 Booster #${booster.id} pegou o pedido #${id}`);
+        res.json({ order });
+    } catch (err) {
+        console.error('Claim order error:', err);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
 module.exports = router;
