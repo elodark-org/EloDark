@@ -9,6 +9,7 @@ const adminRoutes = require('./routes/admin');
 const ordersRoutes = require('./routes/orders');
 const boostersRoutes = require('./routes/boosters');
 const reviewsRoutes = require('./routes/reviews');
+const checkoutRoutes = require('./routes/checkout');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/boosters', boostersRoutes);
 app.use('/api/reviews', reviewsRoutes);
+app.use('/api/checkout', checkoutRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
