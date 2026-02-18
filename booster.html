@@ -480,7 +480,49 @@
         });
 
         // AVAILABLE ORDERS
-        // ... (unchanged) ...
+        const serviceLabels = { 'elo-boost': 'Elo Boost', 'duo-boost': 'Duo Boost', 'md10': 'MD10', 'wins': 'Vitórias', 'coach': 'Coach' };
+        const serviceIcons = { 'elo-boost': '⚔️', 'duo-boost': '👥', 'md10': '🎯', 'wins': '🏆', 'coach': '🎓' };
+
+        async function loadAvailable() {
+            const container = document.getElementById('available-orders');
+            container.innerHTML = '<div class="empty-state"><span>⏳</span>Carregando...</div>';
+            try {
+                const { orders } = await apiFetch('/orders/available');
+                if (orders.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><span>😴</span>Nenhum serviço disponível no momento.<br><small>Novos serviços aparecerão aqui quando o admin liberar.</small></div>';
+                    return;
+                }
+                container.innerHTML = orders.map(o => `
+                    <div class="order-card">
+                        <div class="order-card-header">
+                            <span class="order-card-id">#${o.id}</span>
+                            <span class="order-card-price">R$ ${parseFloat(o.price).toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        <div class="order-card-service">${serviceIcons[o.service_type] || '🎮'} ${serviceLabels[o.service_type] || o.service_type}</div>
+                        <div class="order-card-meta">
+                            <span>👤 Cliente: ${o.user_name || 'Anônimo'}</span>
+                            <span>📅 ${new Date(o.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
+                        </div>
+                        <div class="order-card-actions">
+                            <button class="btn-claim" onclick="claimOrder(${o.id})">🎮 Pegar Serviço</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = `<div class="empty-state"><span>❌</span>${err.message}</div>`;
+            }
+        }
+
+        async function claimOrder(orderId) {
+            if (!confirm(`Deseja pegar o serviço #${orderId}? Você será responsável por este pedido.`)) return;
+            try {
+                await apiFetch(`/orders/${orderId}/claim`, { method: 'POST' });
+                showToast(`🎮 Serviço #${orderId} é seu! Bom trabalho!`, 'success');
+                loadAvailable();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
 
         // MY ORDERS
         async function loadMyOrders() {
