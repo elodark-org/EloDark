@@ -312,7 +312,10 @@ function showLoggedInState(user) {
                     </div>
                     <div style="display:flex;justify-content:space-between;font-size:0.88rem;color:var(--text-secondary)">
                         <span>💰 <strong style="color:#f0b132">R$ ${parseFloat(o.price).toFixed(2).replace('.', ',')}</strong></span>
-                        <span>🎮 ${o.booster_name || 'Aguardando booster...'}</span>
+                        <div style="display:flex;gap:8px">
+                            <span>🎮 ${o.booster_name || 'Aguardando...'}</span>
+                            ${['active', 'in_progress', 'completed'].includes(o.status) ? `<button onclick="openChat(${o.id})" style="background:none;border:none;cursor:pointer;font-size:1.1rem" title="Chat com Booster">💬</button>` : ''}
+                        </div>
                     </div>
                     <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">${new Date(o.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
                 </div>
@@ -321,6 +324,64 @@ function showLoggedInState(user) {
             container.innerHTML = `<p style="text-align:center;color:#f85149;padding:24px">Erro: ${err.message}</p>`;
         }
     });
+
+    // CHAT LOGIC
+    window.currentChatOrderId = null;
+    window.chatInterval = null;
+
+    window.openChat = async function (orderId) {
+        window.currentChatOrderId = orderId;
+        const modal = document.getElementById('modal-chat');
+        openModal(modal);
+        loadMessages();
+
+        if (window.chatInterval) clearInterval(window.chatInterval);
+        window.chatInterval = setInterval(loadMessages, 3000); // Poll every 3s
+    };
+
+    async function loadMessages() {
+        if (!window.currentChatOrderId) return;
+        const container = document.getElementById('chat-messages');
+        try {
+            const data = await apiRequest(`/chat/${window.currentChatOrderId}`);
+            const user = JSON.parse(localStorage.getItem('elodark_session') || '{}');
+
+            container.innerHTML = data.messages.map(m => {
+                const isSelf = m.user_id === user.id;
+                return `
+                    <div class="chat-message ${isSelf ? 'self' : 'other'}">
+                        ${m.content}
+                        <div class="chat-message-meta">
+                            <span>${m.sender_name || 'Usuário'}</span>
+                            <span>${new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Auto scroll to bottom if near bottom (or first load)
+            // container.scrollTop = container.scrollHeight; 
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    window.sendChatMessage = async function () {
+        const input = document.getElementById('chat-input');
+        const content = input.value.trim();
+        if (!content || !window.currentChatOrderId) return;
+
+        try {
+            await apiRequest(`/chat/${window.currentChatOrderId}`, {
+                method: 'POST',
+                body: JSON.stringify({ content })
+            });
+            input.value = '';
+            loadMessages();
+        } catch (err) {
+            showToast(err.message, 'error');
+        }
+    };
 
     document.getElementById('menu-profile')?.addEventListener('click', e => {
         e.preventDefault();
