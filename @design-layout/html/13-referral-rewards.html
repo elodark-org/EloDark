@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark Pro Booster Profile | Alpha</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7f0df2",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#0A0A0F",
+                        "surface-dark": "#12121A",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .hex-bg {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill-opacity='0.03' fill='%237f0df2' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .glass-panel {
+            background: rgba(18, 18, 26, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(127, 13, 242, 0.15);
+        }
+        .glow-gold {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            border: 2px solid #ffd700;
+        }
+        .glow-primary {
+            box-shadow: 0 0 20px rgba(127, 13, 242, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen hex-bg selection:bg-primary selection:text-white">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-primary/10 bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-3xl font-bold">rocket_launch</span>
+<h1 class="text-xl font-bold tracking-tight text-white">EloDark</h1>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Boosters</a>
+<a class="text-sm font-medium hover:text-primary transition-colors text-primary" href="#">Services</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Leaderboard</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Reviews</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="bg-primary/5 border-primary/20 rounded-lg pl-9 pr-4 py-1.5 text-sm focus:ring-primary focus:border-primary w-64" placeholder="Search Boosters..." type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-5 py-1.5 rounded-lg text-sm font-bold transition-all glow-primary">
+                    Sign In
+                </button>
+</div>
+</div>
+</header>
+<main class="relative">
+<!-- Hero Section -->
+<div class="relative h-80 w-full overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/40 to-transparent z-10"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-background-dark/80 via-transparent to-background-dark/80 z-10"></div>
+<img class="w-full h-full object-cover opacity-60 scale-110" data-alt="Cinematic dark gaming landscape background with purple neon glows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq78EFh7hPBK0pPLzQJYOZ68xAraGvvDipsxNPl7_DLETfRp9jZ3S57Rqsoq7mVIF9qHBfo3yoiOkS2qPyA9w9EMkftpUYXbX4INi3xdfZn5J0DfWFuKPI6w2ru3umwD8g1y2q1mJw5bP-PN8oYwZ9MM4J5UgmOlmvh03Ad532Lak2tc-2YEcMvnwBaHtHPGuJY7m-zOzYYds8e_m2PiiweGeumrVgWYKtRpfHnWjwfU94yB_sXji-y2OyQ_3Clwk6lV2fYW6uaOfr"/>
+<!-- Ambient Glows -->
+<div class="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 blur-[120px] rounded-full"></div>
+</div>
+<!-- Content Layout -->
+<div class="max-w-7xl mx-auto px-4 -mt-32 relative z-20 pb-20">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Sidebar: Profile Identity -->
+<div class="lg:col-span-3 space-y-6">
+<div class="glass-panel p-6 rounded-xl flex flex-col items-center text-center">
+<div class="relative mb-6">
+<div class="size-32 rounded-full overflow-hidden glow-gold p-1 bg-background-dark">
+<img class="w-full h-full object-cover rounded-full" data-alt="Professional male portrait for gaming profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7gKO43GayUnkwCSi7k8lDUGHdjDPks97ko7dOB2Fj99Vd5j2aJaRhIvyBwS88_liiFzBX6zbdZGbv21xRSLNBB6eBW_ZbhHT9Hi2K_adqs-xnsoangqMNTKjCwo4FnXzIcCvYctX5w9UK9nT9LOuFEaYOUO_CrVXSexpF0YPf5lcye9lGRb37OU-U-GWkwV9HUvInW8Q77a3ZqPp1HEpWj095U5NST3jEJosDpIQtcq7o6_gR0J2jet1pg7pRACLkmyrrIY3QvEEJ"/>
+</div>
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-yellow-500 text-background-dark text-[10px] font-black px-2 py-1 rounded-full flex items-center gap-1 shadow-lg whitespace-nowrap uppercase tracking-widest">
+<span class="material-symbols-outlined text-[12px] fill-1">verified</span> Verified Pro
+                            </div>
+</div>
+<h2 class="text-2xl font-bold text-white mb-1 tracking-tight">Alpha</h2>
+<p class="text-primary text-sm font-semibold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">stars</span> Elite Tier Booster
+                        </p>
+<div class="w-full space-y-4 text-left">
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-400">Main Games</span>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-primary" title="League of Legends">swords</span>
+<span class="material-symbols-outlined text-cyan-400" title="Valorant">target</span>
+</div>
+</div>
+<div class="h-px bg-primary/10 w-full"></div>
+<div class="flex justify-between items-center">
+<span class="text-slate-400 text-sm">Win Rate</span>
+<span class="text-green-400 font-bold">98%</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-slate-400 text-sm">Total Orders</span>
+<span class="text-white font-bold">2,400+</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-slate-400 text-sm">Member Since</span>
+<span class="text-white font-bold">2021</span>
+</div>
+</div>
+<div class="mt-8 w-full">
+<button class="w-full bg-primary/10 border border-primary/30 hover:bg-primary/20 text-primary font-bold py-3 rounded-lg transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">mail</span> Send Message
+                            </button>
+</div>
+</div>
+<!-- Live Stats Widget -->
+<div class="glass-panel p-5 rounded-xl border-l-4 border-l-green-500">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-sm font-bold uppercase tracking-widest text-slate-400">Live Stats</h3>
+<span class="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">trending_up</span>
+</div>
+<div>
+<p class="text-[10px] text-slate-400 uppercase">Current Boost</p>
+<p class="text-sm font-bold text-white">Diamond III → Master</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="bg-primary/5 p-2 rounded text-center">
+<p class="text-[10px] text-slate-500">KDA</p>
+<p class="text-xs font-bold text-white">14.2 / 2.1 / 8.5</p>
+</div>
+<div class="bg-primary/5 p-2 rounded text-center">
+<p class="text-[10px] text-slate-500">CS/Min</p>
+<p class="text-xs font-bold text-white">9.8</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Column -->
+<div class="lg:col-span-6 space-y-8">
+<!-- Biography Card -->
+<section class="glass-panel p-8 rounded-xl">
+<h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">person</span> Professional Biography
+                        </h3>
+<p class="text-slate-300 leading-relaxed text-base">
+                            Former Challenger-tier professional player with over 8 years of competitive experience in the MOBA and FPS scenes. Known for aggressive jungle pathing and exceptional map awareness. I specialize in high-ELO carries, ensuring not just a victory, but a dominant performance. 
+                        </p>
+<p class="text-slate-300 mt-4 leading-relaxed">
+                            My approach is data-driven; I analyze current meta shifts daily to provide the most efficient path to your desired rank. I offer voice-comms and coaching as part of the boosting process to help you maintain your new rank.
+                        </p>
+<div class="grid grid-cols-3 gap-4 mt-8">
+<div class="p-4 bg-primary/5 border border-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary mb-2">military_tech</span>
+<h4 class="text-xs font-bold text-slate-400 uppercase">Top Rank</h4>
+<p class="text-white font-bold">Rank 14 Challenger</p>
+</div>
+<div class="p-4 bg-primary/5 border border-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary mb-2">history_edu</span>
+<h4 class="text-xs font-bold text-slate-400 uppercase">Exp.</h4>
+<p class="text-white font-bold">8+ Years</p>
+</div>
+<div class="p-4 bg-primary/5 border border-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary mb-2">trophy</span>
+<h4 class="text-xs font-bold text-slate-400 uppercase">Tourneys</h4>
+<p class="text-white font-bold">12 Wins</p>
+</div>
+</div>
+</section>
+<!-- Expertise Section -->
+<section class="glass-panel p-8 rounded-xl">
+<h3 class="text-xl font-bold text-white mb-8 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">bar_chart</span> Technical Expertise
+                        </h3>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-semibold text-slate-200">Jungle / Duelist</span>
+<span class="text-primary text-sm font-bold">99% Proficiency</span>
+</div>
+<div class="w-full bg-primary/10 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[99%] shadow-[0_0_10px_rgba(127,13,242,0.6)]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-semibold text-slate-200">Mid Lane / Initiator</span>
+<span class="text-primary text-sm font-bold">95% Proficiency</span>
+</div>
+<div class="w-full bg-primary/10 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[95%] shadow-[0_0_10px_rgba(127,13,242,0.6)]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-semibold text-slate-200">Top Lane / Sentinel</span>
+<span class="text-primary text-sm font-bold">88% Proficiency</span>
+</div>
+<div class="w-full bg-primary/10 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full w-[88%] shadow-[0_0_10px_rgba(127,13,242,0.6)]"></div>
+</div>
+</div>
+</div>
+<div class="mt-10">
+<p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Most Played Champions/Agents</p>
+<div class="flex flex-wrap gap-3">
+<span class="px-4 py-2 bg-background-dark/50 border border-primary/20 rounded-lg text-sm font-medium text-slate-200 hover:border-primary transition-colors cursor-default">Lee Sin</span>
+<span class="px-4 py-2 bg-background-dark/50 border border-primary/20 rounded-lg text-sm font-medium text-slate-200 hover:border-primary transition-colors cursor-default">Jett</span>
+<span class="px-4 py-2 bg-background-dark/50 border border-primary/20 rounded-lg text-sm font-medium text-slate-200 hover:border-primary transition-colors cursor-default">Nidalee</span>
+<span class="px-4 py-2 bg-background-dark/50 border border-primary/20 rounded-lg text-sm font-medium text-slate-200 hover:border-primary transition-colors cursor-default">Reyna</span>
+<span class="px-4 py-2 bg-background-dark/50 border border-primary/20 rounded-lg text-sm font-medium text-slate-200 hover:border-primary transition-colors cursor-default">Kha'Zix</span>
+</div>
+</div>
+</section>
+<!-- Reviews Carousel -->
+<section class="space-y-4">
+<div class="flex justify-between items-center px-2">
+<h3 class="text-lg font-bold text-white">Client Reviews</h3>
+<div class="flex gap-2">
+<button class="p-1 rounded bg-primary/10 hover:bg-primary/20 text-primary">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-1 rounded bg-primary/10 hover:bg-primary/20 text-primary">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="glass-panel p-5 rounded-xl">
+<div class="flex gap-1 mb-3">
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+</div>
+<p class="text-sm text-slate-300 italic mb-4 line-clamp-2">"Alpha got me from Gold to Diamond in 2 days. Super fast and very professional. Recommended!"</p>
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-700"></div>
+<span class="text-xs font-bold text-white">User_921</span>
+<span class="text-[10px] text-slate-500 ml-auto">2 days ago</span>
+</div>
+</div>
+<div class="glass-panel p-5 rounded-xl">
+<div class="flex gap-1 mb-3">
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-yellow-500 text-sm fill-1">star</span>
+</div>
+<p class="text-sm text-slate-300 italic mb-4 line-clamp-2">"Extremely high win rate. I watched the games and the map control was insane. Worth every penny."</p>
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-slate-700"></div>
+<span class="text-xs font-bold text-white">ProSlayer20</span>
+<span class="text-[10px] text-slate-500 ml-auto">1 week ago</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Sidebar: Sticky CTA -->
+<div class="lg:col-span-3">
+<div class="sticky top-24 space-y-6">
+<div class="glass-panel p-6 rounded-xl relative overflow-hidden group">
+<!-- Premium Shine -->
+<div class="absolute -top-12 -right-12 size-24 bg-primary/20 blur-2xl rounded-full"></div>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-white tracking-tight">Book Alpha</h3>
+<div class="bg-primary/20 text-primary text-[10px] font-black px-2 py-1 rounded border border-primary/30 uppercase tracking-tighter">
+                                    +20% Premium
+                                </div>
+</div>
+<div class="space-y-4 mb-8">
+<div>
+<label class="text-[10px] uppercase font-bold text-slate-400 mb-2 block">Service Type</label>
+<select class="w-full bg-background-dark/50 border-primary/20 rounded-lg text-sm text-white focus:ring-primary">
+<option>Division Boosting</option>
+<option>Win Boosting</option>
+<option>Placements</option>
+<option>Coaching (Hourly)</option>
+</select>
+</div>
+<div>
+<label class="text-[10px] uppercase font-bold text-slate-400 mb-2 block">Expected Completion</label>
+<div class="flex items-center gap-2 text-sm text-white font-medium">
+<span class="material-symbols-outlined text-primary text-sm">schedule</span>
+                                        12 - 24 Hours
+                                    </div>
+</div>
+</div>
+<div class="h-px bg-primary/10 w-full mb-6"></div>
+<div class="flex items-end justify-between mb-8">
+<div>
+<p class="text-[10px] uppercase font-bold text-slate-400">Estimate Price</p>
+<p class="text-3xl font-black text-white">$149.99</p>
+</div>
+<span class="text-xs text-green-400 font-bold">In Stock</span>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-black py-4 rounded-lg transition-all glow-primary flex items-center justify-center gap-2 mb-4 group-hover:scale-[1.02]">
+<span class="material-symbols-outlined">bolt</span> BOOK NOW
+                            </button>
+<p class="text-[10px] text-center text-slate-500 px-4">
+                                Secure checkout with 100% money-back guarantee and account protection.
+                            </p>
+</div>
+<!-- Achievements Mini Grid -->
+<div class="grid grid-cols-2 gap-3">
+<div class="glass-panel p-3 rounded-lg text-center">
+<span class="material-symbols-outlined text-primary text-xl mb-1">security</span>
+<p class="text-[10px] text-slate-400 uppercase font-bold">VPN Secured</p>
+</div>
+<div class="glass-panel p-3 rounded-lg text-center">
+<span class="material-symbols-outlined text-primary text-xl mb-1">forum</span>
+<p class="text-[10px] text-slate-400 uppercase font-bold">Direct Chat</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="border-t border-primary/10 py-12 bg-background-dark/50">
+<div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-xl">rocket_launch</span>
+<span class="font-bold tracking-tight">EloDark</span>
+<span class="text-sm ml-4">© 2024 Elite Gaming Services. All rights reserved.</span>
+</div>
+<div class="flex gap-6">
+<a class="text-sm text-slate-500 hover:text-primary" href="#">Terms of Service</a>
+<a class="text-sm text-slate-500 hover:text-primary" href="#">Privacy Policy</a>
+<a class="text-sm text-slate-500 hover:text-primary" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+</body></html>

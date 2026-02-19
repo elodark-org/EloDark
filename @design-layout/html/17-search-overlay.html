@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark Global Search Overlay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7f0df2",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#0A0A0F",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(25, 16, 34, 0.7);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(127, 13, 242, 0.1);
+        }
+        .glow-border:focus-within {
+            box-shadow: 0 0 20px rgba(127, 13, 242, 0.4);
+            border-color: #7f0df2;
+        }
+        .ambient-purple {
+            background: radial-gradient(circle at center, rgba(127, 13, 242, 0.15) 0%, transparent 70%);
+        }
+        .ambient-cyan {
+            background: radial-gradient(circle at center, rgba(6, 182, 212, 0.1) 0%, transparent 70%);
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-slate-100 antialiased overflow-hidden">
+<!-- Ambient Background Effects -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden">
+<div class="ambient-purple absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full blur-3xl"></div>
+<div class="ambient-cyan absolute -bottom-1/4 -left-1/4 w-[800px] h-[800px] rounded-full blur-3xl"></div>
+</div>
+<!-- Search Overlay Container -->
+<div class="relative min-h-screen w-full flex flex-col glass-panel p-6 md:p-12 lg:px-40">
+<!-- Header / Close Button -->
+<header class="flex justify-between items-center mb-12">
+<div class="flex items-center gap-3">
+<div class="size-10 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary text-2xl">rocket_launch</span>
+</div>
+<h1 class="text-2xl font-bold tracking-tight text-white uppercase italic">Elo<span class="text-primary">Dark</span></h1>
+</div>
+<button class="group flex items-center justify-center size-12 rounded-full bg-white/5 hover:bg-primary/20 border border-white/10 hover:border-primary/50 transition-all duration-300">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary group-hover:rotate-90 transition-transform duration-300">close</span>
+</button>
+</header>
+<!-- Main Search Section -->
+<div class="max-w-4xl mx-auto w-full">
+<div class="relative group">
+<div class="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-slate-500 group-focus-within:text-primary transition-colors">search</span>
+</div>
+<input autofocus="" class="w-full bg-white/5 border border-white/10 rounded-2xl py-8 pl-16 pr-8 text-2xl md:text-3xl text-white placeholder-slate-500 focus:ring-0 focus:outline-none glow-border transition-all duration-300" placeholder="Search for games, boosters, or ranks..." type="text"/>
+</div>
+<!-- Trending Section -->
+<div class="mt-8 flex flex-wrap items-center gap-4 px-2">
+<span class="text-sm font-semibold text-slate-500 uppercase tracking-widest">Trending:</span>
+<div class="flex flex-wrap gap-3">
+<a class="text-sm text-slate-300 hover:text-primary flex items-center gap-1 transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> Duo Queue
+                    </a>
+<a class="text-sm text-slate-300 hover:text-primary flex items-center gap-1 transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> Iron to Gold
+                    </a>
+<a class="text-sm text-slate-300 hover:text-primary flex items-center gap-1 transition-colors" href="#">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> Placement Matches
+                    </a>
+</div>
+</div>
+<!-- Content Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-16">
+<!-- Games Category -->
+<section>
+<div class="flex items-center justify-between mb-6 border-b border-white/5 pb-2">
+<h2 class="text-lg font-bold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">sports_esports</span> Games
+                        </h2>
+<a class="text-xs text-primary font-bold hover:underline" href="#">View All</a>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/[0.08] hover:border-primary/30 transition-all cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-slate-800 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="League of Legends game icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQTymWpKDuW7RV6bQw0gKdvSep0vYuBQN8LWMtXhDiDLiTQeQdEaOxrMAxi9BK0szWy43ATiM51gaWFHDMTDbaXtI_lLRzpcMN9TdFwuAd8RwZBkz1ZSZAjSQrs3ZA41Av94i4xrFhfNL3Chvp09Dep3LohGOvj77wHQhDwlYlomunuabe56RWaQrhKvo-3RBUZlw5cWtZdguupGYd-KwPTr4d4I_0RGorNUmqtUs_6vaNN9gLuZCFhqXdOO_-b7CsM4czHKT94GaB"/>
+</div>
+<span class="font-medium text-slate-200 group-hover:text-white">League of Legends</span>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/[0.08] hover:border-primary/30 transition-all cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-slate-800 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Valorant game icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuHDpm7FommzbaOeMV6ataRBAxdG3dZbFgG1gIm91mdY7857J936evZ6vWFSbVK_85aj52EF8VkjegDEDo8h1rjS1RfjYlUtKjDVeh-wQZYiWLelDuO4ie15s27os4ZbpXqGo6LXJkkhw5UGWz2Hqr81-SlT6TIA3JLM3X03hZmhp28mumW9I9Nkl0-Tjg3opOAq_aX_I1IMICs0y_v1bcXPUafAfEI48myd99xyL8WmxqEssZpl1PjOI_YLm6kAxTZJ-9NxDh1Z0u"/>
+</div>
+<span class="font-medium text-slate-200 group-hover:text-white">Valorant</span>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/[0.08] hover:border-primary/30 transition-all cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-lg bg-slate-800 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Counter-Strike 2 game icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5aooWVDwu8OhD6CZFyonOonYiNdV662WJcivQb7AeWpSt3_o9WylF0O56F_WF9GbyOx7Byv63do0lcg62E_zZ6FmqYPQTYh39MOQfdjcxdK_Nence_4_fpayTxP_-aw0Y3J6AJ5qhAVnDqCbyIPy9o75hRcXUW1xtj7x3gp6o2XDCKo1spSN8akcIBNM-e06sAyrnN8AhWnjzO-GCmthURkY55_H6nF_5Fj4vhRyeUiUXbFBPXJ5ZaLXwq6jGEus_X-c9WnkFr2uX"/>
+</div>
+<span class="font-medium text-slate-200 group-hover:text-white">Counter-Strike 2</span>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Top Boosters Category -->
+<section>
+<div class="flex items-center justify-between mb-6 border-b border-white/5 pb-2">
+<h2 class="text-lg font-bold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">verified</span> Top Boosters
+                        </h2>
+<a class="text-xs text-primary font-bold hover:underline" href="#">Leaderboard</a>
+</div>
+<div class="space-y-3">
+<div class="flex items-center p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/[0.08] hover:border-primary/30 transition-all cursor-pointer group">
+<div class="relative">
+<div class="size-12 rounded-full bg-primary/20 border-2 border-primary/50 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Alpha booster avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyp-N5dSTyvSzX4paSDDrtkkiOBHCZ0mtFjw9v2wo5mQiIQweZRUJ8iNerxKqlmKpapXDcYB_6TXiBHsVLdg3l2_c2J340wAOBwy0xP_mwG-5FOEpJ9nY3RDLaKCyuVSTiG6qClNrI0WhcxPyysNfybx_yFBMtphzp_KufhPkZJXiFGWsB_5H6cybfln0Mkw4MggyE4R8V5b9TOBm6ZuJN3KUAIx3DbzDK25SvPaV4615--_zu3LpedkL7-lgfof-_bwctcC45M5W-"/>
+</div>
+<div class="absolute bottom-0 right-0 size-3 bg-green-500 border-2 border-background-dark rounded-full"></div>
+</div>
+<div class="ml-4 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-bold text-white group-hover:text-primary transition-colors">Alpha</span>
+<div class="flex items-center text-primary text-xs">
+<span class="material-symbols-outlined text-[14px] fill-current">star</span>
+<span class="ml-1 font-bold">5.0</span>
+</div>
+</div>
+<p class="text-xs text-slate-500">200+ Orders Completed</p>
+</div>
+</div>
+<div class="flex items-center p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/[0.08] hover:border-primary/30 transition-all cursor-pointer group">
+<div class="relative">
+<div class="size-12 rounded-full bg-slate-800 border-2 border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Shadow booster avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9qJ-bqzVb0rAXHs-HIxQHDtCSgUBbdlVXi2tZnz9fclrPIwXw2vm6DueZNzh51ZX4IM1d7FGWuuwjMQ2X17u5ZhQw5yUliFcyWxMyDcUSjaSIAzqkKjDwGlwuc96Xh6BfY-vT8M-THZ5i-zHW3eaiNea6sGk72XWdXZDr4eQ87qz6jhC1mo1ZxzxeJdrVp3bWWlI5tfDKLv8M1w3w6ks9SeIBS818aHy-qlJp0vYqWWnH6kYu4DLx4RekHNEpOcX0ztQgCaQqCqB5"/>
+</div>
+<div class="absolute bottom-0 right-0 size-3 bg-green-500 border-2 border-background-dark rounded-full"></div>
+</div>
+<div class="ml-4 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-bold text-white group-hover:text-primary transition-colors">Shadow</span>
+<div class="flex items-center text-primary text-xs">
+<span class="material-symbols-outlined text-[14px] fill-current">star</span>
+<span class="ml-1 font-bold">4.9</span>
+</div>
+</div>
+<p class="text-xs text-slate-500">150+ Orders Completed</p>
+</div>
+</div>
+<div class="flex items-center p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/[0.08] hover:border-primary/30 transition-all cursor-pointer group">
+<div class="relative">
+<div class="size-12 rounded-full bg-slate-800 border-2 border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="ApexMaster booster avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqH1o8BA7f2PZGjeUZTGXCrbfwy9XJ9oyg0vgibmLPrFU3gP23GqiVddSwrw1DS84yYyV8nF9L6FD6LrqD6p074aIZksY4b8wxHw4BJokMoMjPItiSr0nlMPZhTHIJ17glO6tFP8-U1SmQPdLaGJubORH5hcWmpQ8jo60Yu5v9l5ZJ9x7Vts8S2zea9x0Kow9_pOOSYMX3cSG3F-ANAxAK6ZV_hObBbm9uTe3jjeTTA0-CfKfbDI0ShpRzklx82veDMvN-XYFy2qlS"/>
+</div>
+<div class="absolute bottom-0 right-0 size-3 bg-orange-500 border-2 border-background-dark rounded-full"></div>
+</div>
+<div class="ml-4 flex-1">
+<div class="flex items-center justify-between">
+<span class="font-bold text-white group-hover:text-primary transition-colors">ApexMaster</span>
+<div class="flex items-center text-primary text-xs">
+<span class="material-symbols-outlined text-[14px] fill-current">star</span>
+<span class="ml-1 font-bold">4.8</span>
+</div>
+</div>
+<p class="text-xs text-slate-500">89+ Orders Completed</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Recent Searches Tags -->
+<footer class="mt-20 flex flex-col items-center">
+<p class="text-xs font-bold text-slate-600 uppercase tracking-widest mb-4">Recent Searches</p>
+<div class="flex flex-wrap justify-center gap-3">
+<div class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm text-slate-400 cursor-pointer flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[18px]">history</span> LoL Master
+                    </div>
+<div class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm text-slate-400 cursor-pointer flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[18px]">history</span> Valorant Radiant
+                    </div>
+<div class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-sm text-slate-400 cursor-pointer flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[18px]">history</span> Coaching
+                    </div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

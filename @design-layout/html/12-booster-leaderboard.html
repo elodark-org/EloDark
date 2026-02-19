@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark Pro Booster Leaderboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#af25f4",
+                        "accent-cyan": "#00f2ff",
+                        "gold": "#FFD700",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#0A0A0F",
+                        "card-dark": "rgba(25, 18, 35, 0.7)",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0A0A0F;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(175, 37, 244, 0.15) 0%, transparent 50%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill-rule='evenodd' stroke='%23ffffff' stroke-width='0.5' fill='none' fill-opacity='0.03'/%3E%3C/svg%3E");
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .text-gradient {
+            background: linear-gradient(90deg, #af25f4 0%, #00f2ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-glow {
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            border: 2px solid #FFD700 !important;
+        }
+        .row-hover:hover {
+            background: rgba(175, 37, 244, 0.05);
+            box-shadow: inset 0 0 15px rgba(175, 37, 244, 0.1);
+            border-color: rgba(175, 37, 244, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex flex-col w-full overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between border-b border-white/10 px-6 py-4 lg:px-20 bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+<div class="flex items-center gap-12">
+<div class="flex items-center gap-2">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white">bolt</span>
+</div>
+<h2 class="text-white text-xl font-bold tracking-tight">EloDark</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Marketplace</a>
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Services</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="#">Leaderboard</a>
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">About</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">search</span>
+<input class="bg-white/5 border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-primary focus:border-primary w-64 text-white" placeholder="Search boosters..." type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary/80 transition-all text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-primary/20">
+                    Join the Elite
+                </button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-12 w-full">
+<!-- Hero Header -->
+<div class="text-center mb-16">
+<h1 class="text-5xl md:text-7xl font-black mb-4 text-gradient">Elite Squad</h1>
+<p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto">The top 1% of competitive players worldwide. Vetted for excellence, performance, and professionalism.</p>
+</div>
+<!-- Top 3 Showcase -->
+<div class="flex flex-col lg:flex-row items-end justify-center gap-6 mb-20 px-4">
+<!-- Rank 2 -->
+<div class="glass rounded-xl p-6 flex flex-col items-center w-full lg:w-72 order-2 lg:order-1 relative group">
+<div class="absolute -top-4 bg-slate-800 px-3 py-1 rounded-full text-xs font-bold border border-white/10">#2 Rank</div>
+<div class="size-24 rounded-full overflow-hidden mb-4 border-2 border-primary/30 p-1">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Gaming avatar of pro booster Shadow" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCoUyybGCZ-Jc1PqVmaL141JeMknTQav30e_Hjv7g3MxC5wxjK6YnM31Vtmgk-B5ZykTWFNsdvtK21yX0vzRPBGq702ba22yQCWvPyXi44MOsYWs8nUQCJuF3Ej80SMnQ6gic2fW8Ac3dppjpu9qqnqP6kePXhlD-59oe4i_Dn0ONSgz9nKEfL9R8ncf88WCQ4aC1ePCaEQPnwR4bVdhfTkD3WIGHW4_4MzpiDCzSmvxzOqGkn8EJaHsu4AYd4IB2ayFcvE1FmxLVg-');"></div>
+</div>
+<h3 class="text-xl font-bold mb-1">Shadow</h3>
+<div class="flex gap-2 mb-4">
+<span class="px-2 py-0.5 bg-primary/20 text-primary text-[10px] rounded uppercase font-bold tracking-widest">LoL</span>
+<span class="px-2 py-0.5 bg-accent-cyan/20 text-accent-cyan text-[10px] rounded uppercase font-bold tracking-widest">Valorant</span>
+</div>
+<div class="grid grid-cols-2 w-full gap-4 text-center border-t border-white/5 pt-4">
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-bold">Rating</p>
+<div class="flex items-center justify-center text-gold gap-1">
+<span class="text-sm font-bold">5.0</span>
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+</div>
+</div>
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-bold">Orders</p>
+<p class="text-sm font-bold">620+</p>
+</div>
+</div>
+</div>
+<!-- Rank 1 (The King) -->
+<div class="glass gold-glow rounded-xl p-8 flex flex-col items-center w-full lg:w-80 order-1 lg:order-2 relative transform scale-105 z-10">
+<div class="absolute -top-6 text-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+<span class="material-symbols-outlined text-4xl fill-current">rewarded_ads</span>
+</div>
+<div class="size-32 rounded-full overflow-hidden mb-6 border-4 border-gold p-1.5 shadow-[0_0_30px_rgba(255,215,0,0.2)]">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Gaming avatar of elite pro booster Alpha" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAaq0ETQl3ZsQpBNGfqLlGL6feRvtQr1B0bb5WB7BaYkapA3Mp5E98ybAXgrSyrrZgZ6Lx8KZHIpqP3wZYeYAqGyv7DxnVkcxBYyrkIojG2yCxELEgQJK88Fnons60vqJkvDwXmrX0kcxo6tOjPNzjrBgfjkAlAV17v7QpbFkVkYL1oMbRCs6THZWz6UKq-o9jd0z1BZs4s6KzMWiHL0c61baTf5nSyquI717GIaLqVnyKMNyxf8JlPiUKpJca-9aw_kb0C8JCHpi_a');"></div>
+</div>
+<h3 class="text-2xl font-black mb-1">Alpha</h3>
+<p class="text-gold text-xs font-bold tracking-widest uppercase mb-4">Elite Grandmaster</p>
+<div class="flex gap-2 mb-6">
+<span class="px-3 py-1 bg-primary/20 text-primary text-xs rounded uppercase font-bold tracking-widest">LoL</span>
+<span class="px-3 py-1 bg-accent-cyan/20 text-accent-cyan text-xs rounded uppercase font-bold tracking-widest">Valorant</span>
+</div>
+<div class="grid grid-cols-2 w-full gap-4 text-center border-t border-white/10 pt-6">
+<div>
+<p class="text-xs text-slate-500 uppercase font-bold mb-1">Rating</p>
+<div class="flex items-center justify-center text-gold gap-1">
+<span class="text-lg font-black">5.0</span>
+<span class="material-symbols-outlined text-lg fill-current">star</span>
+</div>
+</div>
+<div>
+<p class="text-xs text-slate-500 uppercase font-bold mb-1">Win Rate</p>
+<p class="text-lg font-black text-white">99.2%</p>
+</div>
+</div>
+</div>
+<!-- Rank 3 -->
+<div class="glass rounded-xl p-6 flex flex-col items-center w-full lg:w-72 order-3 lg:order-3 relative group">
+<div class="absolute -top-4 bg-slate-800 px-3 py-1 rounded-full text-xs font-bold border border-white/10">#3 Rank</div>
+<div class="size-24 rounded-full overflow-hidden mb-4 border-2 border-accent-cyan/30 p-1">
+<div class="w-full h-full rounded-full bg-cover bg-center" data-alt="Gaming avatar of pro booster Nova" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCxNI7PR22fyRPSOhyhJlWlUV199A_wDZ40904T1cFXDnejEbSG_xVzKftvLZmJehbaTN50Uow9Ham_YzxEk8nCONJba0V-pJ2q9ri2urIW2g3gSs6Q8rL6fEMc4eeA7PBr7UqiJ_gNRKBx0eomQVJwnJEgUpPj4_jeurA7_ptVPoMdFAAYx4n8dDNPmu-_StLQe0Y5mtW1KqFzmgNmlWRAIhyEtTQjxO42JDC5ptX6Za0BW-pDV3uKTIRy9FIpF_kWqWU9cXmFpwsG');"></div>
+</div>
+<h3 class="text-xl font-bold mb-1">Nova</h3>
+<div class="flex gap-2 mb-4">
+<span class="px-2 py-0.5 bg-accent-cyan/20 text-accent-cyan text-[10px] rounded uppercase font-bold tracking-widest">Valorant</span>
+<span class="px-2 py-0.5 bg-slate-700 text-slate-300 text-[10px] rounded uppercase font-bold tracking-widest">CS2</span>
+</div>
+<div class="grid grid-cols-2 w-full gap-4 text-center border-t border-white/5 pt-4">
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-bold">Rating</p>
+<div class="flex items-center justify-center text-gold gap-1">
+<span class="text-sm font-bold">5.0</span>
+<span class="material-symbols-outlined text-[12px] fill-current">star</span>
+</div>
+</div>
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-bold">Orders</p>
+<p class="text-sm font-bold">450+</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Area: Table + Sidebar -->
+<div class="flex flex-col xl:flex-row gap-8">
+<!-- Leaderboard Table -->
+<div class="flex-1">
+<div class="flex items-center justify-between mb-6 px-4">
+<h2 class="text-2xl font-bold">Elite Rankings 4-10</h2>
+<div class="flex gap-2">
+<button class="glass p-2 rounded-lg hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+<button class="glass p-2 rounded-lg hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-sm">sort</span>
+</button>
+</div>
+</div>
+<div class="glass rounded-xl overflow-hidden">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-white/5 text-slate-400 text-xs font-bold uppercase tracking-widest">
+<th class="px-6 py-4">Rank</th>
+<th class="px-6 py-4">Booster Name</th>
+<th class="px-6 py-4">Games</th>
+<th class="px-6 py-4">Win Rate</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Row 4 -->
+<tr class="row-hover transition-all group">
+<td class="px-6 py-5 font-bold text-slate-500 group-hover:text-primary">#4</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-800 border border-white/10" data-alt="Avatar of booster Viper" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCQWD473CfcO4b6jxRzFHEicbgJOwUPVwFcw6Khu6GR2Plo1JOj1acH9-tPD0w_sw_bNHfQLxNN4sW7XMdRFbTD--0Gsdi3AR1JW6U3BwPHsq1qq5WjdJUDi_kpJPyW9FVi3F_M1E5Ofhafir68dtgjoALzKWytC5u0NWz2u0pitAFwr3hTPbjtyl0EZWi_SoOs2nNQUudzom6wKFCnXhXn3QXY7dAxnshOFTW-vgQp5X4gbYHIVjDaP20kya914LIEzEtUGje13v9s');"></div>
+<span class="font-bold">Viper</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex gap-1">
+<span class="text-[9px] bg-white/5 px-2 py-1 rounded text-slate-300">LoL</span>
+<span class="text-[9px] bg-white/5 px-2 py-1 rounded text-slate-300">Val</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-accent-cyan font-bold">98.5%</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs font-medium text-green-500">Available</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-xs font-bold text-primary hover:text-white transition-colors">View Profile</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="row-hover transition-all group">
+<td class="px-6 py-5 font-bold text-slate-500 group-hover:text-primary">#5</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-800 border border-white/10" data-alt="Avatar of booster Ghost" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDoBZe-k-nkkYx4UDigOmkg3LjoSUS0WMOA6SbjEobJda5g99D69iyUP3M0kSfo3j19bfWKUJ3jDdah6aUkAWKAqdtXkX8zxG9os8rpgS7hlspSrvYkcwZ6vszR5E3cmS7lDeKvPeTe8bQ75Fe9yRKxiRiIvngY4FgaA4Ioryty530Ai9fDvydSq0Xal9umBisOrlNFXWVcE1cSb4NAarBQil4BYrD5KwEPG6ttb5Mu7R7Fio-AoK-UJvMEucogTwpNiOYCklcRInWK');"></div>
+<span class="font-bold">Ghost</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex gap-1">
+<span class="text-[9px] bg-white/5 px-2 py-1 rounded text-slate-300">Valorant</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-accent-cyan font-bold">97.9%</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-primary animate-pulse"></div>
+<span class="text-xs font-medium text-primary">In-Game</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-xs font-bold text-primary hover:text-white transition-colors">View Profile</button>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="row-hover transition-all group">
+<td class="px-6 py-5 font-bold text-slate-500 group-hover:text-primary">#6</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-800 border border-white/10" data-alt="Avatar of booster Raven" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDOjXnwHcwAlzskRUfvDZ9_PPVMfo9W6evcNqJHPrurmY8DpJh5nBqWjJKbhLVevSeDWjw2y-pA6qT1XMKnK8FumOpdCS3OR-JU221jGqUG8_TyvYzwhAhgyl3q747MfuWbOKSW2x9RD3MugkO4ePVv5Qu8eicHmD3kz0BjmCqRF3ejcG-8XZIhDNMJrkAIIVtAoqDu1lXBSiegtbAu-tN7vMKKvlAzmXKjnBu1IyPo6kkVER97sR_0O652fryAOCJgMxuKWJpnXsDU');"></div>
+<span class="font-bold">Raven</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex gap-1">
+<span class="text-[9px] bg-white/5 px-2 py-1 rounded text-slate-300">LoL</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-accent-cyan font-bold">97.2%</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs font-medium text-green-500">Available</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-xs font-bold text-primary hover:text-white transition-colors">View Profile</button>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr class="row-hover transition-all group">
+<td class="px-6 py-5 font-bold text-slate-500 group-hover:text-primary">#7</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-800 border border-white/10" data-alt="Avatar of booster Blitz" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuADenDGS27ASSKFLy8JlmyUoH6jMF4zWqJmilD4mBCJoFuYz5w96dvNkLDegMcXLIhrBk2G_snixq8mO6F4qzZtuOdJw-kNy1EZHKQ4Sb0gUG0tYKmIKZ5zKe1XwCt9AqBM2sH9I0B1IqZ81P3QTGbkJ4SN7d0NiD3DTKz9t9LBPMbbLpAEU4SoJSKWmnIp3pK2iF12IR_E8TTpTdyV4_7uHe6vFP60YzLsniyUZqXTVwMs2IQEStz6L1dl6wJzUyX647AtxRp2_GVD');"></div>
+<span class="font-bold">Blitz</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex gap-1">
+<span class="text-[9px] bg-white/5 px-2 py-1 rounded text-slate-300">CS2</span>
+<span class="text-[9px] bg-white/5 px-2 py-1 rounded text-slate-300">Val</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-accent-cyan font-bold">96.8%</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-primary animate-pulse"></div>
+<span class="text-xs font-medium text-primary">In-Game</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-xs font-bold text-primary hover:text-white transition-colors">View Profile</button>
+</td>
+</tr>
+<!-- Row 8 -->
+<tr class="row-hover transition-all group">
+<td class="px-6 py-5 font-bold text-slate-500 group-hover:text-primary">#8</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-800 border border-white/10" data-alt="Avatar of booster Luna" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAywVR2EEgxppgLXYyBocUJUHOxsT6ekzX2ozCc75FnaHJcOUK2iiwCKX0Cpcr7Hn2KuXAN6teMuTIYysIuFUbjK_E7dKBggMt9klAWh8kspdeWJJpEstR2qbOTXwFnhUEj8aQ8sOrtafQet2lIBmfQcsG12F778iwIwPCo6uc87_Aocpqex6BlEn9T9JVpO1RvsEbRIw3OfDosFluouiuO1r1mv7aViKfPMWvdY7I6IP37G8oWIFCMx78Ga5AMHcruy3i7JfFvH1qW');"></div>
+<span class="font-bold">Luna</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex gap-1">
+<span class="text-[9px] bg-white/5 px-2 py-1 rounded text-slate-300">LoL</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-accent-cyan font-bold">96.5%</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs font-medium text-green-500">Available</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-xs font-bold text-primary hover:text-white transition-colors">View Profile</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Sidebar CTA -->
+<div class="xl:w-80">
+<div class="glass rounded-xl p-8 border-primary/20 sticky top-24">
+<div class="size-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-3xl">verified_user</span>
+</div>
+<h3 class="text-2xl font-bold mb-4">Become a Pro</h3>
+<p class="text-slate-400 mb-8 text-sm leading-relaxed">
+                            Think you have what it takes to join the top 1%? We're always looking for world-class talent to join the EloDark roster.
+                        </p>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                High ELO Verified
+                            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Professional conduct
+                            </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                Instant payouts
+                            </li>
+</ul>
+<button class="w-full bg-primary hover:bg-primary/90 transition-all text-white py-4 rounded-xl font-bold text-sm tracking-wide shadow-xl shadow-primary/20">
+                            Apply Now
+                        </button>
+</div>
+<div class="mt-8 glass rounded-xl p-6 bg-gradient-to-br from-accent-cyan/5 to-primary/5 border-accent-cyan/10">
+<div class="flex items-center gap-3 mb-4">
+<div class="size-8 bg-accent-cyan rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-background-dark font-black">support_agent</span>
+</div>
+<h4 class="font-bold">Need a Booster?</h4>
+</div>
+<p class="text-xs text-slate-400 mb-4">Our matchmakers can find the perfect specialist for your specific goals within 5 minutes.</p>
+<a class="text-accent-cyan text-xs font-bold flex items-center gap-2 hover:underline" href="#">
+                            Open Live Chat
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</main>
+<footer class="border-t border-white/10 mt-20 py-12 px-6 lg:px-20 bg-black/40">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="size-6 bg-slate-700 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xs">bolt</span>
+</div>
+<span class="font-bold text-slate-400">EloDark © 2024</span>
+</div>
+<div class="flex gap-8 text-slate-500 text-sm">
+<a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-white transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-white transition-colors" href="#">Cookie Policy</a>
+</div>
+<div class="flex gap-4">
+<div class="size-8 glass rounded-full flex items-center justify-center text-slate-400 hover:text-primary cursor-pointer transition-all">
+<span class="material-symbols-outlined text-lg">public</span>
+</div>
+<div class="size-8 glass rounded-full flex items-center justify-center text-slate-400 hover:text-primary cursor-pointer transition-all">
+<span class="material-symbols-outlined text-lg">groups</span>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

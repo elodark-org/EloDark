@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark Game Selection</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8c2bee",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#0A0A0F",
+                        "card-dark": "#141118",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better aesthetic */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0A0F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #302839;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8c2bee;
+        }
+        
+        .glass-panel {
+            background: rgba(20, 17, 24, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .game-card:hover .game-bg {
+            transform: scale(1.1);
+        }
+        
+        .game-card:hover .glow-border {
+            opacity: 1;
+        }
+        
+        /* Smooth fade for the background image zoom */
+        .game-bg {
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .glow-border {
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen text-white flex flex-col">
+<!-- Navbar -->
+<header class="sticky top-0 z-50 w-full glass-panel border-b border-white/5">
+<div class="max-w-[1280px] mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="text-primary size-8">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+</div>
+<h1 class="text-white text-xl font-bold tracking-tight">EloDark</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-gray-300 hover:text-white text-sm font-medium transition-colors" href="#">Boosting</a>
+<a class="text-gray-300 hover:text-white text-sm font-medium transition-colors" href="#">Coaching</a>
+<a class="text-gray-300 hover:text-white text-sm font-medium transition-colors" href="#">Accounts</a>
+<a class="text-primary hover:text-white text-sm font-medium transition-colors" href="#">Premium</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden md:flex text-gray-300 hover:text-white text-sm font-bold">Log In</button>
+<button class="bg-primary hover:bg-primary/90 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_-5px_#8c2bee]">
+                    Get Started
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow flex flex-col items-center py-16 px-4 md:px-8">
+<div class="w-full max-w-[1100px]">
+<!-- Section Header -->
+<div class="text-center mb-16 relative">
+<h2 class="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight inline-block relative">
+                    Choose Your Game
+                    <span class="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full opacity-80"></span>
+</h2>
+<p class="text-gray-400 text-lg max-w-2xl mx-auto mt-6 font-light">
+                    We boost in the most competitive games worldwide
+                </p>
+</div>
+<!-- Game Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+<!-- Card 1: League of Legends -->
+<div class="group game-card relative h-[420px] rounded-2xl overflow-hidden cursor-pointer">
+<!-- Glow Border Effect -->
+<div class="glow-border absolute inset-0 rounded-2xl border-2 border-primary/50 opacity-0 z-20 shadow-[0_0_30px_-5px_rgba(140,43,238,0.4)] pointer-events-none"></div>
+<!-- Background Image -->
+<div class="game-bg absolute inset-0 bg-cover bg-center" data-alt="Futuristic fantasy battle arena landscape" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQ57yBbvSagW2n78XduHHRhYr7gnvAagpEinC0l_XTQ3f34CDVFxD9acJ74L61R23houojXNJvTfnPizeGF2ZBohkjuZFlOiTORIYeCcE0JvVJ_YynqUUcoM5yuhnXcCyCtJSTRJwd86cv4irfrA-h_v6XV8oI7-k1T4p4RMqFNC7TOvaxnBjhEfLf68ezXVXqGuguyS35_KjWf2LikWqKiIDbdQL2JAh5LPzUjF6cavBMWktWkrBwHRcXlL5TtXEbB_lcXB07nQGx');">
+</div>
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10"></div>
+<!-- Content -->
+<div class="relative z-20 h-full flex flex-col justify-between p-6">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg">Popular</span>
+<div class="glass-panel px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-lg border border-white/10">
+                                From <span class="text-primary text-sm">$4.99</span>
+</div>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-white mb-1 group-hover:text-primary transition-colors">League of Legends</h3>
+<div class="flex items-center gap-2 text-gray-400 text-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<span>View Services</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Valorant -->
+<div class="group game-card relative h-[420px] rounded-2xl overflow-hidden cursor-pointer">
+<div class="glow-border absolute inset-0 rounded-2xl border-2 border-primary/50 opacity-0 z-20 shadow-[0_0_30px_-5px_rgba(140,43,238,0.4)] pointer-events-none"></div>
+<div class="game-bg absolute inset-0 bg-cover bg-center" data-alt="Cyberpunk tactical shooter character silhouette" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDVQSvv2w2NCQS-iCHwskR1oETzbPU3tR8-27PUED-mjdk-tSupxj7eLudv0cbqCUx75okBWe5zRnEVU0XLhv-H8xMH9uVQxOmHC6HXkEBhdRZIoNsSi-y4KOUsuhvq22vl8Gpm7rgXlMZXahSlqbj-zsQg6mS6w1VYTfsc558HpKcMyMxtSqQKOyWYtLnOk7CxnEU-Z4D3oO8lIaSw7oRyP3BZgumlmZ4OX37R8Wk9zDf-XqR7L8DMiNztpOkP2jBTr4x37obKuW19');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10"></div>
+<div class="relative z-20 h-full flex flex-col justify-between p-6">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg">Popular</span>
+<div class="glass-panel px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-lg border border-white/10">
+                                From <span class="text-primary text-sm">$6.99</span>
+</div>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-white mb-1 group-hover:text-primary transition-colors">Valorant</h3>
+<div class="flex items-center gap-2 text-gray-400 text-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<span>View Services</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: CS2 -->
+<div class="group game-card relative h-[420px] rounded-2xl overflow-hidden cursor-pointer">
+<div class="glow-border absolute inset-0 rounded-2xl border-2 border-primary/50 opacity-0 z-20 shadow-[0_0_30px_-5px_rgba(140,43,238,0.4)] pointer-events-none"></div>
+<div class="game-bg absolute inset-0 bg-cover bg-center" data-alt="Tactical military shooter dusty environment" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCUFYWu0aIk5qFnwNA-csG1toEsCMXhTjK9LcFKFjEZFfS5j_RI39UgGI1ukW4PpiRhw7BEhttJuDd-5Tx3IOXMcdG7q6_JhLhGy1H7hjT0kFFH--Xc8OyS1DGXM3sD2sUEPsEflOVWzV7iarP9nPGO79UWVQQyPOBZxux9axnw7O7thDYE5fOTYRwWZY8Lb9dVz57-G7c63xVaEU3FmOx4C-H8HB25mWPs05jTSH39Imo1mxWx7FyKKTVIz6xZl_tOeQX-HVMkN314');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10"></div>
+<div class="relative z-20 h-full flex flex-col justify-between p-6">
+<div class="flex justify-end items-start w-full">
+<div class="glass-panel px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-lg border border-white/10">
+                                From <span class="text-primary text-sm">$5.99</span>
+</div>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-white mb-1 group-hover:text-primary transition-colors">CS2</h3>
+<div class="flex items-center gap-2 text-gray-400 text-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<span>View Services</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4: Dota 2 -->
+<div class="group game-card relative h-[420px] rounded-2xl overflow-hidden cursor-pointer">
+<div class="glow-border absolute inset-0 rounded-2xl border-2 border-primary/50 opacity-0 z-20 shadow-[0_0_30px_-5px_rgba(140,43,238,0.4)] pointer-events-none"></div>
+<div class="game-bg absolute inset-0 bg-cover bg-center" data-alt="Dark fantasy magical forest atmosphere" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAcJ7JPEgHxg2jfXctQsPUTXmWz2yrVkosbkcU26R14Lpkud7DXtn47eawIywY0Jyn3tMsCayOWG3FNQNCdw93KGKblRt0KpkeeLyzmPhGXUo8NZLF9hG5P0agCAWOv-U1Th7RxgM7TG7F2HSw5mmfBYflrsAcSu0y8zghNMmBlDclK9eik9UiU_rJLYM6at3Q180iNg73oYA9m4i3gABGcuIHBmrhK6rmV497NIKE_6Dzb1ICGNwmS6wQDialTNNByEwfhL67eBE0q');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10"></div>
+<div class="relative z-20 h-full flex flex-col justify-between p-6">
+<div class="flex justify-end items-start w-full">
+<div class="glass-panel px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-lg border border-white/10">
+                                From <span class="text-primary text-sm">$4.50</span>
+</div>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-white mb-1 group-hover:text-primary transition-colors">Dota 2</h3>
+<div class="flex items-center gap-2 text-gray-400 text-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<span>View Services</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 5: Marvel Rivals -->
+<div class="group game-card relative h-[420px] rounded-2xl overflow-hidden cursor-pointer">
+<div class="glow-border absolute inset-0 rounded-2xl border-2 border-cyan-500 opacity-0 z-20 shadow-[0_0_30px_-5px_rgba(6,182,212,0.4)] pointer-events-none"></div>
+<div class="game-bg absolute inset-0 bg-cover bg-center" data-alt="Superhero comic book style action scene" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBapfZH6ft4mU3574QFGgg8ADF87YoNfInsdv66_lE4QoWWDiYj-wJsEVcwAicUaxCFvSXNxrVmlYwzcg1FHTt6ByX2QMEXJQilQKNb9Bf6Vea3iRWzOr6uSyzPz7QoZngfu56x64bxXTGhxMY9FLuEKlr396RWSeHSbrBgsSg1fh8X4mvlPOttUWfHzDxo3aGO4RQsnYbYfBkhxB38WUtaz2gcnP8yu2IHNccdA-1L5VVHsJqSQUmCvy_2oFaUEqRvRuKXb6rs2ogq');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10"></div>
+<div class="relative z-20 h-full flex flex-col justify-between p-6">
+<div class="flex justify-between items-start">
+<span class="px-3 py-1 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg">New</span>
+<div class="glass-panel px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-lg border border-white/10">
+                                From <span class="text-cyan-400 text-sm">$9.99</span>
+</div>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors">Marvel Rivals</h3>
+<div class="flex items-center gap-2 text-gray-400 text-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<span>View Services</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 6: Rocket League -->
+<div class="group game-card relative h-[420px] rounded-2xl overflow-hidden cursor-pointer">
+<div class="glow-border absolute inset-0 rounded-2xl border-2 border-primary/50 opacity-0 z-20 shadow-[0_0_30px_-5px_rgba(140,43,238,0.4)] pointer-events-none"></div>
+<div class="game-bg absolute inset-0 bg-cover bg-center" data-alt="Futuristic car soccer neon stadium" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAF0nXYubZoWLEz1iJPOtAyeHastb2sqoVKHM3h2oYsLD5huBrE9vXmVMn-Aki3jE3NAisNMpmmjiIZBQj7WiNHmP7GzwAOwITvFUvdyo5zy7hLx2Qlrk8LsZUaozK7x2XCZy8Q64M0fioD_-1BbJ5jjaAd1U-uC3qWmg2jmJkcpZ0AIzc46byKgA6GFsI7EPmzEP_v_CIaAum2wj2ZARQiZQ4IwLdSYf69szv5NJWhXOqOw4gj4cqhDQZXymNdimvhap3TYrFoD1aM');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10"></div>
+<div class="relative z-20 h-full flex flex-col justify-between p-6">
+<div class="flex justify-end items-start w-full">
+<div class="glass-panel px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-lg border border-white/10">
+                                From <span class="text-primary text-sm">$3.99</span>
+</div>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-white mb-1 group-hover:text-primary transition-colors">Rocket League</h3>
+<div class="flex items-center gap-2 text-gray-400 text-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+<span>View Services</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="flex justify-center mt-12 mb-8">
+<a class="group flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-300" href="#">
+<span class="text-sm font-semibold tracking-wide">View All 13+ Games</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">arrow_right_alt</span>
+</a>
+</div>
+</div>
+</main>
+<!-- Footer Simple -->
+<footer class="border-t border-white/5 bg-[#050508] py-8">
+<div class="max-w-[1280px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="text-gray-500 text-xs">© 2024 EloDark Inc. All rights reserved.</div>
+<div class="flex gap-6">
+<a class="text-gray-500 hover:text-white text-xs transition-colors" href="#">Terms of Service</a>
+<a class="text-gray-500 hover:text-white text-xs transition-colors" href="#">Privacy Policy</a>
+<a class="text-gray-500 hover:text-white text-xs transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>

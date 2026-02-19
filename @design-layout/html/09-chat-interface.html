@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark Booster Chat Interface</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#af25f4",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#0A0A0F",
+                        "surface-dark": "#1c1022",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Space Grotesk', sans-serif; }
+        .glass {
+            background: rgba(28, 16, 34, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(175, 37, 244, 0.1);
+        }
+        .booster-bubble {
+            background: linear-gradient(135deg, #af25f4 0%, #7c19b0 100%);
+            box-shadow: 0 4px 15px rgba(175, 37, 244, 0.3);
+        }
+        .user-bubble {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-border:focus-within {
+            box-shadow: 0 0 0 2px rgba(175, 37, 244, 0.5);
+            border-color: #af25f4;
+        }
+        .pulse-green {
+            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-slate-100 min-h-screen flex flex-col font-display">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between border-b border-white/10 px-8 py-4 bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+<div class="flex items-center gap-12">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white text-2xl">rocket_launch</span>
+</div>
+<h1 class="text-2xl font-bold tracking-tighter text-white">Elo<span class="text-primary">Dark</span></h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Active Orders</a>
+<a class="text-sm font-medium text-primary border-b-2 border-primary pb-1" href="#">Booster Chat</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Marketplace</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-white transition-colors">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></span>
+</div>
+<div class="flex items-center gap-3 pl-6 border-l border-white/10">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold text-white leading-none">Summoner01</p>
+<p class="text-xs text-slate-400 mt-1">Premium Client</p>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary p-0.5">
+<img class="w-full h-full rounded-full object-cover" data-alt="User profile avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3WBpDfTU9c9fvsUL9IP3NYQCsVaTN3iI6SMjp1B7puOStwhwkcdtgSCBLhOZquLLl9buvZAXbaMks8WPptdpHCOpM0p5eXpxigOR79R0glWgYE5M1HPpr5KC20_zck9HlCk6lprCvRGhygKkCbsEi_vbgwvTghEHXEhIelbbC0HM5Z0yFC52Fnf56_9z6kkXtvJsd9Nf6TO6LFy48emqByJwrAf2WcTVoRnVC_ezD-Kuwhfg_JH0mrHemNkRQzQjzumLEfoHTg5eK"/>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 flex overflow-hidden">
+<!-- Left Column: Chat List -->
+<aside class="w-80 border-r border-white/10 flex flex-col bg-background-dark/40">
+<div class="p-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">search</span>
+<input class="w-full bg-white/5 border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Search boosters..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-4 space-y-2 pb-6">
+<!-- Chat Item 1: Active -->
+<div class="flex items-center gap-3 p-3 rounded-xl bg-primary/10 border border-primary/30 cursor-pointer relative group">
+<div class="relative">
+<img class="w-12 h-12 rounded-full border-2 border-primary object-cover" data-alt="Avatar of booster Alpha" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl-K9IenvQuegrMJma1f8lJxtNV7UU6IXc9q_dYmxC7-t2EK45IVgtJVxYCV7Pr02S_ocWDv2bn-nye42MDtPNCCwJdy-qJXXBp6WhPR93s4bCZOIbIN5Wb9u0pU1UiOYA_z3q3oAEtlrCK6kuk7fETTkpn6hNaUKu0P6JQRQ9fBOQq8jV_FsndQfGEeIoMI5TdIA0Biu-XEEtR7gPWHbvNlo41BPmKAAROGglm_2wyIPJunzH-5JRt3oGXpR5e0oFrOQy_AphVtf6"/>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-background-dark pulse-green"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-center mb-0.5">
+<h3 class="text-sm font-bold text-white truncate">Alpha</h3>
+<span class="text-[10px] text-slate-500">2m ago</span>
+</div>
+<p class="text-xs text-slate-300 truncate font-medium">Placement: 5-0 so far!</p>
+<div class="flex items-center mt-1 gap-1">
+<span class="material-symbols-outlined text-[12px] text-primary">sports_esports</span>
+<span class="text-[10px] text-primary/80 uppercase font-bold tracking-wider">League</span>
+</div>
+</div>
+</div>
+<!-- Chat Item 2 -->
+<div class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 border border-transparent cursor-pointer transition-all grayscale opacity-70 hover:grayscale-0 hover:opacity-100">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Avatar of booster Phantom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQAMfZ9ZvThxAwT0hyRm6OjszjcK6Lh8s6mhoeE631KiwOovHRh7FTBKRGG9DcRsu1pgZdH6xxFTPkQLe4x38eol3NMOdLsWGaRFcVjF8iGrGp6MvvI7yYmPAh8wJe6Qt3Er2RFExu4371Fh79eySR3YeUL5wA0Iib3ypvvAVPx2HrP8HLmiHgAJQPlWi0GeMqyLj1EmrHrSfm1p6VXxCfkEIdi_zuwIb8xtZgtoYfO8dUCaWqF3HVXg5TqlxgIfpcofqquAVsV0IU"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-center mb-0.5">
+<h3 class="text-sm font-bold text-white truncate">Phantom</h3>
+<span class="text-[10px] text-slate-500">1h ago</span>
+</div>
+<p class="text-xs text-slate-500 truncate">Valorant session completed.</p>
+<div class="flex items-center mt-1 gap-1">
+<span class="material-symbols-outlined text-[12px] text-slate-400">shield</span>
+<span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Valorant</span>
+</div>
+</div>
+</div>
+<!-- Chat Item 3 -->
+<div class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 border border-transparent cursor-pointer transition-all grayscale opacity-70 hover:grayscale-0 hover:opacity-100">
+<div class="relative">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Avatar of booster Vortex" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_N5Xt1o0NS4WYwett2rw5SnXVTjJ_vonUqdYqwBCcKvAD4yCLjZ_L0-MzOftUPVfWAuNUdSFb8IPB4Q-JVMv3K7sUCE5_ll4ChASlYmZ8Dw26SM2ThXfDudCpwnPjrT6mLBspPEbe5QdhB1bHUMVWZUdk_uqUYdNNRcV5rLa1Hkvqb4XBZ4cibtN-wgTVLzMb3hCchcaLuK4Yt0dUhhmsGR7GvI_4KdLgR6hM8Il332sjOrFeZNVye0CKMp0zCpAdpeO4Y4wQ1mzQ"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-center mb-0.5">
+<h3 class="text-sm font-bold text-white truncate">Vortex</h3>
+<span class="text-[10px] text-slate-500">Yesterday</span>
+</div>
+<p class="text-xs text-slate-500 truncate">Thanks for the feedback!</p>
+<div class="flex items-center mt-1 gap-1">
+<span class="material-symbols-outlined text-[12px] text-slate-400">group</span>
+<span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Overwatch</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Middle Column: Main Chat Window -->
+<section class="flex-1 flex flex-col glass overflow-hidden m-4 rounded-xl relative">
+<!-- Chat Header -->
+<div class="flex items-center justify-between p-4 border-b border-white/10 bg-white/5 backdrop-blur-sm">
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<h2 class="text-lg font-bold text-white leading-tight">Alpha</h2>
+<span class="material-symbols-outlined text-blue-400 text-sm">verified</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 bg-green-500 rounded-full pulse-green"></div>
+<span class="text-xs text-slate-300 font-medium">Live Status</span>
+<span class="text-slate-500 text-xs">•</span>
+<span class="text-xs text-slate-400">League of Legends</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg text-sm transition-all border border-white/5">
+<span class="material-symbols-outlined text-sm">videocam</span>
+<span>Request Stream</span>
+</button>
+<button class="p-2 hover:bg-white/10 rounded-lg text-slate-400 transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Chat Messages -->
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<!-- System Message -->
+<div class="flex justify-center">
+<span class="text-[10px] uppercase font-bold tracking-widest text-slate-500 bg-white/5 px-3 py-1 rounded-full">Conversation Started Today</span>
+</div>
+<!-- Booster Message -->
+<div class="flex gap-3 max-w-[80%]">
+<img class="w-8 h-8 rounded-full object-cover self-end" data-alt="Booster avatar Alpha" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwsD-W_XdPUfYnaRp2l_YR0LKbMiBLxPcLExB-9m4minueaPela9ncrs-xgNIkNvZF-FSy1RC6TYQCVQwuKMSYsI4Iq6bAjZ5l9qmq24ALHKPuKj2isLev_kJD39J0_dY6d9yMAI4gxfjV-L2A_iwHgPmxreTuEd0o2yTkHLwX1ujQY22cfr0unw9lylw7kI_-5ao2oFouuD85J4X9ZJev20pk8rH4y-1fDTU3MmKUTBEiRhQj3nMBLTJqhPpDzVGZGxciu6vxXAXB"/>
+<div class="flex flex-col gap-1">
+<span class="text-[11px] text-slate-500 ml-1">Alpha • 10:24 AM</span>
+<div class="booster-bubble text-white text-sm py-3 px-4 rounded-2xl rounded-bl-none">
+                            Hey! Just finished the placement matches. We went 5-0 as promised. 
+                        </div>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex flex-col gap-1 items-end ml-auto max-w-[80%]">
+<span class="text-[11px] text-slate-500 mr-1">You • 10:25 AM</span>
+<div class="user-bubble text-slate-100 text-sm py-3 px-4 rounded-2xl rounded-br-none">
+                        That was fast! Can you share the result screenshot for the records?
+                    </div>
+</div>
+<!-- Booster Message with Attachment -->
+<div class="flex gap-3 max-w-[80%]">
+<img class="w-8 h-8 rounded-full object-cover self-end" data-alt="Booster avatar Alpha" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSbpcE-QI7w1dISJPZ--kS4d0sf64LoovF4buDuLc86vGY46s4XWYO5kIHdxbxeQCVAzB3bwl7iEQbMbrWwv62gnoZh7J-605suGn3gKe-3VIpSWYIp381Bgj5kFFskaYeadBcNp9nq8F69Sk83jhQ7yiGIPARigU8F-i3c6FzdvgPh1x_hQdyM4iUGV35SK0EPQxbLSM29LTJ44eL65vGNxL_aGtLp0m45XnhJKxxNvR924ss4w8ftX4r_nA2coBUsmpV8zAWBwFE"/>
+<div class="flex flex-col gap-2">
+<span class="text-[11px] text-slate-500 ml-1">Alpha • 10:27 AM</span>
+<div class="booster-bubble text-white text-sm py-3 px-4 rounded-2xl rounded-bl-none">
+                            Of course, here it is. Ready for the next division boost whenever you are!
+                        </div>
+<!-- Attachment Widget -->
+<div class="bg-black/40 border border-white/10 rounded-xl overflow-hidden max-w-xs group relative">
+<div class="h-40 bg-gradient-to-tr from-slate-900 to-primary/20 flex items-center justify-center relative">
+<span class="material-symbols-outlined text-4xl text-white/20">image</span>
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<button class="bg-primary hover:bg-primary/80 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined text-white">download</span>
+</button>
+</div>
+<img class="absolute inset-0 w-full h-full object-cover opacity-60" data-alt="Gaming match results screenshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_OHzhM_JFOHRi2KHihY9xE-aCgvOkueqnJ-Wcca-EX9zTQ5otTGxlpQOJ0vlYbr6NBl2gkJdP5isZvYWIuBf4FZiZe--7xZUpgdOPmebfmMteSWq6aTePpTUXWHvBe1fmawkWgGq_zvAn16AsaAI8Q-Ff3_nP7G86wQt_9E9m3qfDtorbmRrC6In_0WNV9YaH-T2a6bkfi9GFCQqQOgwfpI2G4hPw0-CurmTElNcvubAlxmo8DPyEWe8HRZhZiWc2jK-3VOs5c9zr"/>
+</div>
+<div class="p-3 flex items-center justify-between">
+<div class="flex items-center gap-2 overflow-hidden">
+<span class="material-symbols-outlined text-primary text-sm">insert_drive_file</span>
+<p class="text-[11px] text-slate-300 truncate">Match_Result_P5.png</p>
+</div>
+<span class="text-[10px] text-slate-500 uppercase">1.2 MB</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat Footer: Input Area -->
+<div class="p-4 border-t border-white/10 bg-background-dark/80">
+<div class="flex items-end gap-3 glass p-2 rounded-xl glow-border border border-white/10 transition-all">
+<div class="flex items-center gap-1 mb-1">
+<button class="p-2 hover:bg-white/10 rounded-lg text-slate-400 transition-colors">
+<span class="material-symbols-outlined text-xl">add_circle</span>
+</button>
+<button class="p-2 hover:bg-white/10 rounded-lg text-slate-400 transition-colors">
+<span class="material-symbols-outlined text-xl">mood</span>
+</button>
+</div>
+<div class="flex-1">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-sm text-slate-100 resize-none py-2 placeholder:text-slate-500" placeholder="Type your message..." rows="1"></textarea>
+</div>
+<div class="flex items-center gap-1 mb-1">
+<button class="p-2 hover:bg-white/10 rounded-lg text-slate-400 transition-colors">
+<span class="material-symbols-outlined text-xl">mic</span>
+</button>
+<button class="w-10 h-10 bg-primary hover:bg-primary/80 text-white rounded-lg flex items-center justify-center transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-xl">send</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Sidebar Info -->
+<aside class="w-72 p-4 hidden lg:flex flex-col gap-6">
+<!-- Booster Stats Card -->
+<div class="glass p-5 rounded-xl border border-white/10">
+<h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Booster Intel</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-yellow-500 text-sm">star</span>
+<span class="text-sm font-bold text-white">4.9</span>
+</div>
+<span class="text-[10px] text-slate-500">Booster Rating</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">shopping_cart</span>
+<span class="text-sm font-bold text-white">1,200+</span>
+</div>
+<span class="text-[10px] text-slate-500">Total Orders</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-green-500 text-sm">verified_user</span>
+<span class="text-sm font-bold text-white">Verified</span>
+</div>
+<span class="text-[10px] text-slate-500">Identity Check</span>
+</div>
+</div>
+<button class="w-full mt-6 bg-white/5 hover:bg-white/10 text-white text-xs font-bold py-2.5 rounded-lg border border-white/5 transition-all">
+                    View Full Profile
+                </button>
+</div>
+<!-- Active Order Summary -->
+<div class="glass p-5 rounded-xl border border-white/10">
+<h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Active Session</h3>
+<div class="bg-primary/5 rounded-lg p-3 border border-primary/20 mb-4">
+<p class="text-[11px] text-primary font-bold uppercase mb-1">League of Legends</p>
+<p class="text-sm text-white font-medium">Iron IV → Silver I</p>
+<div class="w-full bg-white/5 h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-primary h-full w-[65%] shadow-[0_0_8px_rgba(175,37,244,0.5)]"></div>
+</div>
+<div class="flex justify-between mt-2">
+<span class="text-[10px] text-slate-500">65% Complete</span>
+<span class="text-[10px] text-primary">ETA: 2 Days</span>
+</div>
+</div>
+</div>
+<!-- Report Button (Pushed to bottom) -->
+<div class="mt-auto">
+<button class="w-full group flex items-center justify-center gap-2 text-slate-500 hover:text-red-400 text-xs font-bold transition-colors">
+<span class="material-symbols-outlined text-sm">report</span>
+<span>Report Issue</span>
+</button>
+</div>
+</aside>
+</main>
+</body></html>

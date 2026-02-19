@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark LoL Order Configurator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8c2bee",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#0A0A0F",
+                        "gold": "#FFD700",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass {
+            background: rgba(25, 16, 34, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(140, 43, 238, 0.2);
+        }
+        .rank-grid-overlay {
+            background-image: radial-gradient(circle at 2px 2px, rgba(140, 43, 238, 0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(140, 43, 238, 0.4);
+        }
+        .gold-glow {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+        .splash-bg {
+            background: linear-gradient(to bottom, rgba(10, 10, 15, 0.9), rgba(10, 10, 15, 0.95)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-white selection:bg-primary/40 splash-bg min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 glass border-b border-primary/10 px-6 py-4">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center neon-glow">
+<span class="material-symbols-outlined text-white">bolt</span>
+</div>
+<h1 class="text-2xl font-bold tracking-tight">EloDark <span class="text-primary text-sm align-top">LOL</span></h1>
+</div>
+<div class="h-6 w-px bg-white/10 mx-2"></div>
+<div class="flex items-center gap-2 px-3 py-1 bg-green-500/10 rounded-full border border-green-500/20">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+</span>
+<span class="text-xs font-medium text-green-400">142 Boosters Online</span>
+</div>
+</div>
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Boosting</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Coaching</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Accounts</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Reviews</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="px-5 py-2 text-sm font-bold border border-white/10 rounded-lg hover:bg-white/5 transition-all">Login</button>
+<button class="px-5 py-2 text-sm font-bold bg-primary rounded-lg hover:opacity-90 transition-all neon-glow">Register</button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-10 rank-grid-overlay">
+<!-- Hero Title Section -->
+<div class="mb-12">
+<h2 class="text-4xl font-black mb-2">League of Legends Boosting</h2>
+<p class="text-white/60">Configure your order and reach your dream rank in days.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Configurator -->
+<div class="lg:col-span-8 space-y-10">
+<!-- Current Rank Section -->
+<section>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">military_tech</span>
+<h3 class="text-xl font-bold">Select Your Current Rank</h3>
+</div>
+<div class="grid grid-cols-3 sm:grid-cols-5 gap-4">
+<!-- Rank Cards -->
+<div class="group cursor-pointer">
+<div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-4 border-2 border-transparent group-hover:border-primary/40 transition-all">
+<img alt="Iron Rank" class="w-16 h-16 mb-2 opacity-60 group-hover:opacity-100 transition-opacity" data-alt="Icon of Iron league rank insignia" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCo5Z1WTtojOScmWJ_5XqUNgcl_2w2Y2pQ6xkpCPpgiMHq5-TUxwFezSbq2MNZuFkXIbaC-PTOOgWLgTJJamWbncKTwQdwoz-Y6s5j8gmYmW3n1scieZtHK3V6RYlABfjc3_oUYoqvv3tMQaCCk4uVade5fhO5CUEHHeHflNevh1v8CzklH2NEDVKVG589dko-sdO80RGJZUwxeZwtfwqhS1SZo8c0OkMgZOtMHvfiuRNS517kLlOHfaN4TbZlELAhg8p8qMcDmN2Qc"/>
+<span class="text-xs font-bold uppercase tracking-widest text-white/40 group-hover:text-white">Iron</span>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-4 border-2 border-transparent group-hover:border-primary/40 transition-all">
+<img alt="Bronze Rank" class="w-16 h-16 mb-2 opacity-60 group-hover:opacity-100 transition-opacity" data-alt="Icon of Bronze league rank insignia" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYOnL1DBWNXb4HDLrCWLfEjdM3YUVGgVLUF0-DqrbKvGiTkjZgnAQi9Il7NTiBsQsElyqQx5jlxtgl7ThXZ6GITQRCplYQa3QYa9WuqcKDsVz91uqurRDC4pAx-SdFhQy6-AwaUU0JhTGEQHIBfauMU6lXIdMbRbHKO7tN6TaJJjTsyfv1GR_F_mAPyR3Mhe6g61rsxugUJ1e9XVZiRYHVKqaY9vUkgSvSj-UGOAFD-XYme0f1J9H-8FW1o-HuV6jVGEsjw6JPb7JS"/>
+<span class="text-xs font-bold uppercase tracking-widest text-white/40 group-hover:text-white">Bronze</span>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-4 border-2 border-transparent group-hover:border-primary/40 transition-all">
+<img alt="Silver Rank" class="w-16 h-16 mb-2 opacity-60 group-hover:opacity-100 transition-opacity" data-alt="Icon of Silver league rank insignia" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN75JN_zghoWh2ncebHSh7eqysaR8MOsvn96ohyDnfzjhRm6tziWlGpSE3pP4ezC5LBgESkkRFDvlndPJ9t9NVm1fFGXC01c0ZpO-d0rl9QJVCyl0F-sQEc7Lk6jLdVpMDn7RTbYZAQPhkCa-oJaPrGvYX-Qob2ajx34FiNUjX3Z1FSkZDjOXKc9Bq085PzTJKLupANzXE4g-KWW7wihFx-2VGnJeYI9mywQPurqYNiqn2-fRi40lc2Hrx0BbF0EaRdDIAgMbdJnQt"/>
+<span class="text-xs font-bold uppercase tracking-widest text-white/40 group-hover:text-white">Silver</span>
+</div>
+</div>
+<!-- Active Rank -->
+<div class="group cursor-pointer">
+<div class="aspect-square bg-primary/20 rounded-xl flex flex-col items-center justify-center p-4 border-2 border-primary neon-glow transition-all">
+<img alt="Gold Rank" class="w-20 h-20 mb-2" data-alt="Icon of Gold league rank insignia with glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMNfjcoBGgxvz7InbzNZKMVCq-KUsbvUrzP_FNNczKivoE6m28xJHlaC0_f7B5BCDP_V5MU3TIBVvaBQzTUiilnUMWu_-n2EhUyM4kSk0uN3VJu9kWrWfUPHH5mz_TAl-a2kJJD3NoXIffle6u3KJ7U4ga7Jj99eV9Y1LMduvJazKbf9ontxjRP-tnAOW5AYJCh7rvTI6M65a2cN9FHfpIrg4xQPQWepekOyXixLZFXv4g1Q4U0Jx2EHgzO5YnMjFv7Lxx_zJkkWtJ"/>
+<span class="text-xs font-bold uppercase tracking-widest text-primary">Gold IV</span>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="aspect-square glass rounded-xl flex flex-col items-center justify-center p-4 border-2 border-transparent group-hover:border-primary/40 transition-all">
+<img alt="Platinum Rank" class="w-16 h-16 mb-2 opacity-60 group-hover:opacity-100 transition-opacity" data-alt="Icon of Platinum league rank insignia" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYb70dbmyima1oWD-G48K8xALRz-xImVtRqsmJ5PFiwsb8PYqTqvD4n45mFKuD39nYmJQTMK1MrMplgpG1Rxp-BUM9QhEsY-7uWEieMWZ0OfvcUNE0BDQdkM-1f5H0pEVSc5PBfHVZRHtSMbBr7L15EMAxJkp1l3kMVCQTC4R9XzFWiYzl6hl9Iquc4k-gMOIHC6xi3NIt_-lwdOwSbTr-IcVBqx0aFA6_l6PNT2phuEzzI9rm-HMjqyEgdxRPlbsZUeCOsuKx9mBC"/>
+<span class="text-xs font-bold uppercase tracking-widest text-white/40 group-hover:text-white">Platinum</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Desired Rank Slider -->
+<section class="glass p-8 rounded-2xl">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">stars</span>
+<h3 class="text-xl font-bold">Desired Rank</h3>
+</div>
+<div class="text-primary font-bold text-lg">Platinum I</div>
+</div>
+<div class="relative pt-6 pb-2">
+<input class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-primary" max="10" min="1" type="range" value="7"/>
+<div class="flex justify-between mt-4 text-[10px] font-bold text-white/30 uppercase tracking-tighter">
+<span>Iron</span>
+<span>Bronze</span>
+<span>Silver</span>
+<span>Gold</span>
+<span class="text-primary">Platinum</span>
+<span>Emerald</span>
+<span>Diamond</span>
+<span>Master</span>
+<span>Grandmaster</span>
+<span>Challenger</span>
+</div>
+</div>
+</section>
+<!-- Boost Options Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Toggle Card 1 -->
+<div class="glass p-5 rounded-xl border border-white/5 hover:border-primary/30 transition-all flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-white/5 rounded-lg text-primary">
+<span class="material-symbols-outlined">group</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Duo Queue</h4>
+<p class="text-xs text-white/50">Play with the booster</p>
+</div>
+</div>
+<label class="inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="relative w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Toggle Card 2 -->
+<div class="glass p-5 rounded-xl border border-white/5 hover:border-primary/30 transition-all flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-white/5 rounded-lg text-primary">
+<span class="material-symbols-outlined">person_pin</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Select Role</h4>
+<p class="text-xs text-white/50">Mid, Top, Jung, etc.</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-bold bg-primary/20 text-primary px-2 py-1 rounded">+15%</span>
+<label class="inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="relative w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<!-- Toggle Card 3 (Premium) -->
+<div class="glass p-5 rounded-xl border border-gold/20 hover:border-gold/40 transition-all flex items-center justify-between relative overflow-hidden">
+<div class="absolute top-0 right-0 bg-gold text-black text-[8px] font-black px-2 py-0.5 rounded-bl-lg uppercase tracking-wider">VIP</div>
+<div class="flex items-center gap-4">
+<div class="p-3 bg-gold/10 rounded-lg text-gold">
+<span class="material-symbols-outlined">rocket_launch</span>
+</div>
+<div>
+<h4 class="font-bold text-sm text-gold">Express Order</h4>
+<p class="text-xs text-white/50">Priority in queue</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-bold bg-gold/20 text-gold px-2 py-1 rounded">+25%</span>
+<label class="inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="relative w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
+</label>
+</div>
+</div>
+<!-- Toggle Card 4 -->
+<div class="glass p-5 rounded-xl border border-white/5 hover:border-primary/30 transition-all flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-white/5 rounded-lg text-primary">
+<span class="material-symbols-outlined">visibility_off</span>
+</div>
+<div>
+<h4 class="font-bold text-sm">Offline Mode</h4>
+<p class="text-xs text-white/50">Hide from friend list</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-bold bg-green-500/20 text-green-400 px-2 py-1 rounded">FREE</span>
+<label class="inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="relative w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Sticky Summary -->
+<div class="lg:col-span-4 lg:sticky lg:top-28">
+<div class="glass rounded-2xl p-6 border border-primary/30 neon-glow relative overflow-hidden">
+<!-- Accent background glow -->
+<div class="absolute -top-12 -right-12 size-40 bg-primary/20 blur-[80px]"></div>
+<h3 class="text-xl font-bold mb-6 flex items-center justify-between">
+                        Order Summary
+                        <span class="material-symbols-outlined text-white/20">receipt_long</span>
+</h3>
+<div class="space-y-4 mb-8">
+<div class="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/5">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Current</span>
+<span class="text-sm font-bold">Gold IV</span>
+</div>
+<span class="material-symbols-outlined text-primary/40 text-sm">arrow_forward</span>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Desired</span>
+<span class="text-sm font-bold text-primary">Platinum I</span>
+</div>
+</div>
+<div class="space-y-3 px-1">
+<div class="flex justify-between text-sm">
+<span class="text-white/60">Base Boosting Fee</span>
+<span class="font-medium">$32.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-white/60">Duo Queue (Standard)</span>
+<span class="font-medium">$13.99</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-white/60">Offline Mode</span>
+<span class="text-green-400 font-bold">FREE</span>
+</div>
+<div class="border-t border-white/10 pt-3 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-xs text-primary">schedule</span>
+<span class="text-xs text-white/60">Est. Completion</span>
+</div>
+<span class="text-xs font-bold">2 - 4 Days</span>
+</div>
+</div>
+</div>
+<div class="mb-6">
+<div class="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1">Total Amount</div>
+<div class="text-4xl font-black text-white">$45.99</div>
+</div>
+<button class="w-full py-4 bg-gradient-to-r from-primary to-[#4a148c] rounded-xl font-bold text-lg hover:shadow-[0_0_25px_rgba(140,43,238,0.5)] transition-all flex items-center justify-center gap-2 mb-4 group">
+                        Checkout Now
+                        <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">shopping_cart_checkout</span>
+</button>
+<div class="flex items-center justify-center gap-4 py-2 opacity-40 grayscale hover:grayscale-0 transition-all cursor-default">
+<span class="material-symbols-outlined text-lg">verified_user</span>
+<span class="material-symbols-outlined text-lg">shield_with_heart</span>
+<span class="material-symbols-outlined text-lg">lock</span>
+</div>
+</div>
+<!-- Trust Signal Card -->
+<div class="mt-6 glass p-4 rounded-xl border border-white/5 flex items-center gap-4">
+<div class="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<div>
+<h4 class="text-sm font-bold">24/7 Priority Support</h4>
+<p class="text-[11px] text-white/50">Live chat is available for this order.</p>
+</div>
+<button class="ml-auto p-2 text-white/20 hover:text-white transition-colors">
+<span class="material-symbols-outlined">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Decorative -->
+<footer class="max-w-7xl mx-auto px-6 py-12 border-t border-white/5 text-center mt-20">
+<p class="text-white/20 text-xs font-medium uppercase tracking-[0.3em]">EloDark - League of Legends Professional Boosting Services</p>
+</footer>
+</body></html>

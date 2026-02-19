@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark Referral Rewards Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#af25f4",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#0A0A0F",
+                        "accent-cyan": "#22d3ee",
+                        "accent-gold": "#fbbf24",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(175, 37, 244, 0.15) 0%, transparent 50%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill-opacity='0.03' fill='%23af25f4' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #af25f4, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .progress-glow {
+            box-shadow: 0 0 20px rgba(175, 37, 244, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="border-b border-white/10 px-6 py-4 glass sticky top-0 z-50">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-10 bg-primary rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(175,37,244,0.5)]">
+<span class="material-symbols-outlined text-white">rocket_launch</span>
+</div>
+<h1 class="text-2xl font-bold tracking-tighter text-white">Elo<span class="text-primary">Dark</span></h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Services</a>
+<a class="text-primary border-b-2 border-primary pb-1" href="#">Rewards</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Support</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-lg hover:bg-white/5 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-white/10">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-white uppercase tracking-wider">Elite Member</p>
+<p class="text-[10px] text-slate-400">ID: 88219</p>
+</div>
+<img alt="User Profile" class="size-10 rounded-full border-2 border-primary/50" data-alt="Cyberpunk style user profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPAAdGbk0T-dmIY2w0UZEvIsHfxEEJ_wy3SJyI49BdbzmBdJ7kpdJn6xymJec_gXMWOzP61oRqETl04dEBl6WGaDFhAr1akIBJp9EWju1ozaUAiQTvT2zFsVow-qN7z2Gs38JUcc2dCRRDH-WawRctTXNzGOjQ-74eCmAiYiV5HJJQmhke6QbSUoKkeetA97L9E0OxJH3HTy8WMlIw7v1Jth_mkELgPPyQ4QA9sTascFl6aD7yRoEliCsvSHqdmv7L6UDVVw3tY3Dj"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-10">
+<!-- Hero Section -->
+<section class="mb-12 text-center md:text-left">
+<h2 class="text-5xl md:text-6xl font-black mb-4 text-gradient">Recruit Your Squad</h2>
+<p class="text-lg text-slate-400 max-w-2xl">Earn free boosts and exclusive rewards for every friend you invite. Build the ultimate team and climb the ranks together.</p>
+</section>
+<!-- Referral Link Card -->
+<div class="glass rounded-xl p-8 mb-12 shadow-2xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/20 transition-all"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="flex-1">
+<h3 class="text-white text-xl font-bold mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">link</span>
+                        Your Unique Referral Link
+                    </h3>
+<div class="flex items-center bg-black/40 rounded-lg p-1 border border-white/5">
+<span class="px-4 text-slate-300 font-mono text-sm overflow-hidden text-ellipsis whitespace-nowrap">elodark.gg/ref/elite-gamer-2024</span>
+<button class="bg-primary hover:bg-primary/80 text-white font-bold py-3 px-8 rounded-lg transition-all flex items-center gap-2 shadow-[0_0_20px_rgba(175,37,244,0.3)]">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+                            Copy Link
+                        </button>
+</div>
+</div>
+<div class="flex gap-4 md:border-l border-white/10 md:pl-8">
+<div class="text-center">
+<p class="text-xs text-slate-500 uppercase tracking-widest font-bold mb-1">Total Earned</p>
+<p class="text-3xl font-black text-white">$150.00</p>
+</div>
+<div class="text-center pl-4 border-l border-white/10">
+<p class="text-xs text-slate-500 uppercase tracking-widest font-bold mb-1">Success Rate</p>
+<p class="text-3xl font-black text-accent-cyan">84%</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Reward Tiers Track -->
+<section class="mb-16">
+<h3 class="text-2xl font-bold mb-10 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">military_tech</span>
+                Reward Tiers
+            </h3>
+<div class="relative px-4">
+<!-- Progress Background Track -->
+<div class="absolute top-8 left-10 right-10 h-1 bg-white/5 rounded-full"></div>
+<!-- Active Progress -->
+<div class="absolute top-8 left-10 w-[45%] h-1 bg-primary rounded-full progress-glow"></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+<!-- Tier 1 -->
+<div class="flex flex-col items-center text-center">
+<div class="size-16 rounded-xl bg-primary flex items-center justify-center text-white shadow-[0_0_30px_rgba(175,37,244,0.5)] mb-4 border-2 border-white/20">
+<span class="material-symbols-outlined text-3xl">hexagon</span>
+</div>
+<h4 class="font-bold text-white">Tier 1: Bronze</h4>
+<p class="text-xs text-primary font-bold mb-2">1 Referral</p>
+<p class="text-sm text-slate-400 bg-white/5 px-4 py-2 rounded-full border border-white/10">$10 Store Credit</p>
+</div>
+<!-- Tier 2 -->
+<div class="flex flex-col items-center text-center">
+<div class="size-16 rounded-xl bg-slate-700 flex items-center justify-center text-white/50 mb-4 border-2 border-white/5">
+<span class="material-symbols-outlined text-3xl">hexagon</span>
+</div>
+<h4 class="font-bold text-slate-300">Tier 2: Silver</h4>
+<p class="text-xs text-slate-500 font-bold mb-2">5 Referrals</p>
+<p class="text-sm text-slate-400 bg-white/5 px-4 py-2 rounded-full border border-white/10">Priority Boost</p>
+</div>
+<!-- Tier 3 -->
+<div class="flex flex-col items-center text-center">
+<div class="size-16 rounded-xl bg-slate-800 flex items-center justify-center text-white/30 mb-4 border-2 border-white/5">
+<span class="material-symbols-outlined text-3xl">hexagon</span>
+</div>
+<h4 class="font-bold text-slate-500">Tier 3: Gold</h4>
+<p class="text-xs text-slate-600 font-bold mb-2">10 Referrals</p>
+<p class="text-sm text-slate-400 bg-white/5 px-4 py-2 rounded-full border border-white/10">1 Division Free</p>
+</div>
+<!-- Tier 4 -->
+<div class="flex flex-col items-center text-center">
+<div class="size-16 rounded-xl bg-slate-900 flex items-center justify-center text-accent-gold/40 mb-4 border-2 border-accent-gold/10">
+<span class="material-symbols-outlined text-3xl">military_tech</span>
+</div>
+<h4 class="font-bold text-slate-600">Tier 4: VIP</h4>
+<p class="text-xs text-slate-700 font-bold mb-2">25 Referrals</p>
+<p class="text-sm text-accent-gold bg-accent-gold/5 px-4 py-2 rounded-full border border-accent-gold/20">'Elite Dark' VIP Status</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Lower Section: Stats & History -->
+<div class="grid lg:grid-cols-3 gap-8">
+<!-- Sidebar Stats -->
+<div class="lg:col-span-1 space-y-6">
+<div class="glass rounded-xl p-6 border-l-4 border-primary">
+<h4 class="text-white font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">analytics</span>
+                        Referral Stats
+                    </h4>
+<div class="space-y-4">
+<div class="flex justify-between items-center p-3 rounded-lg bg-white/5">
+<span class="text-slate-400 text-sm">Active Invites</span>
+<span class="text-white font-black">12</span>
+</div>
+<div class="flex justify-between items-center p-3 rounded-lg bg-white/5">
+<span class="text-slate-400 text-sm">Pending Orders</span>
+<span class="text-white font-black">3</span>
+</div>
+<div class="flex justify-between items-center p-3 rounded-lg bg-white/5">
+<span class="text-slate-400 text-sm">Rewards Claimed</span>
+<span class="text-white font-black">2 / 4</span>
+</div>
+</div>
+</div>
+<div class="glass rounded-xl p-6 relative overflow-hidden group border border-accent-gold/20">
+<div class="absolute -top-10 -right-10 size-32 bg-accent-gold/10 rounded-full blur-3xl group-hover:bg-accent-gold/20 transition-all"></div>
+<div class="relative z-10">
+<h4 class="text-accent-gold font-bold mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined">stars</span>
+                            VIP Benefits
+                        </h4>
+<p class="text-xs text-slate-400 mb-4 leading-relaxed">Unlock 'Elite Dark' VIP to gain access to exclusive boosters and a permanent 15% store discount.</p>
+<div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-accent-gold h-full w-1/4"></div>
+</div>
+<p class="text-[10px] mt-2 text-right text-slate-500">6 referrals until VIP unlock</p>
+</div>
+</div>
+</div>
+<!-- Referral History Table -->
+<div class="lg:col-span-2">
+<div class="glass rounded-xl overflow-hidden">
+<div class="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+<h4 class="text-white font-bold">Referral History</h4>
+<button class="text-xs text-primary font-bold hover:underline">Download Report</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-white/5 text-xs text-slate-500 uppercase tracking-wider font-black">
+<tr>
+<th class="px-6 py-4">Friend Name</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4">Reward Earned</th>
+<th class="px-6 py-4">Date</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5 text-sm">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+<img alt="Avatar" class="size-8 rounded-full" data-alt="Small circular user avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT8npWyPvyczCqSggxa_PcDWj3zs_ahEcYzlSOLcAwrmA9NyLYI5Vcl1jVdu0VHx7N4V02b3TAnIhYZA2X6M1thisCVl4w4K29A4bgCJNXc3_XGauv40RGKg_4oXbJw6wHMX_OKjSNsvgFjyxJ3yjDwRdaj_h2P4SrW_oDMLYskFM3JWW0iFGQKM54aebFySmYlBMKuVfEFxl_sfapVQy8m8N4sz6INRFdqy8bkMiBcayeEe91wSMzpHT9Y2Pr3H7cNSrBq5xWISl7"/>
+                                        X-Slayer-99
+                                    </td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20 uppercase tracking-tighter">Ordered</span>
+</td>
+<td class="px-6 py-4 text-slate-300 font-mono">$10.00 Credit</td>
+<td class="px-6 py-4 text-slate-500">Oct 24, 2023</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+<img alt="Avatar" class="size-8 rounded-full" data-alt="Small circular user avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfM1xb4dXP31txFHc7Gy5J5cnPqc73hSdSEYQa4M-SU-qngBD2CH4VXg-Y6nJYmf3LcXEPOl82UGiCt49mCgO-R4MvK5Z4mMp4DWA_sb9l5XVOzIwSGxjppjXZ-wGtxAZvll8jO-Y2vrrJkT6FkQzmwOGfkHRa7XglrcyGv5jtMyHK6ukXySROEXSpZgLEaxHW-02BP5Y7KNbIM3w4nZ8g1gK76TeAbKiB-VcCpnnSjHu21mKYJSQb8GG17XlxO_yKjUbB0gyXPEPM"/>
+                                        ShadowStep_
+                                    </td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold border border-primary/20 uppercase tracking-tighter">Signed Up</span>
+</td>
+<td class="px-6 py-4 text-slate-300 font-mono">Pending...</td>
+<td class="px-6 py-4 text-slate-500">Oct 26, 2023</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+<img alt="Avatar" class="size-8 rounded-full" data-alt="Small circular user avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdsMleuUstD8f8bd2aGrX0v_GhmL1ctw0mEaOdIBXAjNsGvCYbzglnW91MZpTwa7rwssiZH8U898U5GHsLoVB5AWi735tW8klXkVEerjfcfeO9UZ4Cxh0AWXcsoXMZo4kauJf4JNQg99arvHiaH0DXpWe6UJhqgq-RmTdAcjpXMP-T_1E8V2YVhJmBzWT2P3Ol9oXcFZXpGzE2zEhYXDlIQw_UeVXG_vFDjPR8m3RJ6RWftdFiCVEFt3D-yotqnF5OikFJKzVYElz0"/>
+                                        GlitchMaster
+                                    </td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20 uppercase tracking-tighter">Ordered</span>
+</td>
+<td class="px-6 py-4 text-slate-300 font-mono">Priority Boost</td>
+<td class="px-6 py-4 text-slate-500">Oct 28, 2023</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium text-white flex items-center gap-3">
+<img alt="Avatar" class="size-8 rounded-full" data-alt="Small circular user avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHIJ2fjEdN5byN2iYxb11K5ZWXJVaEgwVYyxaLnC4Tq7TCd8V4TO6IVVHcVKfONroyzt00jMqApT0km2vyiPT_AvxTP2fhrMl2zWDecGEYpdpxsnzuz26wTZyOt_lusklpBrJiqHiI4mTO93xQjj0M3XAkNdXKSBy8bC9b3bphykeXzoQsh6oQi11MTR7wYARNpf6GRjmeAwTu4u5QWnFN2GinQAAHfzWdwdXy_ZStD_YtM4UH3hEt9IjtOgCBuddS3mJxxqK4S-g7"/>
+                                        RankUp_Pro
+                                    </td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-slate-700/50 text-slate-400 text-xs font-bold border border-white/10 uppercase tracking-tighter">Expired</span>
+</td>
+<td class="px-6 py-4 text-slate-500 font-mono">—</td>
+<td class="px-6 py-4 text-slate-500">Oct 12, 2023</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-20 border-t border-white/5 py-12 px-6">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-3 opacity-50">
+<span class="material-symbols-outlined">rocket_launch</span>
+<span class="font-bold tracking-tighter uppercase text-sm">EloDark © 2024</span>
+</div>
+<div class="flex gap-8 text-slate-500 text-xs font-bold uppercase tracking-widest">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Refund Policy</a>
+</div>
+<div class="flex gap-4">
+<div class="size-8 rounded bg-white/5 flex items-center justify-center hover:bg-primary/20 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">terminal</span>
+</div>
+<div class="size-8 rounded bg-white/5 flex items-center justify-center hover:bg-primary/20 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">public</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

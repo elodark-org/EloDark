@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark - How It Works</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#8c2bee",
+              "background-light": "#f7f6f8",
+              "background-dark": "#0A0A0F", // Deep black requested
+              "accent-cyan": "#00f0ff",
+              "accent-gold": "#ffd700",
+              "surface-dark": "#15151e",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"],
+              "sans": ["Space Grotesk", "sans-serif"],
+            },
+            backgroundImage: {
+              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+              'glass': 'linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0A0A0F;
+        }
+        
+        /* Custom hexagon shape */
+        .hexagon {
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        /* Animated connecting line */
+        .animated-line {
+            background: linear-gradient(90deg, #8c2bee, #00f0ff, #ffd700);
+            background-size: 200% 100%;
+            animation: gradientMove 3s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(140, 43, 238, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-white min-h-screen flex flex-col">
+<!-- Top Navigation (Reused from prompt) -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-white/10 bg-[#0A0A0F]/90 backdrop-blur-md px-10 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[32px]">sports_esports</span>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-wider">EloDark</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="hidden md:flex items-center gap-9">
+<a class="text-gray-300 hover:text-white transition-colors text-sm font-medium" href="#">Boosting</a>
+<a class="text-gray-300 hover:text-white transition-colors text-sm font-medium" href="#">Coaching</a>
+<a class="text-gray-300 hover:text-white transition-colors text-sm font-medium" href="#">Accounts</a>
+<a class="text-gray-300 hover:text-white transition-colors text-sm font-medium" href="#">FAQ</a>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center rounded-lg h-9 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-bold transition-all">
+                    Log In
+                </button>
+<button class="flex items-center justify-center rounded-lg h-9 px-4 bg-primary hover:bg-primary/90 text-white text-sm font-bold shadow-[0_0_15px_rgba(140,43,238,0.4)] transition-all">
+                    Sign Up
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col items-center justify-center relative overflow-hidden py-20 px-4">
+<!-- Background Ambient Glows -->
+<div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent-cyan/5 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="max-w-7xl w-full mx-auto relative z-10 flex flex-col gap-16">
+<!-- Section Header -->
+<div class="text-center space-y-4">
+<h1 class="text-5xl md:text-6xl font-bold tracking-tight">
+<span class="bg-clip-text text-transparent bg-gradient-to-r from-primary via-[#b06bf7] to-accent-cyan glow-text pb-2">
+                        HOW IT WORKS
+                    </span>
+</h1>
+<p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto font-light">
+                    Get boosted in 3 simple steps. Safe, anonymous, and faster than the speed of light.
+                </p>
+</div>
+<!-- Steps Container -->
+<div class="relative mt-10">
+<!-- Connecting Line (Desktop) -->
+<div class="hidden lg:block absolute top-1/2 left-0 w-full h-[2px] -translate-y-1/2 z-0">
+<div class="w-full h-full bg-white/5 rounded-full"></div>
+<div class="absolute top-0 left-0 h-full w-full animated-line opacity-50 blur-[1px]"></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+<!-- Step 1: Choose Your Boost (Purple Theme) -->
+<div class="group relative">
+<div class="absolute inset-0 bg-primary/20 blur-[40px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative h-full bg-glass backdrop-blur-xl border border-white/10 rounded-2xl p-8 flex flex-col items-center text-center hover:border-primary/50 transition-colors duration-300">
+<div class="absolute -top-10">
+<div class="hexagon w-20 h-24 bg-gradient-to-b from-[#2a1a35] to-[#0A0A0F] border-2 border-primary flex items-center justify-center shadow-[0_0_20px_rgba(140,43,238,0.3)]">
+<span class="material-symbols-outlined text-primary text-4xl">ads_click</span>
+</div>
+</div>
+<div class="mt-12 space-y-4">
+<span class="text-primary font-bold tracking-widest text-sm uppercase">Step 01</span>
+<h3 class="text-2xl font-bold text-white">Choose Your Boost</h3>
+<p class="text-gray-400 leading-relaxed">
+                                    Select your current rank, desired goal, and customize your order. Choose specific agents, champions, or duo queue options.
+                                </p>
+</div>
+</div>
+</div>
+<!-- Step 2: We Match Your Pro (Cyan Theme) -->
+<div class="group relative">
+<div class="absolute inset-0 bg-accent-cyan/20 blur-[40px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative h-full bg-glass backdrop-blur-xl border border-white/10 rounded-2xl p-8 flex flex-col items-center text-center hover:border-accent-cyan/50 transition-colors duration-300">
+<div class="absolute -top-10">
+<div class="hexagon w-20 h-24 bg-gradient-to-b from-[#1a2a35] to-[#0A0A0F] border-2 border-accent-cyan flex items-center justify-center shadow-[0_0_20px_rgba(0,240,255,0.3)]">
+<span class="material-symbols-outlined text-accent-cyan text-4xl">shield_person</span>
+</div>
+</div>
+<div class="mt-12 space-y-4">
+<span class="text-accent-cyan font-bold tracking-widest text-sm uppercase">Step 02</span>
+<h3 class="text-2xl font-bold text-white">We Match Your Pro</h3>
+<p class="text-gray-400 leading-relaxed">
+                                    Our AI-driven algorithm instantly assigns a top-tier Challenger booster. Your account is 100% anonymous and VPN protected.
+                                </p>
+</div>
+</div>
+</div>
+<!-- Step 3: Track & Dominate (Gold Theme) -->
+<div class="group relative">
+<div class="absolute inset-0 bg-accent-gold/20 blur-[40px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="relative h-full bg-glass backdrop-blur-xl border border-white/10 rounded-2xl p-8 flex flex-col items-center text-center hover:border-accent-gold/50 transition-colors duration-300">
+<div class="absolute -top-10">
+<div class="hexagon w-20 h-24 bg-gradient-to-b from-[#352a1a] to-[#0A0A0F] border-2 border-accent-gold flex items-center justify-center shadow-[0_0_20px_rgba(255,215,0,0.3)]">
+<span class="material-symbols-outlined text-accent-gold text-4xl">rocket_launch</span>
+</div>
+</div>
+<div class="mt-12 space-y-4">
+<span class="text-accent-gold font-bold tracking-widest text-sm uppercase">Step 03</span>
+<h3 class="text-2xl font-bold text-white">Track &amp; Dominate</h3>
+<p class="text-gray-400 leading-relaxed">
+                                    Watch your rank soar in real-time via your private dashboard. Chat with your booster and reclaim your rightful place on the ladder.
+                                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- CTA Section -->
+<div class="flex flex-col items-center gap-12 mt-8">
+<button class="group relative px-12 py-5 rounded-xl font-bold text-lg overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(140,43,238,0.3)] hover:shadow-[0_0_60px_rgba(140,43,238,0.5)]">
+<div class="absolute inset-0 bg-gradient-to-r from-primary via-[#a855f7] to-primary w-[200%] animate-[gradientMove_3s_linear_infinite]"></div>
+<span class="relative z-10 flex items-center gap-2 text-white">
+                        Start Your Boost Now
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</span>
+</button>
+<!-- Trust Badges -->
+<div class="flex flex-wrap justify-center gap-4 md:gap-8">
+<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-gray-300">
+<span class="material-symbols-outlined text-accent-cyan text-[18px]">vpn_key</span>
+                        VPN Protected
+                    </div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-gray-300">
+<span class="material-symbols-outlined text-primary text-[18px]">support_agent</span>
+                        24/7 Support
+                    </div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-gray-300">
+<span class="material-symbols-outlined text-accent-gold text-[18px]">currency_exchange</span>
+                        Money-Back Guarantee
+                    </div>
+<div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-gray-300">
+<span class="material-symbols-outlined text-green-400 text-[18px]">lock</span>
+                        SSL Encrypted
+                    </div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

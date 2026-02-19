@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark Match Analytics Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#af25f4",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#0A0A0F",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0F;
+            background-image: 
+                linear-gradient(rgba(175, 37, 244, 0.05) 1px, transparent 1px),
+                linear-gradient(90px, rgba(175, 37, 244, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glow-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at 20% 30%, rgba(175, 37, 244, 0.15), transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(175, 37, 244, 0.1), transparent 40%);
+            z-index: -1;
+        }
+        .glass-card {
+            background: rgba(28, 16, 34, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(175, 37, 244, 0.2);
+        }
+        .victory-text { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        .defeat-text { color: #ef4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+        .neon-border:hover {
+            border-color: #af25f4;
+            box-shadow: 0 0 15px rgba(175, 37, 244, 0.3);
+        }
+    </style>
+</head>
+<body class="font-display text-slate-100 min-h-screen">
+<div class="glow-overlay"></div>
+<!-- Navigation -->
+<header class="border-b border-primary/20 bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+<div class="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between">
+<div class="flex items-center gap-12">
+<div class="flex items-center gap-2">
+<div class="bg-primary p-1.5 rounded-lg shadow-[0_0_15px_rgba(175,37,244,0.5)]">
+<span class="material-symbols-outlined text-white text-2xl">rocket_launch</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-white">EloDark</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Dashboard</a>
+<a class="text-primary border-b-2 border-primary pb-5 mt-5 text-sm font-medium" href="#">Match History</a>
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Champions</a>
+<a class="text-slate-400 hover:text-primary transition-colors text-sm font-medium" href="#">Pro Guides</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="bg-primary/10 border border-primary/20 rounded-xl pl-10 pr-4 py-2 text-sm w-64 focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Search Summoner..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(175,37,244,0.8)]"></span>
+</button>
+<div class="h-10 w-10 rounded-xl overflow-hidden border border-primary/30">
+<img class="w-full h-full object-cover" data-alt="Summoner profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLJLjgSa1DTWI1D6Ey7XbZx37tlecN6_2EqRwo16o6lAOleqzHNpHDBZiXsEjxOxFgGW8_uadqrrMK9Mzo4YoQ0C5EZUfcUOUQZMYhoHBw75TfIGWl2yRFjVN8lY7aAVAk00U1X1wwvILySWl04u0xMQCPWsQqT1wW882RXUdr-N2f8VoL_6B2PnAgLVLf6f4fYwoj2NnBPqN7JUVueriNP8-D2PxOAQA-khAzZGz1R1J1s8-8JERTRptiZIZLB_9f0PZYzvsAT-cq"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-6 py-8 flex flex-col lg:flex-row gap-8">
+<!-- Left Content: Match History -->
+<div class="flex-1 space-y-6">
+<div class="flex items-end justify-between">
+<div>
+<h2 class="text-3xl font-bold text-white mb-2">Match History</h2>
+<p class="text-slate-400">Deep dive into your recent competitive performance.</p>
+</div>
+<button class="bg-primary/20 text-primary border border-primary/30 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-primary/30 transition-all">
+<span class="material-symbols-outlined text-lg">refresh</span>
+                    Refresh Data
+                </button>
+</div>
+<!-- Filters -->
+<div class="flex p-1 bg-primary/10 rounded-xl w-fit border border-primary/20">
+<button class="px-6 py-2 rounded-lg text-sm font-medium bg-primary text-white shadow-lg">All Games</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-colors">Wins</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white transition-colors">Losses</button>
+</div>
+<!-- Match List -->
+<div class="space-y-4">
+<!-- Detailed Match Card (Expanded) -->
+<div class="glass-card rounded-xl overflow-hidden neon-border transition-all duration-300">
+<div class="p-6 flex flex-wrap items-center gap-6 border-b border-primary/10">
+<div class="relative">
+<img class="w-16 h-16 rounded-xl border-2 border-primary/40 object-cover" data-alt="Champion icon for Kai'Sa" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7dbdmzhUqYgrMsQ10PNXK6FNPPnGWaqe3BDP7UmZsyRt6FShljyPhHthY5BYAaF7hJBTm9i4rDJpn2bK8WPP4mR8nPg6gFaBllx3Bhw6U-561jzSvfiQB62YfO3lqvl15kV74-cGsRIRTOnCurW0a2UbPwZKWGIoK2WWndfg-P87J0PkTx6UOI_vIVqS5Y7q-eeMgLiZlWZnvz4t7n_XgEgMLBj_g98cl8wPV7qrwUIp8UCgX4XtX1xLD1Wgg5dmpbh9qKuj6VIb5"/>
+<span class="absolute -bottom-2 -right-2 bg-slate-900 text-xs px-2 py-0.5 rounded border border-primary/30 font-bold">Lvl 18</span>
+</div>
+<div class="min-w-[100px]">
+<p class="victory-text font-black text-xl uppercase tracking-wider">Victory</p>
+<p class="text-slate-400 text-xs mt-1">Ranked Solo • 28:45</p>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-4">
+<p class="text-2xl font-bold tracking-tight">15 <span class="text-slate-500 font-normal">/</span> 2 <span class="text-slate-500 font-normal">/</span> 8</p>
+<div class="bg-primary/10 px-2 py-0.5 rounded text-primary text-xs font-bold">7.2 KDA</div>
+</div>
+<p class="text-xs text-slate-400 mt-1 uppercase tracking-widest font-medium">9.2 CS/min • 28.4k Gold</p>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold text-lg">+22 LP</p>
+<p class="text-slate-400 text-xs">Diamond I - 84 LP</p>
+</div>
+<span class="material-symbols-outlined text-slate-500">expand_less</span>
+</div>
+<!-- Expanded Content -->
+<div class="p-6 bg-primary/5 grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Gold Advantage Area Chart Simulation -->
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<h4 class="text-sm font-bold text-slate-200 uppercase tracking-widest">Gold Advantage</h4>
+<span class="text-xs text-primary font-medium">+4,200 @ 25 min</span>
+</div>
+<div class="h-40 w-full relative bg-background-dark/50 rounded-lg overflow-hidden border border-primary/10">
+<!-- Simulated SVG Chart -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 400 100">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#af25f4" stop-opacity="0.5"></stop>
+<stop offset="100%" stop-color="#06b6d4" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,80 Q50,60 100,70 T200,40 T300,50 T400,20 V100 H0 Z" fill="url(#chartGradient)"></path>
+<path d="M0,80 Q50,60 100,70 T200,40 T300,50 T400,20" fill="none" stroke="#af25f4" stroke-width="2"></path>
+<line stroke="rgba(255,255,255,0.1)" stroke-dasharray="4" x1="0" x2="400" y1="50" y2="50"></line>
+</svg>
+</div>
+</div>
+<!-- Damage Dealt Bar Chart Simulation -->
+<div class="space-y-4">
+<h4 class="text-sm font-bold text-slate-200 uppercase tracking-widest">Team Damage Dealt</h4>
+<div class="space-y-3">
+<div class="space-y-1">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-primary font-bold">Kaisa (You)</span>
+<span class="text-slate-300">42,852</span>
+</div>
+<div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary shadow-[0_0_8px_#af25f4]" style="width: 85%;"></div>
+</div>
+</div>
+<div class="space-y-1 opacity-60">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-slate-400">Teammate 2</span>
+<span class="text-slate-300">28,104</span>
+</div>
+<div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-slate-400" style="width: 55%;"></div>
+</div>
+</div>
+<div class="space-y-1 opacity-60">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-slate-400">Teammate 3</span>
+<span class="text-slate-300">12,450</span>
+</div>
+<div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-slate-400" style="width: 25%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Match Card (Defeat) -->
+<div class="glass-card rounded-xl p-6 flex items-center gap-6 neon-border transition-all duration-300 group cursor-pointer">
+<div class="relative">
+<img class="w-16 h-16 rounded-xl border border-slate-700 object-cover grayscale opacity-80 group-hover:grayscale-0 transition-all" data-alt="Champion icon for Ezreal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcMuYKUHn5tExpSXEmeH0JSgQfwxNfhpCHGK8TLiJZVmsnUzwIAap8fkWezh-8kB8JpYtPpzNeblDrS3mXtVDQCp7UCNiWeo3D_Ax8fp4J0wzOjGzVbeqMc9FhzxtXnW6nLxwyxVBKxiiOeykjKrtiWotgt5c-28HPOY9jYvp5Xlz_sQ9qEq-jL_Yv5DPsDVU4hQk36u7zg0pMICycFEXVyMTFn-j9vZr1JabVUSvvgWzpZOMZsUyrdZXhy-dZ2HO5YwumubrDTiZm"/>
+</div>
+<div class="min-w-[100px]">
+<p class="defeat-text font-black text-xl uppercase tracking-wider">Defeat</p>
+<p class="text-slate-400 text-xs mt-1">Ranked Solo • 19:12</p>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-4">
+<p class="text-2xl font-bold tracking-tight text-slate-400">4 <span class="text-slate-700 font-normal">/</span> 6 <span class="text-slate-700 font-normal">/</span> 2</p>
+</div>
+<p class="text-xs text-slate-500 mt-1 uppercase tracking-widest font-medium">6.8 CS/min • 8.2k Gold</p>
+</div>
+<div class="text-right">
+<p class="text-red-500 font-bold text-lg">-18 LP</p>
+<p class="text-slate-500 text-xs">Diamond I - 66 LP</p>
+</div>
+<span class="material-symbols-outlined text-slate-500">expand_more</span>
+</div>
+<!-- Match Card (Victory) -->
+<div class="glass-card rounded-xl p-6 flex items-center gap-6 neon-border transition-all duration-300 cursor-pointer">
+<div class="relative">
+<img class="w-16 h-16 rounded-xl border-2 border-primary/40 object-cover" data-alt="Champion icon for Jinx" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyjgfhuxVGLL9nVu19DsVGk_1pUqHpHrQo-WcgYbTzEXAHmE0TyQgKL8H5QpEhI5Wd0jUp4LY9QMImrtT5zf2d-260AY2LAWYW6uweCmBzVK4wCLDOqQuJCI3N-mlXmVO-cSG4EVI7FbwDiD7S6cF5wGX1beM1nc4rIvcfgTw8IpYj-SBWHKXScy2cEgKWU_AiHwRRHYiZzwh10KBByr9SlmI76Cec3oTwa6zLYnCFASsVDJjYGCD-bJTuyzOvbWMLVbXpfIZDN5Im"/>
+</div>
+<div class="min-w-[100px]">
+<p class="victory-text font-black text-xl uppercase tracking-wider">Victory</p>
+<p class="text-slate-400 text-xs mt-1">Ranked Solo • 34:20</p>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-4">
+<p class="text-2xl font-bold tracking-tight">12 <span class="text-slate-500 font-normal">/</span> 5 <span class="text-slate-500 font-normal">/</span> 14</p>
+<div class="bg-primary/10 px-2 py-0.5 rounded text-primary text-xs font-bold">5.2 KDA</div>
+</div>
+<p class="text-xs text-slate-400 mt-1 uppercase tracking-widest font-medium">10.1 CS/min • 32k Gold</p>
+</div>
+<div class="text-right">
+<p class="text-primary font-bold text-lg">+24 LP</p>
+<p class="text-slate-400 text-xs">Diamond II - 12 LP</p>
+</div>
+<span class="material-symbols-outlined text-slate-500">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Session Stats -->
+<aside class="w-full lg:w-[380px] space-y-6">
+<div class="glass-card rounded-xl p-6 border-l-4 border-primary">
+<h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                    Session Summary
+                </h3>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="p-4 rounded-xl bg-background-dark/50 border border-primary/10 text-center">
+<div class="relative inline-flex items-center justify-center mb-2">
+<svg class="w-16 h-16 transform -rotate-90">
+<circle class="text-slate-800" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-primary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="176" stroke-dashoffset="14" stroke-width="4"></circle>
+</svg>
+<span class="absolute text-sm font-bold">92%</span>
+</div>
+<p class="text-slate-400 text-xs uppercase font-bold tracking-tighter">Win Rate</p>
+</div>
+<div class="p-4 rounded-xl bg-background-dark/50 border border-primary/10 text-center">
+<div class="flex items-center justify-center h-16 mb-2">
+<span class="text-3xl font-black text-primary">4.8</span>
+</div>
+<p class="text-slate-400 text-xs uppercase font-bold tracking-tighter">Avg. KDA</p>
+</div>
+</div>
+<div class="space-y-6">
+<h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-slate-800 pb-2">Most Played Champions</h4>
+<div class="flex items-center gap-4 group">
+<img class="w-12 h-12 rounded-lg border border-primary/30 group-hover:scale-105 transition-transform" data-alt="Champion icon Kai'Sa" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgGs5_6JSfwGtoLn80xXOJ0Ge4tM5FKa8R_9vAZh5-cgE5xrkZ9040Huke7qydwUinqoCYgi0tdU0bRsAy-7r-JiRFEUfwO3ZsYsgMM21j7Lr-3jaHjE3UbE1OjbdqpBNI_KU5StpfA97vLqudWMco7s8QmGUhqWpSRp4136nn-2Pbeg8XgX43nj5Ds9B-4Ye04ssMkLhUJ5jKxhF9rNfH-cJ1Ydm_bkxgOtjAZbY66UTNtlabRcAC0xE-0NV-8AuvQ6Y6szPu63Uw"/>
+<div class="flex-1">
+<p class="text-sm font-bold text-white">Kai'Sa</p>
+<p class="text-xs text-slate-400">8 Games • 100% Win Rate</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-primary">8.2 KDA</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<img class="w-12 h-12 rounded-lg border border-primary/10 group-hover:scale-105 transition-transform" data-alt="Champion icon Jinx" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDh1o1alYMPefpdIiTLyOiMiSomLrUr4UzZJ2UGhEbyYY0-5yY_7NBp8Zwl_97GZ0j11mM6TIwGbL5uLUHY4ITMR8WJEvvXN8OCbVh814jLpsHsl4uUGMacC_0HCF6xxFZaqHDorxwFwgbsaRc4KrxT_3nBZVpOU2DxCuLT6koHi8Q84eZd3iBSt3-Q93KxZ8m_ToIb76AS6pmogyHRCuuUVjEw6OU-Gx9OGlAhg-emAXUONUe57zrwWVGha2zTnRrJI2GDOc9ryyd0"/>
+<div class="flex-1">
+<p class="text-sm font-bold text-white">Jinx</p>
+<p class="text-xs text-slate-400">5 Games • 80% Win Rate</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-primary">4.5 KDA</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<img class="w-12 h-12 rounded-lg border border-primary/10 group-hover:scale-105 transition-transform" data-alt="Champion icon Ezreal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_bz8_RXUTilRQz_-v6XDlMBH1-rAZ1roNyYaRdIwQ3vo0B3uT4tztwyeIPHPBkwv9slywTPOYeI1PkGbvGwm3n4VuqzNLqrsuIGWqwFnzB80oZzCNlBpsPpA2zwZxLJGeHeOFAs25v3BxjNinlNSe3_JGra_ggmv00EyVy0rLmOUCadqxoqAPmrIWf8i0s1pDMQ3aUSwxKdcB7MDp_2j4FkD8QjWLCf8c1gLsNAY3Q8y3vMK-6osytMuMl2k_pJLyxW1T3JPF_MNT"/>
+<div class="flex-1">
+<p class="text-sm font-bold text-white">Ezreal</p>
+<p class="text-xs text-slate-400">4 Games • 50% Win Rate</p>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-primary">3.1 KDA</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 bg-primary text-white py-3 rounded-xl font-bold shadow-[0_0_20px_rgba(175,37,244,0.3)] hover:shadow-[0_0_30px_rgba(175,37,244,0.5)] transition-all">
+                    Upgrade to Premium
+                </button>
+</div>
+<!-- Promotion Card -->
+<div class="rounded-xl overflow-hidden relative group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/80 to-blue-600/80 mix-blend-multiply"></div>
+<img class="w-full h-48 object-cover" data-alt="Abstract gaming pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4--l2q070f_1gRM_FSkLdoIrRXJtAcBngkGlq2_YHHjFBjEqwtzp5D3e2fIaFkvzyWt0OfdS4ZD8odnAadNcil0uG_5AIb24qbYK7Qj-P0mhspp_LlfgxtAGfYYApa1Z41NNwyC2Jp05RPXk50BgvNPmhqvHPwnsAs4p7czS752qq8-rR7S69g0A3T6ohs6l967xPIzgpR2mHyxSO8-56IthUGAJNDwfQDLM9NNaiN7M6Ferz1rQuzROfor6Zqofxyr4KrZkaawt3"/>
+<div class="absolute inset-0 p-6 flex flex-col justify-end">
+<p class="text-white font-bold text-xl leading-tight">Climb Faster with EloDark Boosters</p>
+<p class="text-white/80 text-sm mt-2">Get matched with top 0.1% players globally.</p>
+</div>
+</div>
+</aside></main>
+<footer class="mt-12 border-t border-primary/10 py-12">
+<div class="max-w-[1440px] mx-auto px-6 flex flex-wrap justify-between items-center gap-8">
+<div class="flex items-center gap-2">
+<div class="bg-primary/20 p-1.5 rounded-lg">
+<span class="material-symbols-outlined text-primary text-lg">rocket_launch</span>
+</div>
+<h1 class="text-lg font-bold tracking-tight text-white">EloDark</h1>
+</div>
+<p class="text-slate-500 text-sm">© 2024 EloDark Analytics. Not affiliated with Riot Games.</p>
+<div class="flex items-center gap-6">
+<a class="text-slate-400 hover:text-white transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#"><span class="material-symbols-outlined">mail</span></a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#"><span class="material-symbols-outlined">policy</span></a>
+</div>
+</div>
+</footer>
+</body></html>

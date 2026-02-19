@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark Live Activity Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0df259",
+                        "background-light": "#f5f8f6",
+                        "background-dark": "#0A0A0F",
+                        "accent-purple": "#6d28d9",
+                        "gold-glow": "#fbbf24"
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .matrix-bg {
+            background-image: 
+                linear-gradient(rgba(109, 40, 217, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(109, 40, 217, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .pulse-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .5; transform: scale(1.2); }
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scroll-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: rgba(13, 242, 89, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen selection:bg-primary/30 selection:text-primary overflow-x-hidden">
+<!-- Background Decoration -->
+<div class="fixed inset-0 pointer-events-none matrix-bg z-0 opacity-40"></div>
+<div class="fixed top-0 left-1/4 w-96 h-96 bg-accent-purple/10 rounded-full blur-[120px] z-0"></div>
+<div class="fixed bottom-0 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] z-0"></div>
+<div class="relative z-10 layout-container flex flex-col items-center min-h-screen">
+<!-- Navigation Component -->
+<div class="w-full max-w-[1200px] px-6 lg:px-10">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-white/10 py-4 mb-8">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1">rocket_launch</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">EloDark</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Boosting</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Coaching</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Win Rates</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Reviews</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden sm:flex items-center bg-slate-100 dark:bg-white/5 rounded-xl px-4 py-2 border border-slate-200 dark:border-white/5">
+<span class="material-symbols-outlined text-slate-400 text-xl mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm placeholder:text-slate-500 w-32 lg:w-48" placeholder="Search boosters..." type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-background-dark px-6 py-2 rounded-lg text-sm font-bold transition-all transform hover:scale-105">
+                        Sign In
+                    </button>
+</div>
+</header>
+</div>
+<!-- Main Feed Section -->
+<main class="w-full max-w-[960px] px-4 flex flex-col flex-1 pb-20">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 px-4 gap-4">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="flex h-2 w-2 rounded-full bg-primary pulse-dot"></span>
+<span class="text-primary text-xs font-bold tracking-[0.2em] uppercase">Live Activity</span>
+</div>
+<h1 class="text-slate-900 dark:text-white text-4xl font-bold tracking-tight">Live Dominance</h1>
+<p class="text-slate-500 dark:text-slate-400 mt-2 text-lg">Real-time wins from our pro boosters across all competitive tiers.</p>
+</div>
+<div class="flex items-center gap-2 bg-primary/10 border border-primary/20 px-4 py-2 rounded-full">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1">group</span>
+<span class="text-primary text-sm font-bold">142 Boosters Online</span>
+</div>
+</div>
+<!-- Scrollable Feed Area -->
+<div class="scroll-container space-y-4 overflow-y-auto max-h-[70vh] pr-2">
+<!-- Card 1: Standard Win -->
+<div class="glass-card rounded-xl p-5 group hover:border-primary/30 transition-all duration-300">
+<div class="flex items-center gap-5">
+<div class="relative size-14 flex-shrink-0">
+<img class="w-full h-full rounded-lg object-cover border border-white/5" data-alt="League of Legends game logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXRvQ3ClITlVJqy3rmUgW54GYrciGxs1Wyr-J6VBGob6Na3DfvAZFpZT5ecHb2XG6tHrBD-HPivomz5nPkzYTgAa2p6Tir-5e1JjeCOG-DkA-NMrDZ6g-D0xRIH6Myzdz-HvjwfEIZNLpljAI6b1HPh4XePIjkPGmods9MfMDlOA6DUnwRn3tkWBDp22ThyrmPIovvl1SnRLV46DDijZolZxoUAsITkhM9dv981mATivRUAC4LiP6sDLcf5GZUQN1E-wje_cBLPQMs"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-slate-900 dark:text-white font-bold text-lg flex items-center gap-2">
+                                    Booster Alpha 
+                                    <span class="text-[10px] bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded uppercase tracking-wider">Top 500</span>
+</h3>
+<span class="text-slate-500 dark:text-slate-500 text-xs font-medium">Just Now</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-primary text-sm font-bold bg-primary/10 px-2 py-0.5 rounded">VICTORY</span>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Promoted to <span class="text-slate-900 dark:text-white font-semibold">Emerald II</span> (League of Legends)</p>
+</div>
+</div>
+<button class="size-10 flex items-center justify-center bg-white/5 hover:bg-primary/20 rounded-lg text-slate-400 hover:text-primary transition-all">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Standard Win -->
+<div class="glass-card rounded-xl p-5 group hover:border-primary/30 transition-all duration-300">
+<div class="flex items-center gap-5">
+<div class="relative size-14 flex-shrink-0">
+<img class="w-full h-full rounded-lg object-cover border border-white/5" data-alt="Valorant game logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIvcTuQ55Vru0rUAt9Vy2q4rNfEulPx-AGDmhm2YpMmFi0TXyLtbmWO62V-C7mwmMizc3wT0LbSGG_2FGxbkDBeOycQ0UgvF7NMcK7AKgi-T4xGlVAptRC1qqQfNJ_NHw5D8s7neL3O545R7oNXcifJ--CrgrhbkXHUd7XIcZ39JGZeJaFR-T_NexrbzYWNo-TSY91H5wiNR0w1zI3LRWrpN6k_PDcJXeG4WgVtYuarYjqUB4jLkC6JlFi8KNMBG68VbT7jaY_DaLP"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-slate-900 dark:text-white font-bold text-lg flex items-center gap-2">
+                                    Shadowblade
+                                    <span class="text-[10px] bg-accent-purple/20 text-accent-purple border border-accent-purple/20 px-2 py-0.5 rounded uppercase tracking-wider">Radiant</span>
+</h3>
+<span class="text-slate-500 dark:text-slate-500 text-xs font-medium">45s ago</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-primary text-sm font-bold bg-primary/10 px-2 py-0.5 rounded">VICTORY</span>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Rank Up: <span class="text-slate-900 dark:text-white font-semibold">Diamond IV</span> (Valorant)</p>
+</div>
+</div>
+<button class="size-10 flex items-center justify-center bg-white/5 hover:bg-primary/20 rounded-lg text-slate-400 hover:text-primary transition-all">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Card 3: LARGE WIN (Gold Highlight) -->
+<div class="glass-card rounded-xl p-6 border-gold-glow/40 shadow-[0_0_25px_rgba(251,191,36,0.1)] relative overflow-hidden group hover:border-gold-glow/60 transition-all duration-300">
+<div class="absolute top-0 right-0 px-4 py-1 bg-gold-glow text-background-dark text-[10px] font-bold uppercase tracking-widest rounded-bl-lg">
+                        Major Milestone
+                    </div>
+<div class="flex items-center gap-5">
+<div class="relative size-16 flex-shrink-0">
+<div class="absolute inset-0 bg-gold-glow/20 blur-md rounded-full"></div>
+<img class="relative w-full h-full rounded-lg object-cover border border-gold-glow/30" data-alt="DOTA 2 game logo icon with gold glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRtE4ndH_48s20LOirWVdMS9GKoRhVt194QGObahMTIKGpTRvJ2oLqooah08QQijMsQmlMpcSAWybkU9bgS9jjiqQd-tMIC8T56NiHBLD0X4v-agkN_ca0-mCIQwh1hZFLIgYHmK9L1aK2wjHM0Ov4TZJG7Yihg5vmS7IzVJ2AXVy7j4g_dxIc7k5Ft4LOvXoZEv79590jd63CE3bX7l_ANekaYkkc2DJQbC2Zixb56S8JqPvIFrQA_m0mkqZbuNlsePB6A-FEB24n"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-gold-glow font-bold text-xl flex items-center gap-2">
+                                    Nova_X
+                                    <span class="material-symbols-outlined text-gold-glow text-sm" style="font-variation-settings: 'FILL' 1">stars</span>
+</h3>
+<span class="text-slate-500 dark:text-slate-500 text-xs font-medium">2m ago</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-gold-glow text-sm font-black bg-gold-glow/10 px-2 py-0.5 rounded border border-gold-glow/20">ELITE VICTORY</span>
+<p class="text-slate-600 dark:text-slate-300 text-base">Reached <span class="text-gold-glow font-bold underline decoration-gold-glow/30">Immortal Rank</span> (DOTA 2)</p>
+</div>
+</div>
+<button class="size-12 flex items-center justify-center bg-gold-glow/10 hover:bg-gold-glow/20 rounded-lg text-gold-glow transition-all">
+<span class="material-symbols-outlined">analytics</span>
+</button>
+</div>
+</div>
+<!-- Card 4: Standard Win -->
+<div class="glass-card rounded-xl p-5 group hover:border-primary/30 transition-all duration-300">
+<div class="flex items-center gap-5">
+<div class="relative size-14 flex-shrink-0">
+<img class="w-full h-full rounded-lg object-cover border border-white/5" data-alt="Overwatch 2 game logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDddOdswMnjcUeyT9U7UJA7CXvfEZDHwHWv-HMR2lRL8c6pT1yAnnZ48vSbf9UhSnSmTad_ic8PY9cpt4_u9H0tCGAX6uw5q6toy0CDZ9-TsD4LXD3mkfKoytNs1Emm0G3gDLAceLyBMOhah2DWldf2GN8bYCGwPNmr_FE4eLoXDKe_EuamYceOkInzj39raxVXbIvnkJin29d2PFIDntT1xS-j53qxXYotJpJOji4uuKjBT648pxiRH9pF7NvAt0wGvNaUJxMt29vN"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-slate-900 dark:text-white font-bold text-lg">ApexWolf</h3>
+<span class="text-slate-500 dark:text-slate-500 text-xs font-medium">5m ago</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-primary text-sm font-bold bg-primary/10 px-2 py-0.5 rounded">VICTORY</span>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Win Streak: <span class="text-slate-900 dark:text-white font-semibold">5 Games</span> (Overwatch 2)</p>
+</div>
+</div>
+<button class="size-10 flex items-center justify-center bg-white/5 hover:bg-primary/20 rounded-lg text-slate-400 hover:text-primary transition-all">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Card 5: Standard Win -->
+<div class="glass-card rounded-xl p-5 group hover:border-primary/30 transition-all duration-300 opacity-80 hover:opacity-100">
+<div class="flex items-center gap-5">
+<div class="relative size-14 flex-shrink-0">
+<img class="w-full h-full rounded-lg object-cover border border-white/5" data-alt="Apex Legends game logo icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7dB3A0_cfzsHPXv9OXoCv_kDn6QpWaCbhx8X6Z5K4UsSL125JiQsqGuAoqmYnuDeHdH9uL5aTq8ummzEjtaXlYfAdSqFai3hbmdculYbajkLMEA1FrVf-WZvWunXfX3z9XP9r58NZlNFUNcnoR_d8uMlfYmf7ucOe4ONnLAL_6vmbRGht-jgeZ92BErqOMgmeMjijgS816Kre8S6KAbikOENXYjUmYbAPMfGBqIqGyqIPbfQ4Bry4GBHscZsaZ3qRYf7mLiCCkBel"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-slate-900 dark:text-white font-bold text-lg">CyberKnight</h3>
+<span class="text-slate-500 dark:text-slate-500 text-xs font-medium">8m ago</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-primary text-sm font-bold bg-primary/10 px-2 py-0.5 rounded">VICTORY</span>
+<p class="text-slate-600 dark:text-slate-400 text-sm">Promoted to <span class="text-slate-900 dark:text-white font-semibold">Platinum I</span> (Apex Legends)</p>
+</div>
+</div>
+<button class="size-10 flex items-center justify-center bg-white/5 hover:bg-primary/20 rounded-lg text-slate-400 hover:text-primary transition-all">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer CTA -->
+<div class="mt-12 flex flex-col items-center gap-6">
+<a class="group flex items-center gap-2 text-primary hover:text-white transition-all duration-300 font-bold text-lg tracking-wide uppercase" href="#">
+                    Track Your Own Boost 
+                    <span class="material-symbols-outlined transform group-hover:translate-x-2 transition-transform">arrow_right_alt</span>
+</a>
+<div class="flex items-center gap-8 py-6 px-10 glass-card rounded-full border-primary/20">
+<div class="flex -space-x-3">
+<img class="size-10 rounded-full border-2 border-background-dark" data-alt="Booster avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-2JHikezCkA5GZ2W85fTV7F3PtyOf93T5hfJ7MZbP6NnHremb7fOJ7xpt6MAzNuNvsa2GGtvUmsjAFEgsPqGslko_8k_P_BfgTD3W1jLzsQyp8I1zPl8Yaf53-YeHpoA0xbDLAB2nFW9lYBodOu53HNhCkAAtMXvBGMa63e12WtgSb2dTlgj8bNp30O9WX70coEWo83JQP5bCwzOihWrLMqJOK13lLj3Jb0wvSzH2qf2PFlkykSgoS342KmnzyK61ASP1KLChprSO"/>
+<img class="size-10 rounded-full border-2 border-background-dark" data-alt="Booster avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCfQMzP6g6moA7gynEcCyLWEe2MRQYZeYm3XE0QS3e9Vm-SepcGIPak4kTeVyxTU4cvMEYp6fL7qOOYNLmwJ_bS3kfB9uG9Qwv_ZKv2igmnlIP8_NBZa7py3-OgfdkbMwHhLYPzPlI2F3y4l3GnF8AIW69UxIx3gHNjVHMLlU00JlmXvCkXzpXkLex3r5r_hpEdhDM6JTz-0LgFGjTTcj8DeQfbDB8SyNoFAI5DEQrVGrEtMqw_BYxkugNWfha5EJjWQWp12ZuHctf"/>
+<img class="size-10 rounded-full border-2 border-background-dark" data-alt="Booster avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW7K9phMuZiIzdrPuu6lfzacAtv35xNsICy6HpceyT5UkteUB0nLE1NFMMa5mdFAMrVZXXChkef6v-tbr8_WK8woBv1bHT6Hrl0Ed9iQ40jQOCpkV7cH5o0n6kUea-6H3ZZFFed-tzKMrRvgNkgqdDywouI5CbkRlq5M4TTzwelG6ss_b35dyoopGJEzzoZio5WOvdJhIycaGsQB-G19VUZ_tBoBrEmM7MEyrYTZsKDqUXP0bjyqEw9G9x8Y0kwiIbqNeEvh2OhY75"/>
+<div class="size-10 rounded-full bg-slate-800 flex items-center justify-center text-[10px] font-bold border-2 border-background-dark">+89</div>
+</div>
+<div class="h-8 w-px bg-white/10"></div>
+<p class="text-sm text-slate-400">Join <span class="text-white font-bold">4,200+</span> satisfied gamers who reached their dream rank this month.</p>
+</div>
+</div>
+</main>
+<!-- Fixed Footer Status -->
+<footer class="w-full bg-background-dark/80 backdrop-blur-lg border-t border-white/5 py-3 fixed bottom-0 left-0 z-50">
+<div class="max-w-[1200px] mx-auto px-6 flex justify-between items-center text-[10px] uppercase tracking-widest text-slate-500 font-bold">
+<div class="flex gap-6">
+<span class="flex items-center gap-1.5"><span class="size-1.5 bg-primary rounded-full"></span> System Stable</span>
+<span class="flex items-center gap-1.5"><span class="size-1.5 bg-primary rounded-full"></span> API Latency: 14ms</span>
+</div>
+<div class="flex gap-6">
+<span>© 2024 EloDark Protocol</span>
+<span class="text-primary/50">Encrypted Connection Active</span>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EloDark User Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ecec",
+                        "accent-purple": "#A855F7",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#0A0A0F",
+                        "card-bg": "rgba(28, 39, 39, 0.6)",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-image: 
+                radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 10% 80%, rgba(19, 236, 236, 0.1) 0%, transparent 40%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill-opacity='0.03' fill='%23ffffff' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .glass {
+            backdrop-filter: blur(12px);
+            background: rgba(20, 25, 25, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(19, 236, 236, 0.3);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, #13ecec 0%, #a855f7 50%, #13ecec 100%);
+            background-size: 200% auto;
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-white min-h-screen selection:bg-primary/30">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 border-r border-white/5 bg-background-dark/80 backdrop-blur-xl flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="size-10 bg-primary flex items-center justify-center rounded-lg shadow-[0_0_15px_rgba(19,236,236,0.5)]">
+<span class="material-symbols-outlined text-background-dark font-bold">bolt</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tighter">EloDark</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-primary/80 font-semibold">Elite Boosting</p>
+</div>
+</div>
+<nav class="flex-1 px-4 py-6 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border border-primary/20" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/60 hover:text-white hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined">rocket_launch</span>
+<span class="font-medium">Active Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/60 hover:text-white hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-medium">History</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/60 hover:text-white hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-medium">Chat</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-white/60 hover:text-white hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4">
+<div class="bg-gradient-to-br from-primary/10 to-accent-purple/10 rounded-2xl p-4 border border-white/5">
+<p class="text-xs text-white/40 mb-2">Current Plan</p>
+<p class="text-sm font-bold mb-3">Diamond Fast-Track</p>
+<button class="w-full py-2 bg-primary text-background-dark text-xs font-bold rounded-lg hover:brightness-110 transition-all">
+                        UPGRADE
+                    </button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto custom-scrollbar">
+<!-- Header -->
+<header class="sticky top-0 z-30 flex items-center justify-between px-8 py-4 bg-background-dark/60 backdrop-blur-md border-b border-white/5">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Profile" class="size-10 rounded-full border border-primary/30" data-alt="Cyberpunk style gaming avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLquSOkQRUEoxXJrxb2CH6PxCVtBAzNWLQfanAx7_GXt3kew2t19vJO9g1r1ePNITq7ogLtbhWeyQMF-AjSszgLwnuyf7n9BNfqB7-wanrRtczRlodrv00J_oBXgMT76ReszcHAHVeX2S_JTDT1xiBSJiz6NjMi2n257vzYN8jnQ8boc7eqXDXoyqVVQS_5mJXrNPl0RjcqqHB_oCM8P-g7dzSVfhAixa-5BoFnRXxdwpjVvL38huDGR7_HfX2bz5qtXZzcGV2lRB8"/>
+<div class="absolute -bottom-1 -right-1 size-4 bg-green-500 rounded-full border-2 border-background-dark"></div>
+</div>
+<div>
+<h2 class="text-lg font-bold">Welcome back, <span class="text-primary">Summoner</span></h2>
+<p class="text-xs text-white/40">Premium Account • Rank Guardian</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden md:flex items-center bg-white/5 border border-white/10 rounded-xl px-4 py-2">
+<span class="material-symbols-outlined text-white/40 text-lg mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 placeholder:text-white/20" placeholder="Search orders..." type="text"/>
+</div>
+<button class="size-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 transition-all">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+</div>
+</header>
+<div class="p-8 space-y-8 max-w-7xl mx-auto">
+<!-- Hero Active Boost Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Progress Card -->
+<div class="lg:col-span-2 glass rounded-2xl p-8 relative overflow-hidden group border border-primary/20">
+<div class="absolute top-0 right-0 p-4">
+<span class="px-3 py-1 bg-primary/20 text-primary text-[10px] font-bold rounded-full border border-primary/30 animate-pulse">LIVE SESSION</span>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-white/5 rounded-xl border border-white/10">
+<img class="size-12" data-alt="Platinum 3 League of Legends rank icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmRur13BkIIciItIcsvfa6tTSOtK-1u20WCfd0wj1xQbtnk9cGd2cPQ0zdyz4gpPx5NAPI82BAnrg8t5pZeU__kJptJjPS8WwiwX-Z8Lx3lr4w5NLI0k3NQk_tH8CSCjtu4mrOi6-iSw3FJyvdzxhLy-xQVMWcKx08qsW3q20d5o9lVMP66uhzh3L-6Xo2FEJqOLzVEcHQW2ufDO1G_SfvSo8iOOuufeczgcnsKuZ58Q0r-wyLF6oOqQE7PAzxjLmOQ3vaLpZz5zC-"/>
+</div>
+<span class="material-symbols-outlined text-white/20 text-4xl">double_arrow</span>
+<div class="p-3 bg-primary/10 rounded-xl border border-primary/30 glow-cyan">
+<img class="size-12" data-alt="Diamond 4 League of Legends rank icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtYRqTaEOPV81RTaM6ABoWckMOFxdk92MhQledzhZQkOhWjV3s1PUDnmbzKlfogAhd8ScIWIxedCB9FOoP9cxd1_Vo3B6E9RK_DMFh9sMDuSSzHMr1ALO59ELjBygeqyEjzP0dAEGb1v3oEN3rzc6sHvSyvu-a-lTKK_GG8qD7fLKVCMgHZrfKTJZYoogkX4eDPju8TxAluejXmAHrAcXQhuxuR0tRQYVXYawCJsuIw_dS4jFcaBLssWdlgmpchsuTfuMP1mw4NGGp"/>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm text-white/40">Estimated Completion</p>
+<p class="text-xl font-bold">24h 15m</p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="text-2xl font-bold tracking-tight">Progress to Diamond IV</h3>
+<p class="text-sm text-white/60">Current Rank: Platinum III (85 LP)</p>
+</div>
+<p class="text-3xl font-black text-primary">68%</p>
+</div>
+<div class="h-4 bg-white/5 rounded-full overflow-hidden border border-white/10 p-0.5">
+<div class="h-full rounded-full shimmer shadow-[0_0_20px_rgba(19,236,236,0.6)]" style="width: 68%;"></div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4 pt-4">
+<div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-primary/30 transition-all">
+<p class="text-[10px] text-white/40 uppercase font-bold mb-1">Games Played</p>
+<p class="text-xl font-bold">12</p>
+</div>
+<div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-primary/30 transition-all">
+<p class="text-[10px] text-white/40 uppercase font-bold mb-1">Win Rate</p>
+<p class="text-xl font-bold text-green-400">85%</p>
+</div>
+<div class="bg-white/5 p-4 rounded-xl border border-white/10 hover:border-primary/30 transition-all">
+<p class="text-[10px] text-white/40 uppercase font-bold mb-1">Status</p>
+<div class="flex items-center gap-2">
+<div class="size-2 bg-primary rounded-full animate-ping"></div>
+<p class="text-sm font-bold text-primary">In-Game</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Stream Window -->
+<div class="glass rounded-2xl p-1 relative overflow-hidden group border border-accent-purple/40">
+<div class="absolute inset-0 bg-accent-purple/5 opacity-50"></div>
+<div class="relative aspect-video lg:aspect-square bg-background-dark rounded-xl flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="League of Legends live gameplay POV placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfkhPCPVYfryTJAiF9h_y57SVF-TK4AdqznYPYDeJnf1m-1X49xho_BadUsMLJ4NWyKt6oL-8BqpQ_SKX7QqDt6xsMxQvXbD8JhZ-8ggMgOWilMJIUfxFDFIWM3-IN_aeUx9i7G7oY7HtpR6_mV6nCk40LXvq8HTOWgNmlMlY5GVBgPPEVL3kFfcZZdbaKLx-UcKM0QzTqPZZlNoWsL5TMLO0kOIISN_BNe8hbtB2BBQ-_6dR3OzjBXswW7P0AmHbJyPlFBf22hq61"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"></div>
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-4">
+<button class="size-16 rounded-full bg-accent-purple flex items-center justify-center shadow-[0_0_30px_rgba(168,85,247,0.5)] hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl fill-current">play_arrow</span>
+</button>
+<div class="text-center">
+<p class="font-bold tracking-widest text-xs uppercase">Watch Booster POV</p>
+<p class="text-[10px] text-white/40 mt-1">Direct from Alpha's desk</p>
+</div>
+</div>
+<div class="absolute bottom-4 left-4 flex items-center gap-2">
+<div class="px-2 py-0.5 bg-red-600 text-[10px] font-bold rounded animate-pulse">LIVE</div>
+<div class="text-[10px] font-medium bg-black/60 px-2 py-0.5 rounded backdrop-blur">1,242 Spectators</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Recent Matches -->
+<div class="lg:col-span-2 space-y-4">
+<div class="flex items-center justify-between">
+<h4 class="text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                                Recent Matches
+                            </h4>
+<a class="text-xs text-primary font-bold hover:underline" href="#">VIEW ALL MATCHES</a>
+</div>
+<div class="space-y-3">
+<!-- Match 1 -->
+<div class="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/5 transition-all border-l-4 border-l-green-500">
+<div class="flex items-center gap-4">
+<img class="size-10 rounded-lg" data-alt="Champion Lee Sin avatar icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjuikx4SLfD9kjXc7YhkViiQ3uaJVd77-bDEmvAfHU6wM6iCUrJNky52bPmmTvse2qEDMaZCbp4qKS-8yOpIRr_i1TBYOOaBJ7EbkXpnfWfaEtG-j7H7RsWl1_99WzUXfI6O7YJOLARybE-M7qo4ApBdeaY9bOBv440Oyejbvp_j07-UYhg_eha9gIiE9M9jYstfYKqxXi7YwIIuwynSSBZ0dSsD7fBsLeAuMngcowm3z31CRrJKREIjF2fo5IoDvlBs1aIaBaC6n6"/>
+<div>
+<p class="font-bold">Victory</p>
+<p class="text-xs text-white/40">18:24 • Ranked Solo</p>
+</div>
+</div>
+<div class="flex gap-12">
+<div class="text-center">
+<p class="text-xs text-white/40 mb-1">KDA</p>
+<p class="font-bold">12 / 2 / 8</p>
+</div>
+<div class="text-center hidden sm:block">
+<p class="text-xs text-white/40 mb-1">LP GAIN</p>
+<p class="font-bold text-green-400">+28 LP</p>
+</div>
+</div>
+<div class="flex -space-x-2">
+<div class="size-6 rounded-md bg-white/10 border border-white/5"></div>
+<div class="size-6 rounded-md bg-white/10 border border-white/5"></div>
+<div class="size-6 rounded-md bg-white/10 border border-white/5"></div>
+</div>
+</div>
+<!-- Match 2 -->
+<div class="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/5 transition-all border-l-4 border-l-green-500">
+<div class="flex items-center gap-4">
+<img class="size-10 rounded-lg" data-alt="Champion Khazix avatar icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEuRIuytqS9hOhjKmRwXwTCNjgVbvaKLIxo9hkSe1jeGbKwZqmYsVCI0eD3L_i5xKbc9usam--_3sMvMnt06g7QnEMbG6OUMEifyNX_QddynpqafUMGq7kHafIVWY9zCzATQqj1vUWpYSAkBlOErUJcyCm4kxLFzrCnNkKv6JScNKkg6rai_DoSqh-RKb47EusPNbinOx6lhqNevN6iNqJj6LVjv8DBrJ7ndXu1eOkoA4EiuOiHhwltyabwcI7gWyHyIsh2jg8jZEF"/>
+<div>
+<p class="font-bold">Victory</p>
+<p class="text-xs text-white/40">24:51 • Ranked Solo</p>
+</div>
+</div>
+<div class="flex gap-12">
+<div class="text-center">
+<p class="text-xs text-white/40 mb-1">KDA</p>
+<p class="font-bold">8 / 1 / 4</p>
+</div>
+<div class="text-center hidden sm:block">
+<p class="text-xs text-white/40 mb-1">LP GAIN</p>
+<p class="font-bold text-green-400">+26 LP</p>
+</div>
+</div>
+<div class="flex -space-x-2">
+<div class="size-6 rounded-md bg-white/10 border border-white/5"></div>
+<div class="size-6 rounded-md bg-white/10 border border-white/5"></div>
+<div class="size-6 rounded-md bg-white/10 border border-white/5"></div>
+</div>
+</div>
+<!-- Match 3 -->
+<div class="glass p-4 rounded-xl flex items-center justify-between hover:bg-white/5 transition-all border-l-4 border-l-red-500">
+<div class="flex items-center gap-4">
+<img class="size-10 rounded-lg" data-alt="Champion Nidalee avatar icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZuwWST6FrU3iTiUvjG5jrRx96hXchczNp9HC44iFrELsAX7WD_3c7_olYLj-RDOwrnCASwTqkXp-acR2refM71R7XfVDOXpDFQPikfBCoKilRHGB0qh60DtR9_jKHziMkHcu0bNZbSWHtkWE6eFB9_r1ecF6gQsk1UjQJv0De697h0MKk9Q7CULnd5Yb7HiJ0ErrIq03EII2OFP_nybgQ2BMU-YJmUjFUl2fPZTOb-rfdX8kDhwJmFzlKH0O499gvODNNUQCAUOCy"/>
+<div>
+<p class="font-bold text-white/80">Defeat</p>
+<p class="text-xs text-white/40">32:10 • Ranked Solo</p>
+</div>
+</div>
+<div class="flex gap-12">
+<div class="text-center">
+<p class="text-xs text-white/40 mb-1">KDA</p>
+<p class="font-bold">4 / 5 / 12</p>
+</div>
+<div class="text-center hidden sm:block">
+<p class="text-xs text-white/40 mb-1">LP LOSS</p>
+<p class="font-bold text-red-400">-18 LP</p>
+</div>
+</div>
+<div class="flex -space-x-2">
+<div class="size-6 rounded-md bg-white/10 border border-white/5"></div>
+<div class="size-6 rounded-md bg-white/10 border border-white/5"></div>
+<div class="size-6 rounded-md bg-white/10 border border-white/5"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Side Stats & Booster Info -->
+<div class="space-y-6">
+<div class="glass p-6 rounded-2xl border border-white/5">
+<h4 class="text-sm font-bold text-white/40 uppercase tracking-widest mb-4">Current Booster</h4>
+<div class="flex items-center gap-4 mb-6">
+<div class="relative">
+<img class="size-14 rounded-xl border border-primary/20" data-alt="Professional booster portrait avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAnXT-Cl4g1tQUWVDG4tgYdWS1y_rKA_N6D6_xlSa489k0llkQq_nVoh1DYzCuczs1sbvmUUy7uKy60uo3n4e3YtrCffQIzR85_K_-5-aR_3D7_Wu8e-gFTN2LIArbkzKKQjAySQNE_vAq4RSXm_pTHibTGFcpoacUS3OpZy8LkI1oz4vmFb4WHWmnnAcXJEvSpo8v_8QCp2VDiWvBUfmlpkoovtta4UAG5g4091ajNlCVySDI9mzVzbwWXWmAbZdy7nj7CDxJwTgs"/>
+<div class="absolute -top-2 -right-2 bg-primary text-background-dark text-[10px] font-black px-1.5 py-0.5 rounded">PRO</div>
+</div>
+<div>
+<p class="text-lg font-bold">Booster 'Alpha'</p>
+<p class="text-xs text-primary font-medium">98% Success Rate</p>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-xs">
+<span class="text-white/40">Main Role</span>
+<span class="font-bold">Jungle / Mid</span>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-white/40">Region</span>
+<span class="font-bold">EU West</span>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-white/40">Current Status</span>
+<span class="font-bold text-green-400 flex items-center gap-1">
+<span class="size-1.5 bg-green-400 rounded-full"></span> Online
+                                    </span>
+</div>
+</div>
+<button class="w-full mt-6 py-3 bg-white/5 border border-white/10 rounded-xl font-bold text-sm hover:bg-primary hover:text-background-dark transition-all">
+                                OPEN PRIVATE CHAT
+                            </button>
+</div>
+<!-- Achievement Card -->
+<div class="bg-gradient-to-br from-[#1c2727] to-[#102222] p-6 rounded-2xl border border-white/5">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-yellow-500">military_tech</span>
+<h4 class="font-bold">Season Progress</h4>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-white/5 rounded-full">
+<div class="h-full bg-yellow-500 rounded-full" style="width: 45%;"></div>
+</div>
+<span class="text-xs font-bold">45%</span>
+</div>
+<p class="text-[10px] text-white/40 mt-2">14 more wins to reach Diamond Milestone rewards.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Chat Widget -->
+<div class="fixed bottom-6 right-6 z-50">
+<button class="glass p-4 pr-6 rounded-full flex items-center gap-3 border border-primary/30 shadow-[0_10px_40px_rgba(0,0,0,0.5)] hover:-translate-y-1 transition-all group">
+<div class="relative">
+<img class="size-10 rounded-full border border-primary/50" data-alt="Booster Alpha chat circular avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5CMovFyyYKL9ERWdwwPr37W4v0xvID7b8YXNCyjufnmCd79Hkx9ZwJpUrNZP-uo7AN-9xddx1V6mMi032as1pR8Kl-M9LAqW-u01JYfjqEIyoQ_i6LjAPGB-6qmoQT4_sIjr4y-zHIxcX6UUr6M_F9ua0eN_h1n2akxlCQoaI5vsyGCTSnhypKRVDWf1BDB9z2kU_ShCrxGLBHEc7OAmlAFXbNr2Lc1L8WohNzEHeNMydV3CcGZNrBWCLvtxUELdnMjv3vEtShzSd"/>
+<div class="absolute bottom-0 right-0 size-3 bg-primary rounded-full border-2 border-background-dark animate-pulse"></div>
+</div>
+<div class="text-left">
+<p class="text-xs font-bold leading-tight">Chat with Pro</p>
+<p class="text-[10px] text-primary/80 uppercase font-black tracking-tighter">Alpha is online</p>
+</div>
+<span class="material-symbols-outlined text-white/20 group-hover:text-primary transition-colors">send</span>
+</button>
+</div>
+</div>
+</body></html>
