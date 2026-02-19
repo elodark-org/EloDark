@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { SearchOverlay } from "@/components/layout/search-overlay";
+import { useAuth } from "@/hooks/use-auth";
 
 const navLinks = [
   { href: "/#games", label: "Games" },
@@ -17,6 +19,9 @@ const navLinks = [
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const { user, loading, logout } = useAuth();
+  const router = useRouter();
 
   return (
   <>
@@ -65,13 +70,107 @@ export function Navbar() {
             </span>
           </div>
 
-          <Button
-            size="md"
-            className="hidden sm:flex shadow-[0_0_15px_rgba(46,123,255,0.3)]"
-            iconRight="arrow_forward"
-          >
-            Order Now
-          </Button>
+          {!loading && !user && (
+            <>
+              <Link
+                href="/login"
+                className="hidden sm:inline-flex text-sm font-medium text-gray-300 hover:text-white transition-colors"
+              >
+                Log In
+              </Link>
+              <Link href="/register">
+                <Button
+                  size="md"
+                  className="hidden sm:flex shadow-[0_0_15px_rgba(46,123,255,0.3)]"
+                >
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          )}
+
+          {!loading && user && (
+            <div className="relative">
+              <button
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-white/5 transition-all"
+              >
+                <div className="size-9 rounded-lg bg-gradient-to-br from-primary to-accent-purple flex items-center justify-center text-sm font-bold text-white">
+                  {user.username.charAt(0).toUpperCase()}
+                </div>
+                <span className="hidden md:block text-sm font-medium text-white max-w-[100px] truncate">
+                  {user.username}
+                </span>
+                <Icon name="expand_more" size={18} className="text-gray-400 hidden md:block" />
+              </button>
+
+              {profileOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-bg-surface/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
+                    <div className="px-4 py-3 border-b border-white/5">
+                      <p className="text-sm font-bold text-white truncate">{user.username}</p>
+                      <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                      <span className="inline-block mt-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                        {user.role}
+                      </span>
+                    </div>
+                    <div className="py-1">
+                      <Link
+                        href="/dashboard"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-all"
+                        onClick={() => setProfileOpen(false)}
+                      >
+                        <Icon name="dashboard" size={18} />
+                        Dashboard
+                      </Link>
+                      <Link
+                        href="/dashboard/settings"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-all"
+                        onClick={() => setProfileOpen(false)}
+                      >
+                        <Icon name="settings" size={18} />
+                        Settings
+                      </Link>
+                      <Link
+                        href="/dashboard/chat"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-all"
+                        onClick={() => setProfileOpen(false)}
+                      >
+                        <Icon name="forum" size={18} />
+                        Messages
+                      </Link>
+                    </div>
+                    <div className="border-t border-white/5 py-1">
+                      <button
+                        onClick={() => {
+                          logout();
+                          setProfileOpen(false);
+                          router.push("/");
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/5 transition-all"
+                      >
+                        <Icon name="logout" size={18} />
+                        Log Out
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {!loading && !user && (
+            <Link href="/boost/league-of-legends" className="sm:hidden">
+              <Button
+                size="md"
+                className="shadow-[0_0_15px_rgba(46,123,255,0.3)]"
+                iconRight="arrow_forward"
+              >
+                Order Now
+              </Button>
+            </Link>
+          )}
 
           {/* Mobile Menu */}
           <button
@@ -97,9 +196,45 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <Button size="md" className="mt-2 w-full" iconRight="arrow_forward">
-              Order Now
-            </Button>
+            {!loading && !user && (
+              <>
+                <Link
+                  href="/login"
+                  className="text-gray-300 hover:text-white text-sm font-medium py-2"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Log In
+                </Link>
+                <Link href="/register" onClick={() => setMobileOpen(false)}>
+                  <Button size="md" className="w-full">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
+            {!loading && user && (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="text-primary hover:text-white text-sm font-medium py-2 flex items-center gap-2"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <Icon name="dashboard" size={18} />
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setMobileOpen(false);
+                    router.push("/");
+                  }}
+                  className="text-red-400 hover:text-red-300 text-sm font-medium py-2 flex items-center gap-2 text-left"
+                >
+                  <Icon name="logout" size={18} />
+                  Log Out
+                </button>
+              </>
+            )}
           </nav>
         </div>
       )}
