@@ -8,11 +8,11 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { Icon } from "@/components/ui/icon";
 
 interface AdminStats {
-  total_users: number;
-  total_boosters: number;
-  total_orders: number;
-  pending_orders: number;
-  total_revenue: number;
+  users: number;
+  boosters: number;
+  orders: number;
+  pending: number;
+  revenue: number;
 }
 
 export default function AdminDashboardPage() {
@@ -24,8 +24,8 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     if (!authorized) return;
     api
-      .get<AdminStats>("/admin/stats")
-      .then((data) => setStats(data))
+      .get<{ stats: AdminStats }>("/admin/stats")
+      .then((data) => setStats(data.stats))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [authorized]);
@@ -82,31 +82,31 @@ export default function AdminDashboardPage() {
           <StatCard
             icon="people"
             label="Total Users"
-            value={stats.total_users}
+            value={stats.users}
             iconColor="text-primary"
           />
           <StatCard
             icon="sports_esports"
             label="Total Boosters"
-            value={stats.total_boosters}
+            value={stats.boosters}
             iconColor="text-accent-purple"
           />
           <StatCard
             icon="shopping_cart"
             label="Total Orders"
-            value={stats.total_orders}
+            value={stats.orders}
             iconColor="text-blue-400"
           />
           <StatCard
             icon="pending"
             label="Pending Orders"
-            value={stats.pending_orders}
+            value={stats.pending}
             iconColor="text-yellow-400"
           />
           <StatCard
             icon="payments"
             label="Revenue"
-            value={`R$ ${stats.total_revenue.toFixed(2)}`}
+            value={`R$ ${stats.revenue.toFixed(2)}`}
             iconColor="text-green-400"
           />
         </div>
