@@ -1,2 +1,12 @@
 node_modules/
 .env
+
+# Arquivos de teste
+test_*.js
+debug_*.js
+debug_*.html
+*_repro.html
+repro_*.js
+server/db/debug_*.js
+server/db/force_*.js
+server/db/seed_*_test.js
