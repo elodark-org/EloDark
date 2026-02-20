@@ -96,10 +96,10 @@ export function Navbar() {
                 className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-white/5 transition-all"
               >
                 <div className="size-9 rounded-lg bg-gradient-to-br from-primary to-accent-purple flex items-center justify-center text-sm font-bold text-white">
-                  {user.username.charAt(0).toUpperCase()}
+                  {user.name.charAt(0).toUpperCase()}
                 </div>
                 <span className="hidden md:block text-sm font-medium text-white max-w-[100px] truncate">
-                  {user.username}
+                  {user.name}
                 </span>
                 <Icon name="expand_more" size={18} className="text-gray-400 hidden md:block" />
               </button>
@@ -109,7 +109,7 @@ export function Navbar() {
                   <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
                   <div className="absolute right-0 top-full mt-2 w-56 bg-bg-surface/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
                     <div className="px-4 py-3 border-b border-white/5">
-                      <p className="text-sm font-bold text-white truncate">{user.username}</p>
+                      <p className="text-sm font-bold text-white truncate">{user.name}</p>
                       <p className="text-xs text-gray-400 truncate">{user.email}</p>
                       <span className="inline-block mt-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
                         {user.role}

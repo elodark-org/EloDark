@@ -95,10 +95,10 @@ export function DashboardSidebar() {
         <div className="glass-card rounded-2xl p-4 border border-white/5">
           <div className="flex items-center gap-3 mb-3">
             <div className="size-9 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-sm font-bold text-primary">
-              {(user?.name || user?.username || "U").charAt(0).toUpperCase()}
+              {(user?.name || "U").charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold truncate">{user?.name || user?.username || "User"}</p>
+              <p className="text-sm font-bold truncate">{user?.name || "User"}</p>
               <p className="text-[10px] text-white/40 capitalize">{role}</p>
             </div>
           </div>
