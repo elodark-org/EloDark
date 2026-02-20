@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
 import { getStripe } from "@/lib/stripe";
+import { logger } from "@/lib/logger";
+import {
+  isPlainObject,
+  isValidServiceType,
+  parseOptionalString,
+  parsePrice,
+  sanitizeConfig,
+  VALID_SERVICE_TYPES,
+} from "@/lib/validation";
 
 // POST /api/checkout/create-session
 export async function POST(req: NextRequest) {
@@ -14,18 +23,32 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Stripe não configurado. Defina STRIPE_SECRET_KEY no .env" }, { status: 500 });
     }
 
-    const { service_type, config, price } = await req.json();
+    const payload = await req.json();
+    if (!isPlainObject(payload)) {
+      return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
+    }
 
-    if (!service_type || !price) {
+    const serviceType = payload.service_type;
+    const config = sanitizeConfig(payload.config);
+    const price = parsePrice(payload.price);
+    const description = parseOptionalString(config.description, { maxLength: 500 });
+
+    if (!serviceType || price === null) {
       return NextResponse.json({ error: "service_type e price são obrigatórios" }, { status: 400 });
     }
 
-    const numericPrice = parseFloat(price);
-    if (isNaN(numericPrice) || numericPrice <= 0 || numericPrice > 50000) {
+    if (!isValidServiceType(serviceType)) {
+      return NextResponse.json(
+        { error: `Serviço inválido. Use: ${VALID_SERVICE_TYPES.join(", ")}` },
+        { status: 400 }
+      );
+    }
+
+    if (price <= 0 || price > 50000) {
       return NextResponse.json({ error: "Preço inválido. Deve ser entre R$ 0,01 e R$ 50.000,00" }, { status: 400 });
     }
 
-    const serviceNames: Record<string, string> = {
+    const serviceNames: Record<(typeof VALID_SERVICE_TYPES)[number], string> = {
       "elo-boost": "Elo Boost",
       "duo-boost": "Duo Boost",
       "md10": "MD10 (Placement)",
@@ -35,7 +58,7 @@ export async function POST(req: NextRequest) {
 
     const [order] = await sql`
       INSERT INTO orders (user_id, service_type, config, price, status)
-      VALUES (${user.id}, ${service_type}, ${JSON.stringify(config || {})}, ${price}, 'pending')
+      VALUES (${user.id}, ${serviceType}, ${JSON.stringify(config)}, ${price}, 'pending')
       RETURNING *
     `;
 
@@ -47,8 +70,10 @@ export async function POST(req: NextRequest) {
         price_data: {
           currency: "brl",
           product_data: {
-            name: `EloDark - ${serviceNames[service_type] || service_type}`,
-            description: config?.description || `Serviço de ${serviceNames[service_type]} para League of Legends`,
+            name: `EloDark - ${serviceNames[serviceType]}`,
+            description:
+              description ||
+              `Serviço de ${serviceNames[serviceType]} para League of Legends`,
           },
           unit_amount: Math.round(price * 100),
         },
@@ -60,14 +85,14 @@ export async function POST(req: NextRequest) {
       metadata: {
         order_id: order.id.toString(),
         user_id: user.id.toString(),
-        service_type,
+        service_type: serviceType,
       },
       customer_email: user.email,
     });
 
     return NextResponse.json({ sessionId: session.id, url: session.url, order_id: order.id });
   } catch (err) {
-    console.error("Stripe session error:", err);
+    logger.error("Erro ao criar sessão Stripe", err, { userId: user.id });
     return NextResponse.json({ error: "Erro ao criar sessão de pagamento" }, { status: 500 });
   }
 }

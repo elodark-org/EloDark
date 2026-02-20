@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireRole, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
+import {
+  isPlainObject,
+  parseOptionalString,
+  parsePositiveInt,
+} from "@/lib/validation";
 
 // PUT /api/admin/withdrawals/[id] — Approve or reject a withdrawal
 export async function PUT(
@@ -11,10 +17,23 @@ export async function PUT(
   if (!isUser(user)) return user;
 
   try {
-    const { id } = await params;
-    const { status, admin_notes } = await req.json();
+    const { id: rawId } = await params;
+    const id = parsePositiveInt(rawId);
+    if (!id) {
+      return NextResponse.json({ error: "ID de saque inválido" }, { status: 400 });
+    }
 
-    if (!status || !["approved", "rejected"].includes(status)) {
+    const payload = await req.json();
+    if (!isPlainObject(payload)) {
+      return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
+    }
+
+    const status = payload.status;
+    const adminNotes = parseOptionalString(payload.admin_notes, {
+      maxLength: 2000,
+    });
+
+    if (typeof status !== "string" || !["approved", "rejected"].includes(status)) {
       return NextResponse.json({ error: "status deve ser 'approved' ou 'rejected'" }, { status: 400 });
     }
 
@@ -28,14 +47,14 @@ export async function PUT(
 
     const [withdrawal] = await sql`
       UPDATE withdrawals
-      SET status = ${status}, admin_notes = ${admin_notes || null}, processed_at = NOW()
+      SET status = ${status}, admin_notes = ${adminNotes}, processed_at = NOW()
       WHERE id = ${id}
       RETURNING *
     `;
 
     return NextResponse.json({ withdrawal });
   } catch (err) {
-    console.error("Admin withdrawal action error:", err);
+    logger.error("Erro admin ao processar saque", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireRole, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 // GET /api/booster/wallet — Wallet summary for authenticated booster
 export async function GET(req: NextRequest) {
@@ -34,9 +35,9 @@ export async function GET(req: NextRequest) {
       WHERE booster_id = ${booster.id} AND status = 'pending'
     `;
 
-    const totalEarned = parseFloat(earned.total);
-    const totalWithdrawn = parseFloat(withdrawn.total);
-    const pendingWithdrawals = parseFloat(pending.total);
+    const totalEarned = Number(earned.total ?? 0);
+    const totalWithdrawn = Number(withdrawn.total ?? 0);
+    const pendingWithdrawals = Number(pending.total ?? 0);
 
     return NextResponse.json({
       total_earned: totalEarned,
@@ -44,7 +45,7 @@ export async function GET(req: NextRequest) {
       pending_withdrawals: pendingWithdrawals,
     });
   } catch (err) {
-    console.error("Wallet error:", err);
+    logger.error("Erro ao carregar carteira do booster", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

@@ -2,16 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
+import { isPlainObject, parseNonEmptyString } from "@/lib/validation";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password } = await req.json();
+    const payload = await req.json();
+    if (!isPlainObject(payload)) {
+      return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
+    }
+
+    const name = parseNonEmptyString(payload.name, { minLength: 2, maxLength: 100 });
+    const email = parseNonEmptyString(payload.email, { maxLength: 255 })?.toLowerCase();
+    const password = parseNonEmptyString(payload.password, { minLength: 6, maxLength: 255 });
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: "Nome, email e senha são obrigatórios" }, { status: 400 });
-    }
-    if (password.length < 6) {
-      return NextResponse.json({ error: "Senha deve ter no mínimo 6 caracteres" }, { status: 400 });
     }
 
     const existing = await sql`SELECT id FROM users WHERE email = ${email}`;
@@ -28,7 +34,7 @@ export async function POST(req: NextRequest) {
 
     const secret = process.env.JWT_SECRET;
     if (!secret) {
-      console.error("JWT_SECRET não configurado");
+      logger.error("JWT_SECRET não configurado");
       return NextResponse.json({ error: "Erro de configuração do servidor" }, { status: 500 });
     }
 
@@ -40,7 +46,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ user, token }, { status: 201 });
   } catch (err) {
-    console.error("Register error:", err);
+    logger.error("Erro de registro", err);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

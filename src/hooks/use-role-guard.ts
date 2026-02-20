@@ -22,5 +22,9 @@ export function useRoleGuard(...allowedRoles: string[]) {
     }
   }, [user, loading, router, allowedRoles]);
 
-  return { user, loading, authorized: !loading && user && allowedRoles.includes(user.role) };
+  const authorized = Boolean(
+    !loading && user && allowedRoles.includes(user.role)
+  );
+
+  return { user, loading, authorized };
 }

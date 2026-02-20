@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireRole, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 // GET /api/admin/orders — List all orders
 export async function GET(req: NextRequest) {
@@ -36,7 +37,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ orders });
   } catch (err) {
-    console.error("List orders error:", err);
+    logger.error("Erro admin ao listar pedidos", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

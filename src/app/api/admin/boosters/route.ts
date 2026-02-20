@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { requireRole, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
+import {
+  isPlainObject,
+  parseBoundedNumber,
+  parseNonEmptyString,
+  parseNonNegativeInt,
+  parseOptionalString,
+} from "@/lib/validation";
 
 // POST /api/admin/boosters — Create booster (creates user + booster profile)
 export async function POST(req: NextRequest) {
@@ -9,10 +17,41 @@ export async function POST(req: NextRequest) {
   if (!isUser(user)) return user;
 
   try {
-    const { name, email, password, game_name, rank, win_rate, games_played, avatar_emoji } = await req.json();
+    const payload = await req.json();
+    if (!isPlainObject(payload)) {
+      return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
+    }
 
-    if (!name || !email || !password || !game_name || !rank) {
+    const name = parseNonEmptyString(payload.name, { minLength: 2, maxLength: 100 });
+    const email = parseNonEmptyString(payload.email, { maxLength: 255 })?.toLowerCase();
+    const password = parseNonEmptyString(payload.password, { minLength: 6, maxLength: 255 });
+    const gameName = parseNonEmptyString(payload.game_name, { maxLength: 100 });
+    const rank = parseNonEmptyString(payload.rank, { maxLength: 50 });
+    const winRateParsed =
+      payload.win_rate === undefined
+        ? 0
+        : parseBoundedNumber(payload.win_rate, 0, 100);
+    const gamesPlayedParsed =
+      payload.games_played === undefined
+        ? 0
+        : parseNonNegativeInt(payload.games_played);
+    const avatarEmojiParsed =
+      payload.avatar_emoji === undefined
+        ? "🎮"
+        : parseOptionalString(payload.avatar_emoji, { maxLength: 10 });
+
+    if (!name || !email || !password || !gameName || !rank) {
       return NextResponse.json({ error: "name, email, password, game_name e rank são obrigatórios" }, { status: 400 });
+    }
+    if (
+      winRateParsed === null ||
+      gamesPlayedParsed === null ||
+      avatarEmojiParsed === null
+    ) {
+      return NextResponse.json(
+        { error: "win_rate, games_played ou avatar_emoji inválidos" },
+        { status: 400 }
+      );
     }
 
     const existing = await sql`SELECT id FROM users WHERE email = ${email}`;
@@ -30,7 +69,7 @@ export async function POST(req: NextRequest) {
       ),
       new_booster AS (
         INSERT INTO boosters (user_id, game_name, rank, win_rate, games_played, avatar_emoji)
-        SELECT id, ${game_name}, ${rank}, ${win_rate || 0}, ${games_played || 0}, ${avatar_emoji || "🎮"}
+        SELECT id, ${gameName}, ${rank}, ${winRateParsed}, ${gamesPlayedParsed}, ${avatarEmojiParsed}
         FROM new_user
         RETURNING *
       )
@@ -50,7 +89,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ user: newUser, booster }, { status: 201 });
   } catch (err) {
-    console.error("Create booster error:", err);
+    logger.error("Erro admin ao criar booster", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
@@ -69,7 +108,7 @@ export async function GET(req: NextRequest) {
     `;
     return NextResponse.json({ boosters });
   } catch (err) {
-    console.error("List boosters error:", err);
+    logger.error("Erro admin ao listar boosters", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

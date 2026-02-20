@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
+import {
+  isPlainObject,
+  isValidServiceType,
+  parsePrice,
+  sanitizeConfig,
+  VALID_SERVICE_TYPES,
+} from "@/lib/validation";
 
 // POST /api/orders — Create order
 export async function POST(req: NextRequest) {
@@ -8,31 +16,39 @@ export async function POST(req: NextRequest) {
   if (!isUser(user)) return user;
 
   try {
-    const { service_type, config, price } = await req.json();
+    const payload = await req.json();
+    if (!isPlainObject(payload)) {
+      return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
+    }
 
-    if (!service_type || !price) {
+    const serviceType = payload.service_type;
+    const price = parsePrice(payload.price);
+    const config = sanitizeConfig(payload.config);
+
+    if (!serviceType || price === null) {
       return NextResponse.json({ error: "service_type e price são obrigatórios" }, { status: 400 });
     }
 
-    const numericPrice = parseFloat(price);
-    if (isNaN(numericPrice) || numericPrice <= 0 || numericPrice > 50000) {
-      return NextResponse.json({ error: "Preço inválido. Deve ser entre R$ 0,01 e R$ 50.000,00" }, { status: 400 });
+    if (!isValidServiceType(serviceType)) {
+      return NextResponse.json(
+        { error: `Serviço inválido. Use: ${VALID_SERVICE_TYPES.join(", ")}` },
+        { status: 400 }
+      );
     }
 
-    const validServices = ["elo-boost", "duo-boost", "md10", "wins", "coach"];
-    if (!validServices.includes(service_type)) {
-      return NextResponse.json({ error: `Serviço inválido. Use: ${validServices.join(", ")}` }, { status: 400 });
+    if (price <= 0 || price > 50000) {
+      return NextResponse.json({ error: "Preço inválido. Deve ser entre R$ 0,01 e R$ 50.000,00" }, { status: 400 });
     }
 
     const [order] = await sql`
       INSERT INTO orders (user_id, service_type, config, price)
-      VALUES (${user.id}, ${service_type}, ${JSON.stringify(config || {})}, ${price})
+      VALUES (${user.id}, ${serviceType}, ${JSON.stringify(config)}, ${price})
       RETURNING *
     `;
 
     return NextResponse.json({ order }, { status: 201 });
   } catch (err) {
-    console.error("Create order error:", err);
+    logger.error("Erro ao criar pedido", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
@@ -68,7 +84,10 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ orders });
   } catch (err) {
-    console.error("List orders error:", err);
+    logger.error("Erro ao listar pedidos", err, {
+      userId: user.id,
+      role: user.role,
+    });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

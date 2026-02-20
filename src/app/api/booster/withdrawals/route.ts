@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireRole, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
+import {
+  isPlainObject,
+  parseBoundedNumber,
+  parseNonEmptyString,
+} from "@/lib/validation";
 
 // GET /api/booster/withdrawals — List booster's withdrawals
 export async function GET(req: NextRequest) {
@@ -21,7 +27,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ withdrawals });
   } catch (err) {
-    console.error("List withdrawals error:", err);
+    logger.error("Erro ao listar saques do booster", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
@@ -37,20 +43,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Perfil de booster não encontrado" }, { status: 400 });
     }
 
-    const { amount, pix_key, pix_type } = await req.json();
+    const payload = await req.json();
+    if (!isPlainObject(payload)) {
+      return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
+    }
 
-    if (!amount || !pix_key || !pix_type) {
+    const amount = parseBoundedNumber(payload.amount, 0.01, 1000000);
+    const pixKey = parseNonEmptyString(payload.pix_key, { maxLength: 255 });
+    const pixType = payload.pix_type;
+
+    if (amount === null || !pixKey || !pixType) {
       return NextResponse.json({ error: "amount, pix_key e pix_type são obrigatórios" }, { status: 400 });
     }
 
     const validPixTypes = ["cpf", "email", "phone", "random"];
-    if (!validPixTypes.includes(pix_type)) {
+    if (typeof pixType !== "string" || !validPixTypes.includes(pixType)) {
       return NextResponse.json({ error: `pix_type inválido. Use: ${validPixTypes.join(", ")}` }, { status: 400 });
-    }
-
-    const numAmount = parseFloat(amount);
-    if (isNaN(numAmount) || numAmount <= 0) {
-      return NextResponse.json({ error: "Valor inválido" }, { status: 400 });
     }
 
     // Calculate available balance
@@ -63,20 +71,20 @@ export async function POST(req: NextRequest) {
       FROM withdrawals WHERE booster_id = ${booster.id} AND status IN ('approved', 'pending')
     `;
 
-    const available = parseFloat(earned.total) - parseFloat(withdrawn.total);
-    if (numAmount > available) {
+    const available = Number(earned.total ?? 0) - Number(withdrawn.total ?? 0);
+    if (amount > available) {
       return NextResponse.json({ error: `Saldo insuficiente. Disponível: R$ ${available.toFixed(2)}` }, { status: 400 });
     }
 
     const [withdrawal] = await sql`
       INSERT INTO withdrawals (booster_id, amount, pix_key, pix_type)
-      VALUES (${booster.id}, ${numAmount}, ${pix_key}, ${pix_type})
+      VALUES (${booster.id}, ${amount}, ${pixKey}, ${pixType})
       RETURNING *
     `;
 
     return NextResponse.json({ withdrawal }, { status: 201 });
   } catch (err) {
-    console.error("Create withdrawal error:", err);
+    logger.error("Erro ao criar saque do booster", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

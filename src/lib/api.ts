@@ -1,3 +1,5 @@
+import { parseApiResponse } from "@/lib/http-response";
+
 const API_BASE = "/api";
 
 async function request<T>(
@@ -15,13 +17,7 @@ async function request<T>(
       ...options?.headers,
     },
   });
-
-  if (!res.ok) {
-    const error = await res.json().catch(() => ({ message: res.statusText }));
-    throw new Error(error.message || "Request failed");
-  }
-
-  return res.json();
+  return parseApiResponse<T>(res);
 }
 
 export const api = {

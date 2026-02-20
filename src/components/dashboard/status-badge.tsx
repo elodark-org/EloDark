@@ -26,7 +26,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
         className
       )}
     >
-      {status.replace("_", " ")}
+      {(status ?? "unknown").replace("_", " ")}
     </span>
   );
 }

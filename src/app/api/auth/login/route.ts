@@ -2,10 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
+import { isPlainObject, parseNonEmptyString } from "@/lib/validation";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
+    const payload = await req.json();
+    if (!isPlainObject(payload)) {
+      return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
+    }
+
+    const email = parseNonEmptyString(payload.email, { maxLength: 255 })?.toLowerCase();
+    const password = parseNonEmptyString(payload.password, { maxLength: 255 });
 
     if (!email || !password) {
       return NextResponse.json({ error: "Email e senha são obrigatórios" }, { status: 400 });
@@ -23,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     const secret = process.env.JWT_SECRET;
     if (!secret) {
-      console.error("JWT_SECRET não configurado");
+      logger.error("JWT_SECRET não configurado");
       return NextResponse.json({ error: "Erro de configuração do servidor" }, { status: 500 });
     }
 
@@ -44,7 +52,7 @@ export async function POST(req: NextRequest) {
       token,
     });
   } catch (err) {
-    console.error("Login error:", err);
+    logger.error("Erro de login", err);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

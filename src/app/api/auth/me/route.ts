@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   const result = requireAuth(req);
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest) {
     if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
     return NextResponse.json({ user });
   } catch (err) {
-    console.error("Me error:", err);
+    logger.error("Erro ao buscar usuário autenticado", err, { userId: result.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

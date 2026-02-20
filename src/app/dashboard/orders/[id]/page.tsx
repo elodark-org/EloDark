@@ -73,7 +73,7 @@ export default function OrderDetailPage() {
       await api.post("/reviews", {
         order_id: Number(orderId),
         rating,
-        comment: reviewText.trim(),
+        text: reviewText.trim(),
       });
       setReviewSubmitted(true);
     } catch {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 // GET /api/boosters — Public list of active boosters
 export async function GET() {
@@ -12,7 +13,7 @@ export async function GET() {
     `;
     return NextResponse.json({ boosters });
   } catch (err) {
-    console.error("List boosters error:", err);
+    logger.error("Erro ao listar boosters públicos", err);
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

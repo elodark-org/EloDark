@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
+import {
+  isPlainObject,
+  parseNonEmptyString,
+  parsePositiveInt,
+} from "@/lib/validation";
 
 // GET /api/chat/:orderId — List messages for an order
 export async function GET(req: NextRequest, { params }: { params: Promise<{ orderId: string }> }) {
@@ -8,7 +14,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ orde
   if (!isUser(user)) return user;
 
   try {
-    const { orderId } = await params;
+    const { orderId: rawOrderId } = await params;
+    const orderId = parsePositiveInt(rawOrderId);
+    if (!orderId) {
+      return NextResponse.json({ error: "ID de pedido inválido" }, { status: 400 });
+    }
 
     const [order] = await sql`SELECT user_id, booster_id FROM orders WHERE id = ${orderId}`;
     if (!order) return NextResponse.json({ error: "Pedido não encontrado" }, { status: 404 });
@@ -35,7 +45,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ orde
 
     return NextResponse.json({ messages });
   } catch (err) {
-    console.error("Chat list error:", err);
+    logger.error("Erro ao listar mensagens do chat", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
@@ -46,10 +56,20 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ord
   if (!isUser(user)) return user;
 
   try {
-    const { orderId } = await params;
-    const { content } = await req.json();
+    const { orderId: rawOrderId } = await params;
+    const orderId = parsePositiveInt(rawOrderId);
+    if (!orderId) {
+      return NextResponse.json({ error: "ID de pedido inválido" }, { status: 400 });
+    }
 
-    if (!content || !content.trim()) {
+    const payload = await req.json();
+    if (!isPlainObject(payload)) {
+      return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
+    }
+
+    const content = parseNonEmptyString(payload.content, { maxLength: 2000 });
+
+    if (!content) {
       return NextResponse.json({ error: "Mensagem vazia" }, { status: 400 });
     }
 
@@ -76,7 +96,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ord
 
     return NextResponse.json({ message }, { status: 201 });
   } catch (err) {
-    console.error("Chat send error:", err);
+    logger.error("Erro ao enviar mensagem no chat", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

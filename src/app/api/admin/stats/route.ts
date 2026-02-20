@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireRole, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 // GET /api/admin/stats — Dashboard stats
 export async function GET(req: NextRequest) {
@@ -16,15 +17,15 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       stats: {
-        users: parseInt(usersCount.count),
-        boosters: parseInt(boostersCount.count),
-        orders: parseInt(ordersCount.count),
-        pending: parseInt(pendingCount.count),
-        revenue: parseFloat(revenue.total),
+        users: Number(usersCount.count ?? 0),
+        boosters: Number(boostersCount.count ?? 0),
+        orders: Number(ordersCount.count ?? 0),
+        pending: Number(pendingCount.count ?? 0),
+        revenue: Number(revenue.total ?? 0),
       },
     });
   } catch (err) {
-    console.error("Stats error:", err);
+    logger.error("Erro ao carregar estatísticas admin", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }

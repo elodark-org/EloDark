@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 interface JWTPayload {
   id: number;
@@ -16,11 +17,12 @@ export function verifyToken(req: NextRequest): JWTPayload | null {
     const token = header.split(" ")[1];
     const secret = process.env.JWT_SECRET;
     if (!secret) {
-      console.error("JWT_SECRET não configurado");
+      logger.error("JWT_SECRET não configurado");
       return null;
     }
     return jwt.verify(token, secret) as JWTPayload;
-  } catch {
+  } catch (error) {
+    logger.warn("Falha ao validar token JWT", { error });
     return null;
   }
 }
@@ -33,7 +35,10 @@ export function requireAuth(req: NextRequest): JWTPayload | NextResponse {
   return user;
 }
 
-export function requireRole(req: NextRequest, ...roles: string[]): JWTPayload | NextResponse {
+export function requireRole(
+  req: NextRequest,
+  ...roles: JWTPayload["role"][]
+): JWTPayload | NextResponse {
   const result = requireAuth(req);
   if (result instanceof NextResponse) return result;
   if (!roles.includes(result.role)) {

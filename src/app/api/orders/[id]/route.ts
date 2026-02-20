@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, isUser } from "@/lib/auth";
 import { sql } from "@/lib/db";
+import { logger } from "@/lib/logger";
+import { parsePositiveInt } from "@/lib/validation";
 
 // GET /api/orders/:id — Get single order
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -8,7 +10,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!isUser(user)) return user;
 
   try {
-    const { id } = await params;
+    const { id: rawId } = await params;
+    const id = parsePositiveInt(rawId);
+    if (!id) {
+      return NextResponse.json({ error: "ID de pedido inválido" }, { status: 400 });
+    }
+
     const [order] = await sql`
       SELECT o.*, u.name as user_name, u.email as user_email,
              b.game_name as booster_name, b.rank as booster_rank
@@ -33,7 +40,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
     return NextResponse.json({ order });
   } catch (err) {
-    console.error("Get order error:", err);
+    logger.error("Erro ao buscar pedido", err, { userId: user.id });
     return NextResponse.json({ error: "Erro interno do servidor" }, { status: 500 });
   }
 }
