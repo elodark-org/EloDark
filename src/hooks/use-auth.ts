@@ -5,9 +5,10 @@ import { api } from "@/lib/api";
 
 interface User {
   id: number;
+  name: string;
   email: string;
   username: string;
-  role: "client" | "booster" | "admin";
+  role: "user" | "booster" | "admin";
 }
 
 interface AuthState {
@@ -67,9 +68,10 @@ export function useAuth() {
       // Fallback: demo mode when API is unavailable
       const demoUser: User = {
         id: 1,
+        name: email.split("@")[0] || "Summoner",
         email,
         username: email.split("@")[0] || "Summoner",
-        role: "client",
+        role: "user",
       };
       localStorage.setItem(DEMO_USER_KEY, JSON.stringify(demoUser));
       setState({ user: demoUser, loading: false });
@@ -91,9 +93,10 @@ export function useAuth() {
         // Fallback: demo mode when API is unavailable
         const demoUser: User = {
           id: 1,
+          name: username,
           email,
           username,
-          role: "client",
+          role: "user",
         };
         localStorage.setItem(DEMO_USER_KEY, JSON.stringify(demoUser));
         setState({ user: demoUser, loading: false });

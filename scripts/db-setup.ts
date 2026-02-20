@@ -87,6 +87,21 @@ async function createTables() {
   `;
   console.log("  ✅ Tabela messages criada");
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS withdrawals (
+      id SERIAL PRIMARY KEY,
+      booster_id INTEGER REFERENCES boosters(id) ON DELETE CASCADE,
+      amount DECIMAL(10,2) NOT NULL CHECK (amount > 0),
+      pix_key VARCHAR(255) NOT NULL,
+      pix_type VARCHAR(10) NOT NULL CHECK (pix_type IN ('cpf', 'email', 'phone', 'random')),
+      status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+      admin_notes TEXT,
+      created_at TIMESTAMP DEFAULT NOW(),
+      processed_at TIMESTAMP
+    )
+  `;
+  console.log("  ✅ Tabela withdrawals criada");
+
   console.log("🎉 Todas as tabelas criadas com sucesso!");
 }
 

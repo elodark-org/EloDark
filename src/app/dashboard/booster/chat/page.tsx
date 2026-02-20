@@ -2,57 +2,45 @@
 
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
+import { useRoleGuard } from "@/hooks/use-role-guard";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { ChatView } from "@/components/dashboard/chat-view";
 import { Icon } from "@/components/ui/icon";
 import type { Order } from "@/types";
 
-export default function ChatPage() {
+export default function BoosterChatPage() {
+  const { loading: guardLoading, authorized } = useRoleGuard("booster");
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!authorized) return;
+
     api
       .get<{ orders: Order[] }>("/orders")
       .then((data) => setOrders(data.orders))
-      .catch((err) => setError(err.message))
+      .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  }, [authorized]);
 
-  if (loading) {
+  if (guardLoading || !authorized || loading) {
     return (
-      <div className="flex flex-col h-full">
+      <>
         <PageHeader title="Chat" />
-        <div className="flex-1 flex items-center justify-center">
+        <div className="p-8 flex items-center justify-center h-[calc(100vh-65px)]">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading conversations...</span>
+            <span>Loading...</span>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col h-full">
-        <PageHeader title="Chat" />
-        <div className="flex-1 flex items-center justify-center p-8">
-          <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
-            <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load conversations.</p>
-            <p className="text-xs text-white/30 mt-1">{error}</p>
-          </div>
-        </div>
-      </div>
+      </>
     );
   }
 
   return (
     <div className="flex flex-col h-full">
       <PageHeader title="Chat" />
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 min-h-0">
         <ChatView orders={orders} />
       </div>
     </div>
