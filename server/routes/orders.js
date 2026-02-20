@@ -143,6 +143,17 @@ router.put('/:id/status', verifyToken, requireRole('booster', 'admin'), async (r
         `;
 
         if (!order) return res.status(404).json({ error: 'Pedido não encontrado' });
+
+        // Ao concluir, registrar ganho no saldo do booster
+        if (status === 'completed' && order.booster_id) {
+            await sql`
+                INSERT INTO booster_earnings (booster_id, order_id, amount)
+                VALUES (${order.booster_id}, ${order.id}, ${order.price})
+                ON CONFLICT DO NOTHING
+            `;
+            console.log(`💰 Earning de R$ ${order.price} registrado para booster #${order.booster_id} (pedido #${order.id})`);
+        }
+
         res.json({ order });
     } catch (err) {
         console.error('Update order status error:', err);

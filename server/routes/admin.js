@@ -251,4 +251,65 @@ router.get('/users', async (req, res) => {
     }
 });
 
+// GET /api/admin/withdrawals — Listar todas solicitações de saque
+router.get('/withdrawals', async (req, res) => {
+    try {
+        const { status } = req.query;
+        let withdrawals;
+
+        if (status) {
+            withdrawals = await sql`
+                SELECT wr.*, u.name as booster_name, u.email as booster_email
+                FROM withdrawal_requests wr
+                JOIN boosters b ON b.id = wr.booster_id
+                JOIN users u ON u.id = b.user_id
+                WHERE wr.status = ${status}
+                ORDER BY wr.created_at DESC
+            `;
+        } else {
+            withdrawals = await sql`
+                SELECT wr.*, u.name as booster_name, u.email as booster_email
+                FROM withdrawal_requests wr
+                JOIN boosters b ON b.id = wr.booster_id
+                JOIN users u ON u.id = b.user_id
+                ORDER BY wr.created_at DESC
+            `;
+        }
+
+        res.json({ withdrawals });
+    } catch (err) {
+        console.error('List withdrawals error:', err);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
+// PUT /api/admin/withdrawals/:id — Aprovar ou rejeitar saque
+router.put('/withdrawals/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status, admin_notes } = req.body;
+
+        if (!['approved', 'rejected'].includes(status)) {
+            return res.status(400).json({ error: 'Status inválido. Use: approved ou rejected' });
+        }
+
+        const [withdrawal] = await sql`
+            UPDATE withdrawal_requests SET
+                status = ${status},
+                admin_notes = COALESCE(${admin_notes || null}, admin_notes),
+                processed_at = NOW()
+            WHERE id = ${id} AND status = 'pending'
+            RETURNING *
+        `;
+
+        if (!withdrawal) return res.status(404).json({ error: 'Solicitação não encontrada ou já processada' });
+
+        console.log(`💸 Saque #${id} ${status} pelo admin`);
+        res.json({ withdrawal });
+    } catch (err) {
+        console.error('Process withdrawal error:', err);
+        res.status(500).json({ error: 'Erro interno do servidor' });
+    }
+});
+
 module.exports = router;

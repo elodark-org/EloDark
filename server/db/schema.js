@@ -63,6 +63,48 @@ async function createTables() {
     `;
     console.log('  ✅ Tabela reviews criada');
 
+    // Messages table (chat cliente ↔ booster por pedido)
+    await sql`
+        CREATE TABLE IF NOT EXISTS messages (
+            id SERIAL PRIMARY KEY,
+            order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            content TEXT NOT NULL,
+            is_system BOOLEAN DEFAULT false,
+            created_at TIMESTAMP DEFAULT NOW()
+        )
+    `;
+    console.log('  ✅ Tabela messages criada');
+
+    // Booster earnings table (saldo por pedido concluído)
+    await sql`
+        CREATE TABLE IF NOT EXISTS booster_earnings (
+            id SERIAL PRIMARY KEY,
+            booster_id INTEGER REFERENCES boosters(id) ON DELETE CASCADE,
+            order_id INTEGER REFERENCES orders(id) ON DELETE SET NULL,
+            amount DECIMAL(10,2) NOT NULL,
+            created_at TIMESTAMP DEFAULT NOW()
+        )
+    `;
+    console.log('  ✅ Tabela booster_earnings criada');
+
+    // Withdrawal requests table
+    await sql`
+        CREATE TABLE IF NOT EXISTS withdrawal_requests (
+            id SERIAL PRIMARY KEY,
+            booster_id INTEGER REFERENCES boosters(id) ON DELETE CASCADE,
+            amount DECIMAL(10,2) NOT NULL,
+            pix_key VARCHAR(255),
+            status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+            admin_notes TEXT,
+            created_at TIMESTAMP DEFAULT NOW(),
+            processed_at TIMESTAMP
+        )
+    `;
+    // Garante coluna pix_key em tabelas já existentes
+    await sql`ALTER TABLE withdrawal_requests ADD COLUMN IF NOT EXISTS pix_key VARCHAR(255)`;
+    console.log('  ✅ Tabela withdrawal_requests criada');
+
     console.log('🎉 Todas as tabelas criadas com sucesso!');
 }
 

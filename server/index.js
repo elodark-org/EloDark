@@ -11,6 +11,7 @@ const boostersRoutes = require('./routes/boosters');
 const reviewsRoutes = require('./routes/reviews');
 const checkoutRoutes = require('./routes/checkout');
 const chatRoutes = require('./routes/chat');
+const walletRoutes = require('./routes/wallet');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +31,7 @@ app.use('/api/boosters', boostersRoutes);
 app.use('/api/reviews', reviewsRoutes);
 app.use('/api/checkout', checkoutRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/wallet', walletRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

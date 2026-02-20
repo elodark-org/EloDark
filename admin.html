@@ -363,6 +363,7 @@
                 <a class="sidebar-link" data-page="boosters"><span>🎮</span> Boosters</a>
                 <a class="sidebar-link" data-page="orders"><span>📦</span> Pedidos</a>
                 <a class="sidebar-link" data-page="users"><span>👤</span> Usuários</a>
+                <a class="sidebar-link" data-page="withdrawals"><span>💸</span> Saques</a>
             </nav>
         </aside>
 
@@ -440,6 +441,23 @@
                 </div>
                 <div class="panel-card">
                     <div id="users-table"></div>
+                </div>
+            </div>
+
+            <!-- WITHDRAWALS -->
+            <div class="admin-page" id="page-withdrawals">
+                <div class="page-header">
+                    <h2>💸 Saques</h2>
+                    <select id="filter-withdrawals-status"
+                        style="padding:8px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius);color:var(--text-primary);font-size:0.85rem">
+                        <option value="">Todos</option>
+                        <option value="pending">Pendentes</option>
+                        <option value="approved">Aprovados</option>
+                        <option value="rejected">Rejeitados</option>
+                    </select>
+                </div>
+                <div class="panel-card">
+                    <div id="withdrawals-table"></div>
                 </div>
             </div>
         </main>
@@ -548,7 +566,8 @@
                 if (page === 'dashboard') await loadDashboard();
                 else if (page === 'boosters') await loadBoosters();
                 else if (page === 'orders') await loadOrders();
-                else if (page === 'users') await loadUsers();
+        else if (page === 'users') await loadUsers();
+                else if (page === 'withdrawals') await loadWithdrawals();
             } catch (err) {
                 showToast(err.message, 'error');
             }
@@ -767,6 +786,54 @@
         // Filter orders
         document.getElementById('filter-orders-status')?.addEventListener('change', e => {
             loadOrders(e.target.value);
+        });
+
+        // WITHDRAWALS
+        async function loadWithdrawals(statusFilter = '') {
+            const qs = statusFilter ? `?status=${statusFilter}` : '';
+            const { withdrawals } = await apiFetch(`/admin/withdrawals${qs}`);
+            const container = document.getElementById('withdrawals-table');
+            if (!withdrawals || withdrawals.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span>💸</span>Nenhuma solicitação de saque</div>';
+                return;
+            }
+            const statusLabel = { pending: 'Em Análise', approved: 'Aprovado', rejected: 'Rejeitado' };
+            const statusBadge = { pending: 'badge-in_progress', approved: 'badge-completed', rejected: 'badge-cancelled' };
+            container.innerHTML = `<table class="data-table">
+                <thead><tr><th>#</th><th>Booster</th><th>Valor</th><th>Chave Pix</th><th>Status</th><th>Data</th><th>Ações</th></tr></thead>
+                <tbody>${withdrawals.map(w => `<tr>
+                    <td><strong>#${w.id}</strong></td>
+                    <td>${w.booster_name}<br><small style="color:var(--text-muted)">${w.booster_email}</small></td>
+                    <td><strong style="color:var(--gold)">R$ ${parseFloat(w.amount).toFixed(2).replace('.', ',')}</strong></td>
+                    <td style="font-size:.85rem;color:var(--cyan)">${w.pix_key || '—'}</td>
+                    <td><span class="badge ${statusBadge[w.status] || ''}">${statusLabel[w.status] || w.status}</span></td>
+                    <td><small>${new Date(w.created_at).toLocaleDateString('pt-BR')}</small></td>
+                    <td style="display:flex;gap:8px">
+                        ${w.status === 'pending' ? `
+                            <button class="btn btn-sm btn-primary" onclick="processWithdrawal(${w.id},'approved')">Aprovar</button>
+                            <button class="btn btn-sm btn-outline" onclick="processWithdrawal(${w.id},'rejected')">Rejeitar</button>
+                        ` : '—'}
+                    </td>
+                </tr>`).join('')}</tbody></table>`;
+        }
+
+        async function processWithdrawal(id, status) {
+            const label = status === 'approved' ? 'aprovar' : 'rejeitar';
+            const notes = status === 'rejected' ? prompt('Motivo da rejeição (opcional):') : null;
+            if (status === 'rejected' && notes === null) return; // cancelou o prompt
+            if (!confirm(`Deseja ${label} o saque #${id}?`)) return;
+            try {
+                await apiFetch(`/admin/withdrawals/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status, admin_notes: notes || undefined })
+                });
+                showToast(`Saque #${id} ${status === 'approved' ? 'aprovado' : 'rejeitado'}!`, 'success');
+                loadWithdrawals(document.getElementById('filter-withdrawals-status').value);
+            } catch (err) { showToast(err.message, 'error'); }
+        }
+
+        document.getElementById('filter-withdrawals-status')?.addEventListener('change', e => {
+            loadWithdrawals(e.target.value);
         });
 
         // Modal helpers
