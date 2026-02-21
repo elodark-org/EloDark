@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/layout/navbar";
 import { Icon } from "@/components/ui/icon";
@@ -41,6 +40,44 @@ export default function OrderConfiguratorPage() {
     expressOrder: false,
     offlineMode: true,
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  async function handleCheckout() {
+    setIsLoading(true);
+    setCheckoutError(null);
+    try {
+      const res = await fetch("/api/checkout/create-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service_type: "elo-boost",
+          price: total,
+          config: {
+            game: gameSlug,
+            current_rank: currentRank,
+            desired_rank: rankLabels[desiredRankIdx],
+            options: {
+              duo_queue: options.duoQueue,
+              select_role: options.selectRole,
+              express_order: options.expressOrder,
+              offline_mode: options.offlineMode,
+            },
+          },
+        }),
+      });
+      const data = (await res.json()) as { url?: string; error?: string };
+      if (!res.ok || !data.url) {
+        setCheckoutError(data.error ?? "Erro ao criar sessão de pagamento");
+        return;
+      }
+      window.location.href = data.url;
+    } catch {
+      setCheckoutError("Erro ao conectar ao servidor");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const basePrice = 32.0;
   const duoPrice = options.duoQueue ? 13.99 : 0;
@@ -314,15 +351,20 @@ export default function OrderConfiguratorPage() {
                 </div>
               </div>
 
-              <Link href="/checkout">
-                <Button
-                  size="lg"
-                  iconRight="shopping_cart_checkout"
-                  className="w-full mb-4 relative z-10"
-                >
-                  Checkout Now
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                iconRight={isLoading ? undefined : "shopping_cart_checkout"}
+                className="w-full mb-4 relative z-10"
+                onClick={handleCheckout}
+                disabled={isLoading}
+              >
+                {isLoading ? "Redirecionando..." : "Checkout Now"}
+              </Button>
+              {checkoutError && (
+                <p className="text-red-400 text-xs text-center -mt-2 mb-2 relative z-10">
+                  {checkoutError}
+                </p>
+              )}
 
               <div className="flex items-center justify-center gap-4 py-2 opacity-40 relative z-10">
                 <Icon name="verified_user" size={18} />
