@@ -9,13 +9,37 @@ import { Toggle } from "@/components/ui/toggle";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 
-const ranks = [
-  { id: "iron", label: "Iron", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCo5Z1WTtojOScmWJ_5XqUNgcl_2w2Y2pQ6xkpCPpgiMHq5-TUxwFezSbq2MNZuFkXIbaC-PTOOgWLgTJJamWbncKTwQdwoz-Y6s5j8gmYmW3n1scieZtHK3V6RYlABfjc3_oUYoqvv3tMQaCCk4uVade5fhO5CUEHHeHflNevh1v8CzklH2NEDVKVG589dko-sdO80RGJZUwxeZwtfwqhS1SZo8c0OkMgZOtMHvfiuRNS517kLlOHfaN4TbZlELAhg8p8qMcDmN2Qc" },
-  { id: "bronze", label: "Bronze", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAYOnL1DBWNXb4HDLrCWLfEjdM3YUVGgVLUF0-DqrbKvGiTkjZgnAQi9Il7NTiBsQsElyqQx5jlxtgl7ThXZ6GITQRCplYQa3QYa9WuqcKDsVz91uqurRDC4pAx-SdFhQy6-AwaUU0JhTGEQHIBfauMU6lXIdMbRbHKO7tN6TaJJjTsyfv1GR_F_mAPyR3Mhe6g61rsxugUJ1e9XVZiRYHVKqaY9vUkgSvSj-UGOAFD-XYme0f1J9H-8FW1o-HuV6jVGEsjw6JPb7JS" },
-  { id: "silver", label: "Silver", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBN75JN_zghoWh2ncebHSh7eqysaR8MOsvn96ohyDnfzjhRm6tziWlGpSE3pP4ezC5LBgESkkRFDvlndPJ9t9NVm1fFGXC01c0ZpO-d0rl9QJVCyl0F-sQEc7Lk6jLdVpMDn7RTbYZAQPhkCa-oJaPrGvYX-Qob2ajx34FiNUjX3Z1FSkZDjOXKc9Bq085PzTJKLupANzXE4g-KWW7wihFx-2VGnJeYI9mywQPurqYNiqn2-fRi40lc2Hrx0BbF0EaRdDIAgMbdJnQt" },
-  { id: "gold", label: "Gold", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCMNfjcoBGgxvz7InbzNZKMVCq-KUsbvUrzP_FNNczKivoE6m28xJHlaC0_f7B5BCDP_V5MU3TIBVvaBQzTUiilnUMWu_-n2EhUyM4kSk0uN3VJu9kWrWfUPHH5mz_TAl-a2kJJD3NoXIffle6u3KJ7U4ga7Jj99eV9Y1LMduvJazKbf9ontxjRP-tnAOW5AYJCh7rvTI6M65a2cN9FHfpIrg4xQPQWepekOyXixLZFXv4g1Q4U0Jx2EHgzO5YnMjFv7Lxx_zJkkWtJ" },
-  { id: "platinum", label: "Platinum", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYb70dbmyima1oWD-G48K8xALRz-xImVtRqsmJ5PFiwsb8PYqTqvD4n45mFKuD39nYmJQTMK1MrMplgpG1Rxp-BUM9QhEsY-7uWEieMWZ0OfvcUNE0BDQdkM-1f5H0pEVSc5PBfHVZRHtSMbBr7L15EMAxJkp1l3kMVCQTC4R9XzFWiYzl6hl9Iquc4k-gMOIHC6xi3NIt_-lwdOwSbTr-IcVBqx0aFA6_l6PNT2phuEzzI9rm-HMjqyEgdxRPlbsZUeCOsuKx9mBC" },
-];
+// Configuração de ranks por jogo
+const gameRanks: Record<string, Array<{ id: string; label: string; image: string }>> = {
+  "league-of-legends": [
+    { id: "iron", label: "Iron", image: "/assets/games/league-of-legends/badge-iron.png" },
+    { id: "bronze", label: "Bronze", image: "/assets/games/league-of-legends/badge-bronze.png" },
+    { id: "gold", label: "Gold", image: "/assets/games/league-of-legends/badge-gold.png" },
+    { id: "platinum", label: "Platinum", image: "/assets/games/league-of-legends/badge-platinum.png" },
+    { id: "diamond", label: "Diamond", image: "/assets/games/league-of-legends/badge-diamond.png" },
+    { id: "emerald", label: "Emerald", image: "/assets/games/league-of-legends/badge-emerald.png" },
+    { id: "master", label: "Master", image: "/assets/games/league-of-legends/badge-master.png" },
+  ],
+  valorant: [
+    { id: "iron", label: "Ferro", image: "/assets/games/valorant/Ferro.png" },
+    { id: "bronze", label: "Bronze", image: "/assets/games/valorant/Bronze.png" },
+    { id: "silver", label: "Prata", image: "/assets/games/valorant/Prata.png" },
+    { id: "gold", label: "Ouro", image: "/assets/games/valorant/Ouro.png" },
+    { id: "platinum", label: "Platina", image: "/assets/games/valorant/Platina.png" },
+    { id: "diamond", label: "Diamante", image: "/assets/games/valorant/Diamante.png" },
+    { id: "ascendant", label: "Ascendente", image: "/assets/games/valorant/Ascendente.png" },
+    { id: "immortal", label: "Imortal", image: "/assets/games/valorant/Imortal.png" },
+    { id: "radiant", label: "Radiante", image: "/assets/games/valorant/Radiante-shadow-2.png" },
+  ],
+  // Fallback para outros jogos (usando as imagens do Google como antes)
+  default: [
+    { id: "iron", label: "Iron", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCo5Z1WTtojOScmWJ_5XqUNgcl_2w2Y2pQ6xkpCPpgiMHq5-TUxwFezSbq2MNZuFkXIbaC-PTOOgWLgTJJamWbncKTwQdwoz-Y6s5j8gmYmW3n1scieZtHK3V6RYlABfjc3_oUYoqvv3tMQaCCk4uVade5fhO5CUEHHeHflNevh1v8CzklH2NEDVKVG589dko-sdO80RGJZUwxeZwtfwqhS1SZo8c0OkMgZOtMHvfiuRNS517kLlOHfaN4TbZlELAhg8p8qMcDmN2Qc" },
+    { id: "bronze", label: "Bronze", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAYOnL1DBWNXb4HDLrCWLfEjdM3YUVGgVLUF0-DqrbKvGiTkjZgnAQi9Il7NTiBsQsElyqQx5jlxtgl7ThXZ6GITQRCplYQa3QYa9WuqcKDsVz91uqurRDC4pAx-SdFhQy6-AwaUU0JhTGEQHIBfauMU6lXIdMbRbHKO7tN6TaJJjTsyfv1GR_F_mAPyR3Mhe6g61rsxugUJ1e9XVZiRYHVKqaY9vUkgSvSj-UGOAFD-XYme0f1J9H-8FW1o-HuV6jVGEsjw6JPb7JS" },
+    { id: "silver", label: "Silver", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBN75JN_zghoWh2ncebHSh7eqysaR8MOsvn96ohyDnfzjhRm6tziWlGpSE3pP4ezC5LBgESkkRFDvlndPJ9t9NVm1fFGXC01c0ZpO-d0rl9QJVCyl0F-sQEc7Lk6jLdVpMDn7RTbYZAQPhkCa-oJaPrGvYX-Qob2ajx34FiNUjX3Z1FSkZDjOXKc9Bq085PzTJKLupANzXE4g-KWW7wihFx-2VGnJeYI9mywQPurqYNiqn2-fRi40lc2Hrx0BbF0EaRdDIAgMbdJnQt" },
+    { id: "gold", label: "Gold", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCMNfjcoBGgxvz7InbzNZKMVCq-KUsbvUrzP_FNNczKivoE6m28xJHlaC0_f7B5BCDP_V5MU3TIBVvaBQzTUiilnUMWu_-n2EhUyM4kSk0uN3VJu9kWrWfUPHH5mz_TAl-a2kJJD3NoXIffle6u3KJ7U4ga7Jj99eV9Y1LMduvJazKbf9ontxjRP-tnAOW5AYJCh7rvTI6M65a2cN9FHfpIrg4xQPQWepekOyXixLZFXv4g1Q4U0Jx2EHgzO5YnMjFv7Lxx_zJkkWtJ" },
+    { id: "platinum", label: "Platinum", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBYb70dbmyima1oWD-G48K8xALRz-xImVtRqsmJ5PFiwsb8PYqTqvD4n45mFKuD39nYmJQTMK1MrMplgpG1Rxp-BUM9QhEsY-7uWEieMWZ0OfvcUNE0BDQdkM-1f5H0pEVSc5PBfHVZRHtSMbBr7L15EMAxJkp1l3kMVCQTC4R9XzFWiYzl6hl9Iquc4k-gMOIHC6xi3NIt_-lwdOwSbTr-IcVBqx0aFA6_l6PNT2phuEzzI9rm-HMjqyEgdxRPlbsZUeCOsuKx9mBC" },
+  ]
+};
 
 const rankLabels = ["Iron", "Bronze", "Silver", "Gold", "Platinum", "Emerald", "Diamond", "Master", "Grandmaster", "Challenger"];
 
@@ -32,8 +56,13 @@ export default function OrderConfiguratorPage() {
   const params = useParams();
   const gameSlug = params.game as string;
   const gameTitle = gameTitles[gameSlug] || gameSlug;
-
-  const [currentRank, setCurrentRank] = useState("gold");
+  
+  // Pegar os ranks específicos do jogo atual
+  const ranks = gameRanks[gameSlug] || gameRanks.default;
+  
+  // Usar o primeiro rank disponível como padrão ou "gold" se existir
+  const defaultRank = ranks.find(r => r.id === "gold")?.id || ranks[Math.min(2, ranks.length - 1)].id;
+  const [currentRank, setCurrentRank] = useState(defaultRank);
   const [desiredRankIdx, setDesiredRankIdx] = useState(7);
   const [options, setOptions] = useState({
     duoQueue: true,
