@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EloDark | Pagamento Confirmado ✅</title>
+    <title>EloDark | Verificando Pagamento</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
@@ -30,7 +30,23 @@
             overflow: hidden
         }
 
-        .result-card::before {
+        .result-card.state-loading::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--cyan));
+            animation: loading-bar 1.5s ease-in-out infinite alternate
+        }
+
+        @keyframes loading-bar {
+            from { opacity: 0.4; transform: scaleX(0.6); transform-origin: left }
+            to   { opacity: 1;   transform: scaleX(1);   transform-origin: left }
+        }
+
+        .result-card.state-success::before {
             content: '';
             position: absolute;
             top: 0;
@@ -38,6 +54,16 @@
             right: 0;
             height: 3px;
             background: linear-gradient(90deg, var(--green), var(--cyan))
+        }
+
+        .result-card.state-error::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--red, #f85149), var(--gold, #f0b132))
         }
 
         .result-icon {
@@ -71,50 +97,136 @@
             margin-top: 32px;
             display: flex;
             gap: 12px;
-            justify-content: center
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 20px
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg) }
         }
     </style>
 </head>
 
 <body>
     <div class="checkout-result">
-        <div class="result-card">
+        <!-- Loading state (shown initially) -->
+        <div class="result-card state-loading" id="state-loading">
+            <div class="spinner"></div>
+            <h1>Verificando Pagamento</h1>
+            <p>Aguarde enquanto confirmamos seu pagamento com segurança...</p>
+        </div>
+
+        <!-- Success state -->
+        <div class="result-card state-success" id="state-success" style="display:none">
             <span class="result-icon">🎉</span>
             <h1>Pagamento Confirmado!</h1>
             <p>Seu pedido foi registrado com sucesso. Um booster será atribuído em breve.</p>
-            <div class="order-id" id="order-info">Carregando...</div>
+            <div class="order-id" id="order-info"></div>
             <p style="font-size:0.85rem">Você receberá atualizações sobre o progresso do seu pedido.</p>
             <div class="result-actions">
-                <a href="/" class="btn btn-primary">Voltar ao Início</a>
+                <a href="/" class="btn btn-primary">Meus Pedidos</a>
+                <a href="/#pricing" class="btn btn-outline">Novo Pedido</a>
+            </div>
+        </div>
+
+        <!-- Error state -->
+        <div class="result-card state-error" id="state-error" style="display:none">
+            <span class="result-icon" id="error-icon">❌</span>
+            <h1 id="error-title">Erro na Verificação</h1>
+            <p id="error-message">Não foi possível confirmar seu pagamento.</p>
+            <p style="font-size:0.85rem">Se o problema persistir, entre em contato com nosso suporte.</p>
+            <div class="result-actions">
+                <a href="/#pricing" class="btn btn-primary">Tentar Novamente</a>
+                <a href="/" class="btn btn-outline">Voltar ao Início</a>
             </div>
         </div>
     </div>
+
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const orderId = params.get('order_id');
-        const sessionId = params.get('session_id');
+        (async function () {
+            const params = new URLSearchParams(window.location.search);
+            const sessionId = params.get('session_id');
+            const orderId = params.get('order_id');
 
-        if (orderId) {
-            document.getElementById('order-info').textContent = `Pedido #${orderId}`;
-        }
-
-        // Verify payment with backend
-        if (sessionId) {
-            const token = localStorage.getItem('elodark_token');
-            if (token) {
-                fetch(`/api/checkout/verify/${sessionId}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                })
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.payment_status === 'paid') {
-                            document.getElementById('order-info').innerHTML =
-                                `Pedido #${data.order_id} — <span style="color:var(--green)">Pago ✅</span>`;
-                        }
-                    })
-                    .catch(() => { });
+            function showState(state) {
+                document.getElementById('state-loading').style.display = 'none';
+                document.getElementById('state-success').style.display = 'none';
+                document.getElementById('state-error').style.display = 'none';
+                document.getElementById('state-' + state).style.display = 'block';
+                if (state === 'success') {
+                    document.title = 'EloDark | Pagamento Confirmado ✅';
+                } else if (state === 'error') {
+                    document.title = 'EloDark | Erro no Pagamento';
+                }
             }
-        }
+
+            function showError(title, message, icon) {
+                document.getElementById('error-title').textContent = title || 'Erro na Verificação';
+                document.getElementById('error-message').textContent = message || 'Não foi possível confirmar seu pagamento.';
+                if (icon) document.getElementById('error-icon').textContent = icon;
+                showState('error');
+            }
+
+            if (!sessionId) {
+                showError(
+                    'Acesso Inválido',
+                    'Esta página deve ser acessada após a conclusão de um pagamento.',
+                    '🚫'
+                );
+                return;
+            }
+
+            const token = localStorage.getItem('elodark_token');
+            if (!token) {
+                showError(
+                    'Sessão Expirada',
+                    'Faça login novamente para verificar seu pagamento.',
+                    '🔒'
+                );
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/checkout/verify/' + sessionId, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+
+                if (!res.ok) {
+                    showError('Erro na Verificação', data.error || 'Não foi possível verificar o pagamento.');
+                    return;
+                }
+
+                if (data.payment_status === 'paid') {
+                    const displayId = data.order_id || orderId;
+                    document.getElementById('order-info').innerHTML =
+                        'Pedido #' + displayId + ' \u2014 <span style="color:var(--green)">Pago \u2705</span>';
+                    showState('success');
+                } else {
+                    showError(
+                        'Pagamento Pendente',
+                        'Seu pagamento ainda não foi confirmado. Verifique seu email ou tente novamente em alguns minutos.',
+                        '⏳'
+                    );
+                }
+            } catch (err) {
+                showError(
+                    'Erro de Conexão',
+                    'Não foi possível verificar o pagamento. Verifique sua conexão e tente novamente.'
+                );
+            }
+        })();
     </script>
 </body>
 
