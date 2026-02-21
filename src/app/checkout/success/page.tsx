@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
+import { api } from "@/lib/api";
 
 type VerifyResult =
   | { state: "loading" }
@@ -24,15 +25,14 @@ function SuccessContent() {
       return;
     }
 
-    fetch(`/api/checkout/verify/${sessionId}`)
-      .then(async (res) => {
-        const data = (await res.json()) as {
-          payment_status?: string;
-          order_id?: number | null;
-          error?: string;
-        };
-        if (!res.ok || data.error) {
-          setResult({ state: "error", message: data.error ?? "Erro ao verificar pagamento." });
+    api.get<{
+      payment_status?: string;
+      order_id?: number | null;
+      error?: string;
+    }>(`/checkout/verify/${sessionId}`)
+      .then((data) => {
+        if (data.error) {
+          setResult({ state: "error", message: data.error });
           return;
         }
         if (data.payment_status !== "paid") {
@@ -41,8 +41,8 @@ function SuccessContent() {
         }
         setResult({ state: "success", orderId: data.order_id! });
       })
-      .catch(() => {
-        setResult({ state: "error", message: "Erro ao conectar ao servidor." });
+      .catch((error: any) => {
+        setResult({ state: "error", message: error.message || "Erro ao conectar ao servidor." });
       });
   }, [sessionId]);
 

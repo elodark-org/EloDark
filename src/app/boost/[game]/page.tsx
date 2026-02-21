@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Icon } from "@/components/ui/icon";
 import { Toggle } from "@/components/ui/toggle";
 import { Button } from "@/components/ui/button";
+import { api } from "@/lib/api";
 
 const ranks = [
   { id: "iron", label: "Iron", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCo5Z1WTtojOScmWJ_5XqUNgcl_2w2Y2pQ6xkpCPpgiMHq5-TUxwFezSbq2MNZuFkXIbaC-PTOOgWLgTJJamWbncKTwQdwoz-Y6s5j8gmYmW3n1scieZtHK3V6RYlABfjc3_oUYoqvv3tMQaCCk4uVade5fhO5CUEHHeHflNevh1v8CzklH2NEDVKVG589dko-sdO80RGJZUwxeZwtfwqhS1SZo8c0OkMgZOtMHvfiuRNS517kLlOHfaN4TbZlELAhg8p8qMcDmN2Qc" },
@@ -47,33 +48,28 @@ export default function OrderConfiguratorPage() {
     setIsLoading(true);
     setCheckoutError(null);
     try {
-      const res = await fetch("/api/checkout/create-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          service_type: "elo-boost",
-          price: total,
-          config: {
-            game: gameSlug,
-            current_rank: currentRank,
-            desired_rank: rankLabels[desiredRankIdx],
-            options: {
-              duo_queue: options.duoQueue,
-              select_role: options.selectRole,
-              express_order: options.expressOrder,
-              offline_mode: options.offlineMode,
-            },
+      const data = await api.post<{ url: string }>("/checkout/create-session", {
+        service_type: "elo-boost",
+        price: total,
+        config: {
+          game: gameSlug,
+          current_rank: currentRank,
+          desired_rank: rankLabels[desiredRankIdx],
+          options: {
+            duo_queue: options.duoQueue,
+            select_role: options.selectRole,
+            express_order: options.expressOrder,
+            offline_mode: options.offlineMode,
           },
-        }),
+        },
       });
-      const data = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !data.url) {
-        setCheckoutError(data.error ?? "Erro ao criar sessão de pagamento");
-        return;
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setCheckoutError("Erro ao criar sessão de pagamento");
       }
-      window.location.href = data.url;
-    } catch {
-      setCheckoutError("Erro ao conectar ao servidor");
+    } catch (error: any) {
+      setCheckoutError(error.message || "Erro ao conectar ao servidor");
     } finally {
       setIsLoading(false);
     }
