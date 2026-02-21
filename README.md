@@ -1,36 +1,151 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EloDark
 
-## Getting Started
+Plataforma de elo boosting para jogos competitivos. Conecta clientes que querem subir de rank com boosters profissionais.
 
-First, run the development server:
+## Stack
+
+| Camada | Tecnologia |
+|--------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Linguagem | TypeScript |
+| Estilo | Tailwind CSS v4 |
+| Banco de Dados | Neon PostgreSQL |
+| Autenticação | JWT |
+| Pagamento | Stripe Checkout |
+
+## Features
+
+### Landing Page
+- Hero section com CTA
+- Catálogo de jogos
+- Listagem de boosters
+- Reviews de clientes
+- FAQ
+- Configurador de boost por jogo
+
+### Dashboard — Cliente (`/dashboard`)
+- Visão geral com stats (pedidos, gastos)
+- Lista e detalhe de pedidos
+- Sistema de avaliação (1-5 estrelas)
+- Chat direto com booster (apenas em orders ativas)
+
+### Dashboard — Booster (`/dashboard/booster`)
+- Serviços disponíveis para claim
+- Meus pedidos com ações de status
+- Carteira: ganhos (comissão 40%), saldo, saques via PIX
+- Chat com clientes
+
+### Dashboard — Admin (`/dashboard/admin`)
+- Stats da plataforma (users, orders, revenue)
+- Gestão de pedidos (status, assign booster, release)
+- CRUD de boosters
+- Listagem de usuários
+- Aprovação/rejeição de saques
+
+### API (29 routes)
+- Auth: register, login, me
+- Orders: CRUD, claim, status, available
+- Chat: mensagens por order
+- Boosters: listagem pública + admin CRUD
+- Reviews: criar e listar
+- Admin: stats, orders, users, boosters, withdrawals
+- Checkout: Stripe session, verify, webhook, sync
+
+## Setup
+
+### Pré-requisitos
+- Node.js 20+
+- Conta no [Neon](https://neon.tech) (PostgreSQL)
+- Conta no [Stripe](https://stripe.com) (pagamentos)
+
+### Instalação
 
 ```bash
+# Clonar e instalar
+git clone https://github.com/elodark-org/EloDark.git
+cd EloDark
+npm install
+
+# Configurar variáveis de ambiente
+cp .env.example .env.local
+# Editar .env.local com suas credenciais
+
+# Criar tabelas no banco
+npm run setup-db
+
+# Rodar dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Variáveis de Ambiente
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+# Neon PostgreSQL
+DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# JWT
+JWT_SECRET=sua_chave_secreta
 
-## Learn More
+# Stripe
+STRIPE_SECRET_KEY=sk_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...
 
-To learn more about Next.js, take a look at the following resources:
+# Admin seed (opcional)
+ADMIN_EMAIL=admin@elodark.com
+ADMIN_PASSWORD=admin123
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Comandos
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev          # Dev server (http://localhost:3000)
+npm run build        # Build de produção
+npm run start        # Servidor de produção
+npm run lint         # ESLint
+npm run setup-db     # Criar tabelas e seed admin
+```
 
-## Deploy on Vercel
+## Estrutura do Projeto
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/
+│   ├── (auth)/              # Login e registro
+│   ├── api/                 # 29 API routes
+│   ├── boost/[game]/        # Configurador de boost
+│   ├── checkout/            # Fluxo Stripe
+│   ├── dashboard/
+│   │   ├── admin/           # Admin: orders, boosters, users, withdrawals
+│   │   ├── booster/         # Booster: available, orders, wallet, chat
+│   │   ├── orders/          # Client: order list + detail
+│   │   └── chat/            # Client chat
+│   ├── boosters/            # Listagem pública
+│   └── games/               # Catálogo de jogos
+├── components/
+│   ├── dashboard/           # StatCard, DataTable, StatusBadge, PageHeader, ChatView
+│   ├── landing/             # Hero, FAQ, Reviews, HowItWorks, GameGrid
+│   ├── layout/              # Navbar, Footer, DashboardSidebar
+│   └── ui/                  # Button, Input, Icon, Badge, Toggle
+├── hooks/                   # useAuth, useRoleGuard
+├── lib/                     # api, auth, db, stripe, utils, logger, validation
+└── types/                   # TypeScript interfaces
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Banco de Dados
+
+6 tabelas: `users`, `boosters`, `orders`, `reviews`, `messages`, `withdrawals`
+
+O schema completo está em `scripts/db-setup.ts`.
+
+## Modelo de Negócio
+
+- Cliente cria um pedido de boost e paga via Stripe
+- Pedido fica disponível para boosters claimarem
+- Booster executa o serviço e marca como concluído
+- Booster recebe **40%** do valor do pedido
+- Booster solicita saque via **PIX**, admin aprova/rejeita
+- Plataforma retém **60%** como receita
+
+## Licença
+
+Privado. Todos os direitos reservados.

@@ -1,64 +1,112 @@
-# Instruções para Claude Code
+# EloDark — Instruções para Claude Code
 
-## Stack do Projeto
-- Frontend: TypeScript, Next.js (App Router), Tailwind CSS v4
-- Backend: []
-- Banco: [Neon DB]
+## Stack
 
-## Regras Obrigatórias
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **Linguagem**: TypeScript strict mode
+- **Estilo**: Tailwind CSS v4 (CSS-first com `@theme`)
+- **Banco**: Neon PostgreSQL (serverless, `@neondatabase/serverless`)
+- **Auth**: JWT Bearer Token (jsonwebtoken + bcryptjs)
+- **Pagamento**: Stripe Checkout
+- **Deploy**: Vercel
 
-### Antes de Codar
-1. Leia a issue completamente antes de começar
-2. Verifique se já existe solução pronta (biblioteca, componente existente)
-3. Entenda o contexto: olhe arquivos relacionados antes de modificar
+## Estrutura de Pastas
 
-### Princípios de Código
-- **DRY**: Não duplique código. Reutilize componentes/funções existentes
-- **YAGNI**: Implemente APENAS o que a issue pede. Nada mais
-- **KISS**: Escolha a solução mais simples que resolve o problema
-- **Separation of Concerns**: Um arquivo = uma responsabilidade
-
-### Padrões Técnicos
-- TypeScript strict mode, sem `any`
-- ESLint e Prettier já configurados - siga as regras
-- Next.js: prefira Server Components quando possível
-- Tailwind v4: use sintaxe CSS-first (@theme, @apply dentro de CSS)
-- Commits em português, mensagens descritivas
-
-### O que NÃO fazer
-- Criar componentes/funções que já existem no projeto
-- Adicionar dependências sem necessidade clara
-- Implementar features extras não solicitadas
-- Ignorar tipagem ou usar `as any`
-- Criar arquivos com múltiplas responsabilidades
-
-### Estrutura de Pastas
 ```
 src/
-  components/   # Componentes reutilizáveis
-  app/          # Rotas Next.js
-  lib/          # Utilitários e helpers
-  hooks/        # Custom hooks
-  types/        # Tipos TypeScript
+  app/
+    (auth)/         # Login e registro
+    api/            # 29 API routes (auth, orders, chat, admin, booster, checkout)
+    boost/          # Configurador de boost por jogo
+    checkout/       # Fluxo de pagamento Stripe
+    dashboard/      # Dashboards role-based
+      admin/        # Gestão de orders, boosters, users, withdrawals
+      booster/      # Available orders, wallet, chat
+      orders/       # Client order list e detalhe
+    boosters/       # Listagem pública de boosters
+    games/          # Catálogo de jogos
+  components/
+    dashboard/      # StatCard, DataTable, StatusBadge, PageHeader, ChatView
+    landing/        # Hero, FAQ, Reviews, HowItWorks, GameGrid
+    layout/         # Navbar, Footer, DashboardSidebar, SearchOverlay
+    ui/             # Button, Input, Icon, Badge, Toggle
+  hooks/            # useAuth, useRoleGuard
+  lib/              # api, auth, db, stripe, utils, logger, validation
+  types/            # Interfaces (Order, Booster, Withdrawal, etc.)
+scripts/
+  db-setup.ts       # Cria tabelas + seed admin
 ```
 
-### Checklist antes do PR
-- [ ] Código segue os padrões do projeto
-- [ ] Sem duplicação de código
-- [ ] Tipagem correta (sem any)
-- [ ] Testei localmente (se aplicável)
-- [ ] PR descreve o que foi feito e por quê
+## Arquitetura
 
-## Problema
-[Descreva o bug ou necessidade]
+### Roles (3 perfis)
+- **user**: cliente que compra boost
+- **booster**: jogador que executa o serviço (comissão 40%)
+- **admin**: gestão completa da plataforma
 
-## Comportamento esperado
-[O que deveria acontecer]
+### Auth Flow
+1. Register/Login → API gera JWT (expira 7d) → armazena em `localStorage`
+2. `src/lib/api.ts` injeta `Authorization: Bearer <token>` automaticamente
+3. Backend: `requireAuth()` e `requireRole()` em `src/lib/auth.ts`
+4. Frontend: `useAuth()` para estado, `useRoleGuard()` para proteger rotas
 
-## Arquivos relevantes
-- `src/components/Button.tsx`
-- `src/lib/api.ts`
+### Banco de Dados (6 tabelas)
+- `users` (id, name, email, password_hash, role)
+- `boosters` (id, user_id, game_name, rank, win_rate, active)
+- `orders` (id, user_id, booster_id, service_type, config, price, status)
+- `reviews` (id, user_id, order_id, rating, text)
+- `messages` (id, order_id, user_id, content, is_system)
+- `withdrawals` (id, booster_id, amount, pix_key, pix_type, status)
 
-## Critérios de aceite
-- [ ] Funciona em mobile
-- [ ] Não quebra testes existentes
+### Status de Orders
+`pending` → `active` → `available` → `in_progress` → `completed`/`cancelled`
+
+## Convenções
+
+### Código
+- TypeScript strict, sem `any` (exceto generics com `Record<string, any>`)
+- Tailwind v4 CSS-first
+- Server Components por padrão; "use client" só quando necessário
+- API routes usam `logger` e `validation` de `src/lib/`
+- Dinheiro formatado como `R$ X.XX` (Real brasileiro)
+
+### Estilo Visual
+- Dark theme: `bg-bg-primary`, `glass-card`, `border-white/5`
+- Cores: `text-primary` (azul), `text-accent-purple`, `text-accent-cyan`
+- Texto secundário: `text-white/40`, `text-white/60`
+- Cards: `glass-card rounded-2xl p-6 border border-white/5`
+
+### Git
+- Commits em inglês, formato: `type: description`
+- Types: `feat`, `fix`, `chore`, `refactor`
+- Branch principal: `main`
+
+## Comandos
+
+```bash
+npm run dev          # Dev server (porta 3000)
+npm run build        # Build de produção
+npm run lint         # ESLint
+npm run setup-db     # Criar tabelas no Neon DB
+```
+
+## Variáveis de Ambiente (.env.local)
+
+```
+DATABASE_URL=postgresql://...        # Neon connection string
+JWT_SECRET=...                       # Segredo para assinar JWT
+STRIPE_SECRET_KEY=...                # Stripe server key
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=  # Stripe client key
+ADMIN_EMAIL=admin@elodark.com        # Email do admin seed
+ADMIN_PASSWORD=...                   # Senha do admin seed
+```
+
+## Regras
+
+1. Leia a issue/contexto completamente antes de codar
+2. **DRY**: reutilize componentes de `src/components/dashboard/` e `src/components/ui/`
+3. **YAGNI**: implemente apenas o solicitado
+4. **KISS**: solução mais simples que resolve
+5. Rode `npm run build` após mudanças multi-arquivo
+6. Não adicione dependências sem necessidade clara
+7. API routes: sempre use `requireAuth`/`requireRole` de `src/lib/auth.ts`
