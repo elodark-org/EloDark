@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import type { Order } from "@/types";
 
-const COMMISSION_RATE = 0.4;
+const COMMISSION_RATE = 0.6;
 
 function formatBRL(value: number) {
   return `R$ ${value.toFixed(2)}`;
@@ -29,7 +29,7 @@ export default function AvailableOrdersPage() {
       setOrders(data.orders);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load orders");
+      setError(err instanceof Error ? err.message : "Falha ao carregar pedidos");
     } finally {
       setLoading(false);
     }
@@ -48,9 +48,9 @@ export default function AvailableOrdersPage() {
       await api.post<{ order: Order }>(`/orders/${orderId}/claim`, {});
       await fetchOrders();
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to claim";
+      const message = err instanceof Error ? err.message : "Falha ao aceitar";
       if (message.includes("409") || message.toLowerCase().includes("already")) {
-        setClaimError("Order already claimed by another booster.");
+        setClaimError("Pedido já foi aceito por outro booster.");
       } else {
         setClaimError(message);
       }
@@ -63,11 +63,11 @@ export default function AvailableOrdersPage() {
   if (guardLoading || !authorized) {
     return (
       <>
-        <PageHeader title="Available Services" />
+        <PageHeader title="Serviços Disponíveis" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -77,11 +77,11 @@ export default function AvailableOrdersPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Available Services" />
+        <PageHeader title="Serviços Disponíveis" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -91,11 +91,11 @@ export default function AvailableOrdersPage() {
   if (error) {
     return (
       <>
-        <PageHeader title="Available Services" />
+        <PageHeader title="Serviços Disponíveis" />
         <div className="p-8">
           <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
             <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load available orders.</p>
+            <p className="text-white/60">Falha ao carregar pedidos disponíveis.</p>
             <p className="text-xs text-white/30 mt-1">{error}</p>
           </div>
         </div>
@@ -106,10 +106,10 @@ export default function AvailableOrdersPage() {
   return (
     <>
       <PageHeader
-        title="Available Services"
+        title="Serviços Disponíveis"
         actions={
           <Button variant="ghost" size="sm" icon="refresh" onClick={fetchOrders}>
-            Refresh
+            Atualizar
           </Button>
         }
       />
@@ -132,9 +132,9 @@ export default function AvailableOrdersPage() {
           <div className="glass-card rounded-2xl p-12 border border-white/5 text-center space-y-4">
             <Icon name="inbox" className="text-white/20" size={48} />
             <div>
-              <p className="text-white/60 font-medium">No available orders</p>
+              <p className="text-white/60 font-medium">Nenhum pedido disponível</p>
               <p className="text-sm text-white/30 mt-1">
-                Check back later for new boost requests.
+                Volte mais tarde para novas solicitações de boost.
               </p>
             </div>
           </div>
@@ -160,7 +160,7 @@ export default function AvailableOrdersPage() {
                         <p className="font-bold capitalize">
                           {order.service_type.replace(/-/g, " ")}
                         </p>
-                        <p className="text-xs text-white/40">Order #{order.id}</p>
+                        <p className="text-xs text-white/40">Pedido #{order.id}</p>
                       </div>
                     </div>
                     <StatusBadge status={order.status} />
@@ -188,11 +188,11 @@ export default function AvailableOrdersPage() {
                   <div className="px-6 pb-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs text-white/40">Order price</p>
+                        <p className="text-xs text-white/40">Valor do pedido</p>
                         <p className="text-lg font-bold">{formatBRL(price)}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xs text-green-400/80">Your commission</p>
+                        <p className="text-xs text-green-400/80">Sua comissão</p>
                         <p className="text-lg font-bold text-green-400">
                           {formatBRL(commission)}
                         </p>
@@ -208,7 +208,7 @@ export default function AvailableOrdersPage() {
                       disabled={isClaiming}
                       onClick={() => handleClaim(order.id)}
                     >
-                      {isClaiming ? "Claiming..." : "Claim Order"}
+                      {isClaiming ? "Aceitando..." : "Aceitar Pedido"}
                     </Button>
                   </div>
                 </div>

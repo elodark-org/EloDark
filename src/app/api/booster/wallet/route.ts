@@ -14,11 +14,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Perfil de booster não encontrado" }, { status: 400 });
     }
 
-    // Total earned = 40% of completed orders price
+    // Total earned = 60% of completed and admin-approved orders price
     const [earned] = await sql`
-      SELECT COALESCE(SUM(price * 0.40), 0) as total
+      SELECT COALESCE(SUM(price * 0.60), 0) as total
       FROM orders
-      WHERE booster_id = ${booster.id} AND status = 'completed'
+      WHERE booster_id = ${booster.id} AND status = 'completed' AND admin_approved = true
     `;
 
     // Total already withdrawn (approved)
