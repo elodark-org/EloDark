@@ -4,52 +4,52 @@ import { Footer } from "@/components/layout/footer";
 
 const tiers = [
   {
-    tier: "Novice Tier",
+    tier: "Tier Novato",
     name: "Squire",
-    price: "$9.99",
+    price: "R$ 49,99",
     featured: false,
     features: [
-      { label: "Priority Queue Access", included: true },
-      { label: "5% Permanent Discount", included: true },
-      { label: "Free Live Stream", included: false },
-      { label: "Direct Discord Contact", included: false },
+      { label: "Acesso à Fila Prioritária", included: true },
+      { label: "5% de Desconto Permanente", included: true },
+      { label: "Live Stream Gratuita", included: false },
+      { label: "Contato Direto no Discord", included: false },
     ],
-    cta: "Select Squire",
+    cta: "Selecionar Squire",
   },
   {
-    tier: "Elite Tier",
+    tier: "Tier Elite",
     name: "King",
-    price: "$29.99",
+    price: "R$ 149,99",
     featured: true,
     features: [
-      { label: "Ultra-Priority Queue", included: true },
-      { label: "15% Permanent Discount", included: true },
-      { label: "Free Private 4K Stream", included: true },
-      { label: "Direct Discord with Booster", included: true },
-      { label: "Exclusive Profile Badge", included: true },
+      { label: "Fila Ultra-Prioritária", included: true },
+      { label: "15% de Desconto Permanente", included: true },
+      { label: "Stream Privada 4K Gratuita", included: true },
+      { label: "Discord Direto com Booster", included: true },
+      { label: "Badge Exclusiva no Perfil", included: true },
     ],
-    cta: "Unlock Elite Status",
+    cta: "Desbloquear Status Elite",
   },
   {
-    tier: "Veteran Tier",
+    tier: "Tier Veterano",
     name: "Knight",
-    price: "$19.99",
+    price: "R$ 99,99",
     featured: false,
     features: [
-      { label: "High-Priority Queue", included: true },
-      { label: "10% Permanent Discount", included: true },
-      { label: "Free Live Stream", included: true },
-      { label: "Direct Discord Contact", included: false },
+      { label: "Fila de Alta Prioridade", included: true },
+      { label: "10% de Desconto Permanente", included: true },
+      { label: "Live Stream Gratuita", included: true },
+      { label: "Contato Direto no Discord", included: false },
     ],
-    cta: "Select Knight",
+    cta: "Selecionar Knight",
   },
 ];
 
 const comparison = [
-  { feature: "Wait Time Reduction", squire: "Low", king: "Instant", knight: "High" },
-  { feature: "Booster Messaging", squire: false, king: true, knight: false },
-  { feature: "Legacy Profile Badge", squire: false, king: true, knight: true },
-  { feature: "Custom Stream UI", squire: false, king: true, knight: false },
+  { feature: "Redução do Tempo de Espera", squire: "Baixa", king: "Instantânea", knight: "Alta" },
+  { feature: "Mensagens com Booster", squire: false, king: true, knight: false },
+  { feature: "Badge Legacy no Perfil", squire: false, king: true, knight: true },
+  { feature: "UI de Stream Personalizada", squire: false, king: true, knight: false },
 ];
 
 export default function VipPage() {
@@ -63,8 +63,8 @@ export default function VipPage() {
             EloDark Elite VIP
           </h1>
           <p className="text-gray-400 text-lg">
-            Elevate your competitive journey with our exclusive tier-based perks.
-            Precision, speed, and absolute dominance.
+            Eleve sua jornada competitiva com nossas vantagens exclusivas por tier.
+            Precisão, velocidade e dominação absoluta.
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export default function VipPage() {
             >
               {tier.featured && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-accent-gold to-yellow-200 px-4 py-1 rounded-full text-bg-primary text-[10px] font-black uppercase tracking-tighter shadow-lg">
-                  Most Popular
+                  Mais Popular
                 </div>
               )}
 
@@ -107,7 +107,7 @@ export default function VipPage() {
                     {tier.price}
                   </span>
                   <span className={`text-sm ${tier.featured ? "text-accent-gold/70 font-bold" : "text-gray-400"}`}>
-                    /mo
+                    /mês
                   </span>
                 </div>
               </div>
@@ -153,14 +153,14 @@ export default function VipPage() {
         <div className="mt-24 w-full max-w-6xl">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-white">
-              Membership Benefits Comparison
+              Comparação de Benefícios
             </h2>
             <div className="flex gap-2">
               <span className="text-xs text-gray-500 flex items-center gap-1">
-                <span className="size-2 rounded-full bg-primary" /> Included
+                <span className="size-2 rounded-full bg-primary" /> Incluído
               </span>
               <span className="text-xs text-gray-500 flex items-center gap-1 ml-4">
-                <span className="size-2 rounded-full bg-white/10" /> Not Included
+                <span className="size-2 rounded-full bg-white/10" /> Não Incluído
               </span>
             </div>
           </div>
@@ -169,7 +169,7 @@ export default function VipPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-white/5 bg-white/5">
-                  <th className="p-6 text-gray-400 font-medium">Core Feature</th>
+                  <th className="p-6 text-gray-400 font-medium">Recurso Principal</th>
                   <th className="p-6 text-center text-gray-300 font-bold">Squire</th>
                   <th className="p-6 text-center text-primary font-bold">King</th>
                   <th className="p-6 text-center text-gray-300 font-bold">Knight</th>

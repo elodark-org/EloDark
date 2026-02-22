@@ -116,9 +116,9 @@ export default function OrderConfiguratorPage() {
       <main className="max-w-7xl mx-auto px-6 py-10 flex-1">
         {/* Header */}
         <div className="mb-12">
-          <h2 className="text-4xl font-black mb-2">{gameTitle} Boosting</h2>
+          <h2 className="text-4xl font-black mb-2">Boost de {gameTitle}</h2>
           <p className="text-white/60">
-            Configure your order and reach your dream rank in days.
+            Configure seu pedido e alcance o rank dos seus sonhos em dias.
           </p>
         </div>
 
@@ -129,7 +129,7 @@ export default function OrderConfiguratorPage() {
             <section>
               <div className="flex items-center gap-3 mb-6">
                 <Icon name="military_tech" className="text-primary" />
-                <h3 className="text-xl font-bold">Select Your Current Rank</h3>
+                <h3 className="text-xl font-bold">Selecione Seu Rank Atual</h3>
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
                 {ranks.map((rank) => (
@@ -172,7 +172,7 @@ export default function OrderConfiguratorPage() {
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
                   <Icon name="stars" className="text-primary" />
-                  <h3 className="text-xl font-bold">Desired Rank</h3>
+                  <h3 className="text-xl font-bold">Rank Desejado</h3>
                 </div>
                 <div className="text-primary font-bold text-lg">
                   {rankLabels[desiredRankIdx]}
@@ -210,7 +210,7 @@ export default function OrderConfiguratorPage() {
                   </div>
                   <div>
                     <h4 className="font-bold text-sm">Duo Queue</h4>
-                    <p className="text-xs text-white/50">Play with the booster</p>
+                    <p className="text-xs text-white/50">Jogue com o booster</p>
                   </div>
                 </div>
                 <Toggle
@@ -226,7 +226,7 @@ export default function OrderConfiguratorPage() {
                     <Icon name="person_pin" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm">Select Role</h4>
+                    <h4 className="font-bold text-sm">Escolher Role</h4>
                     <p className="text-xs text-white/50">Mid, Top, Jung, etc.</p>
                   </div>
                 </div>
@@ -252,9 +252,9 @@ export default function OrderConfiguratorPage() {
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-accent-gold">
-                      Express Order
+                      Pedido Expresso
                     </h4>
-                    <p className="text-xs text-white/50">Priority in queue</p>
+                    <p className="text-xs text-white/50">Prioridade na fila</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -276,15 +276,15 @@ export default function OrderConfiguratorPage() {
                     <Icon name="visibility_off" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm">Offline Mode</h4>
+                    <h4 className="font-bold text-sm">Modo Offline</h4>
                     <p className="text-xs text-white/50">
-                      Hide from friend list
+                      Ficar invisível na lista de amigos
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-[10px] font-bold bg-green-500/20 text-green-400 px-2 py-1 rounded">
-                    FREE
+                    GRÁTIS
                   </span>
                   <Toggle
                     checked={options.offlineMode}
@@ -301,7 +301,7 @@ export default function OrderConfiguratorPage() {
               <div className="absolute -top-12 -right-12 size-40 bg-primary/20 blur-[80px]" />
 
               <h3 className="text-xl font-bold mb-6 flex items-center justify-between relative z-10">
-                Order Summary
+                Resumo do Pedido
                 <Icon name="receipt_long" className="text-white/20" />
               </h3>
 
@@ -310,7 +310,7 @@ export default function OrderConfiguratorPage() {
                 <div className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/5">
                   <div className="flex flex-col">
                     <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
-                      Current
+                      Atual
                     </span>
                     <span className="text-sm font-bold capitalize">
                       {currentRank} IV
@@ -319,7 +319,7 @@ export default function OrderConfiguratorPage() {
                   <Icon name="arrow_forward" className="text-primary/40" size={14} />
                   <div className="flex flex-col items-end">
                     <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
-                      Desired
+                      Desejado
                     </span>
                     <span className="text-sm font-bold text-primary">
                       {rankLabels[desiredRankIdx]} I
@@ -330,49 +330,49 @@ export default function OrderConfiguratorPage() {
                 {/* Pricing */}
                 <div className="space-y-3 px-1">
                   <div className="flex justify-between text-sm">
-                    <span className="text-white/60">Base Boosting Fee</span>
-                    <span className="font-medium">${basePrice.toFixed(2)}</span>
+                    <span className="text-white/60">Taxa Base de Boost</span>
+                    <span className="font-medium">R$ {basePrice.toFixed(2)}</span>
                   </div>
                   {options.duoQueue && (
                     <div className="flex justify-between text-sm">
                       <span className="text-white/60">Duo Queue</span>
-                      <span className="font-medium">${duoPrice.toFixed(2)}</span>
+                      <span className="font-medium">R$ {duoPrice.toFixed(2)}</span>
                     </div>
                   )}
                   {options.selectRole && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-white/60">Role Selection (+15%)</span>
-                      <span className="font-medium">${rolePrice.toFixed(2)}</span>
+                      <span className="text-white/60">Seleção de Role (+15%)</span>
+                      <span className="font-medium">R$ {rolePrice.toFixed(2)}</span>
                     </div>
                   )}
                   {options.expressOrder && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-white/60">Express (+25%)</span>
-                      <span className="font-medium">${expressPrice.toFixed(2)}</span>
+                      <span className="text-white/60">Expresso (+25%)</span>
+                      <span className="font-medium">R$ {expressPrice.toFixed(2)}</span>
                     </div>
                   )}
                   {options.offlineMode && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-white/60">Offline Mode</span>
-                      <span className="text-green-400 font-bold">FREE</span>
+                      <span className="text-white/60">Modo Offline</span>
+                      <span className="text-green-400 font-bold">GRÁTIS</span>
                     </div>
                   )}
                   <div className="border-t border-white/10 pt-3 flex justify-between items-center">
                     <div className="flex items-center gap-2">
                       <Icon name="schedule" className="text-primary" size={14} />
-                      <span className="text-xs text-white/60">Est. Completion</span>
+                      <span className="text-xs text-white/60">Prazo Estimado</span>
                     </div>
-                    <span className="text-xs font-bold">2 - 4 Days</span>
+                    <span className="text-xs font-bold">2 - 4 Dias</span>
                   </div>
                 </div>
               </div>
 
               <div className="mb-6 relative z-10">
                 <div className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mb-1">
-                  Total Amount
+                  Valor Total
                 </div>
                 <div className="text-4xl font-black text-white">
-                  ${total.toFixed(2)}
+                  R$ {total.toFixed(2)}
                 </div>
               </div>
 
@@ -383,7 +383,7 @@ export default function OrderConfiguratorPage() {
                 onClick={handleCheckout}
                 disabled={isLoading}
               >
-                {isLoading ? "Redirecionando..." : "Checkout Now"}
+                {isLoading ? "Redirecionando..." : "Finalizar Compra"}
               </Button>
               {checkoutError && (
                 <p className="text-red-400 text-xs text-center -mt-2 mb-2 relative z-10">
@@ -404,9 +404,9 @@ export default function OrderConfiguratorPage() {
                 <Icon name="support_agent" />
               </div>
               <div>
-                <h4 className="text-sm font-bold">24/7 Priority Support</h4>
+                <h4 className="text-sm font-bold">Suporte Prioritário 24/7</h4>
                 <p className="text-[11px] text-white/50">
-                  Live chat is available for this order.
+                  Chat ao vivo disponível para este pedido.
                 </p>
               </div>
             </div>

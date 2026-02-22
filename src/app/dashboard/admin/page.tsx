@@ -33,11 +33,11 @@ export default function AdminDashboardPage() {
   if (authLoading || !authorized) {
     return (
       <>
-        <PageHeader title="Admin Dashboard" />
+        <PageHeader title="Painel Administrativo" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Verifying access...</span>
+            <span>Verificando acesso...</span>
           </div>
         </div>
       </>
@@ -47,11 +47,11 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Admin Dashboard" />
+        <PageHeader title="Painel Administrativo" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -61,11 +61,11 @@ export default function AdminDashboardPage() {
   if (error || !stats) {
     return (
       <>
-        <PageHeader title="Admin Dashboard" />
+        <PageHeader title="Painel Administrativo" />
         <div className="p-8">
           <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
             <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load admin stats.</p>
+            <p className="text-white/60">Falha ao carregar estatísticas do admin.</p>
             <p className="text-xs text-white/30 mt-1">{error}</p>
           </div>
         </div>
@@ -75,37 +75,37 @@ export default function AdminDashboardPage() {
 
   return (
     <>
-      <PageHeader title="Admin Dashboard" />
+      <PageHeader title="Painel Administrativo" />
 
       <div className="p-8 space-y-8 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           <StatCard
             icon="people"
-            label="Total Users"
+            label="Total de Usuários"
             value={stats.users}
             iconColor="text-primary"
           />
           <StatCard
             icon="sports_esports"
-            label="Total Boosters"
+            label="Total de Boosters"
             value={stats.boosters}
             iconColor="text-accent-purple"
           />
           <StatCard
             icon="shopping_cart"
-            label="Total Orders"
+            label="Total de Pedidos"
             value={stats.orders}
             iconColor="text-blue-400"
           />
           <StatCard
             icon="pending"
-            label="Pending Orders"
+            label="Pedidos Pendentes"
             value={stats.pending}
             iconColor="text-yellow-400"
           />
           <StatCard
             icon="payments"
-            label="Revenue"
+            label="Receita"
             value={`R$ ${stats.revenue.toFixed(2)}`}
             iconColor="text-green-400"
           />

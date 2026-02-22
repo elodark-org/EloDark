@@ -30,7 +30,7 @@ export default function BoosterChatPage() {
         <div className="p-8 flex items-center justify-center h-[calc(100vh-65px)]">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>

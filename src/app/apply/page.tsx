@@ -7,22 +7,22 @@ import { Footer } from "@/components/layout/footer";
 const benefits = [
   {
     icon: "payments",
-    title: "Instant Payouts",
-    description: "Get paid immediately upon order completion. No waiting weeks for your hard-earned money.",
+    title: "Pagamentos Instantâneos",
+    description: "Receba imediatamente após concluir o pedido. Sem esperar semanas pelo seu dinheiro.",
     glow: "border-accent-gold/30 shadow-[0_0_20px_rgba(255,215,0,0.1)]",
     iconColor: "text-accent-gold bg-accent-gold/10",
   },
   {
     icon: "calendar_today",
-    title: "Flexible Schedule",
-    description: "You choose when you play. Pick orders that fit your schedule and rank preferences easily.",
+    title: "Horário Flexível",
+    description: "Você escolhe quando jogar. Pegue pedidos que encaixem na sua agenda e preferências de rank.",
     glow: "border-accent-cyan/30 shadow-[0_0_20px_rgba(0,212,255,0.1)]",
     iconColor: "text-accent-cyan bg-accent-cyan/10",
   },
   {
     icon: "support_agent",
-    title: "24/7 Support",
-    description: "Our professional support team is available round-the-clock to handle clients and issues.",
+    title: "Suporte 24/7",
+    description: "Nossa equipe de suporte profissional está disponível 24 horas para lidar com clientes e problemas.",
     glow: "border-accent-purple/30 shadow-[0_0_20px_rgba(168,85,247,0.1)]",
     iconColor: "text-accent-purple bg-accent-purple/10",
   },
@@ -45,26 +45,26 @@ export default function ApplyPage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
               </span>
-              Now Recruiting Top 0.1% Players
+              Recrutando os Top 0.1% Jogadores
             </div>
             <h2 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-accent-gold to-accent-cyan bg-clip-text text-transparent tracking-tight">
-              Turn Your Skill <br className="hidden md:block" /> into Profit
+              Transforme Sua Skill <br className="hidden md:block" /> em Lucro
             </h2>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 leading-relaxed mb-10">
-              We are looking for the top 0.1% of players. Earn up to{" "}
-              <span className="text-white font-semibold">$2,000/week</span> boosting
-              the games you love on the world&apos;s most professional platform.
+              Estamos procurando os top 0.1% dos jogadores. Ganhe até{" "}
+              <span className="text-white font-semibold">R$ 10.000/semana</span> fazendo boost
+              nos jogos que você ama na plataforma mais profissional do mercado.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
                 href="#apply"
                 className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold rounded-lg hover:shadow-[0_0_30px_rgba(46,123,255,0.3)] transition-all text-center"
               >
-                Start Application
+                Iniciar Candidatura
               </a>
               <div className="flex items-center gap-2 px-6 py-4 text-gray-300">
                 <Icon name="verified_user" className="text-accent-cyan" />
-                <span className="text-sm">Verified Payouts</span>
+                <span className="text-sm">Pagamentos Verificados</span>
               </div>
             </div>
           </div>
@@ -100,16 +100,16 @@ export default function ApplyPage() {
               <div className="glass-card rounded-2xl p-8 lg:p-12">
                 <div className="mb-10">
                   <h2 className="text-3xl font-bold text-white mb-2">
-                    Join the Elite
+                    Junte-se à Elite
                   </h2>
                   <p className="text-gray-400">
-                    Complete the professional vetting process to start boosting.
+                    Complete o processo de avaliação profissional para começar a fazer boost.
                   </p>
                 </div>
                 <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">
-                      Game Expertise
+                      Jogo Principal
                     </label>
                     <select className="bg-white/5 border border-white/10 rounded-lg text-white focus:ring-primary focus:border-primary px-4 py-3">
                       <option>League of Legends</option>
@@ -121,21 +121,21 @@ export default function ApplyPage() {
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">
-                      Peak Rank
+                      Rank Máximo
                     </label>
                     <input
                       className="bg-white/5 border border-white/10 rounded-lg text-white focus:ring-primary focus:border-primary px-4 py-3 placeholder:text-white/20"
-                      placeholder="e.g. Challenger 600LP"
+                      placeholder="ex: Challenger 600LP"
                       type="text"
                     />
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">
-                      Peak Rank Proof Link
+                      Link de Comprovação do Rank
                     </label>
                     <input
                       className="bg-white/5 border border-white/10 rounded-lg text-white focus:ring-primary focus:border-primary px-4 py-3 placeholder:text-white/20"
-                      placeholder="Tracker.gg or Op.gg link"
+                      placeholder="Link do Tracker.gg ou Op.gg"
                       type="url"
                     />
                   </div>
@@ -151,14 +151,14 @@ export default function ApplyPage() {
                   </div>
                   <div className="flex flex-col gap-2 md:col-span-2">
                     <label className="text-xs font-bold uppercase tracking-wider text-gray-500 ml-1">
-                      Region
+                      Região
                     </label>
                     <select className="bg-white/5 border border-white/10 rounded-lg text-white focus:ring-primary focus:border-primary px-4 py-3">
-                      <option>North America (NA)</option>
-                      <option>Europe West (EUW)</option>
-                      <option>Europe Nordic &amp; East (EUNE)</option>
-                      <option>Brazil (BR)</option>
-                      <option>Korea (KR)</option>
+                      <option>América do Norte (NA)</option>
+                      <option>Europa Oeste (EUW)</option>
+                      <option>Europa Nórdica e Leste (EUNE)</option>
+                      <option>Brasil (BR)</option>
+                      <option>Coreia (KR)</option>
                       <option>Oceania (OCE)</option>
                     </select>
                   </div>
@@ -167,11 +167,11 @@ export default function ApplyPage() {
                       type="submit"
                       className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg transition-all text-lg shadow-lg"
                     >
-                      Submit Application
+                      Enviar Candidatura
                     </button>
                     <p className="text-center text-gray-500 text-xs mt-4">
-                      By submitting, you agree to our Pro Booster Code of Conduct
-                      and Privacy Policy.
+                      Ao enviar, você concorda com nosso Código de Conduta para Boosters
+                      e Política de Privacidade.
                     </p>
                   </div>
                 </form>
@@ -199,22 +199,22 @@ export default function ApplyPage() {
                   </div>
                 </div>
                 <p className="text-gray-300 italic leading-relaxed">
-                  &ldquo;Best platform I&apos;ve worked for. Instant payouts and
-                  constant orders. The management actually respects the
-                  boosters&apos; time.&rdquo;
+                  &ldquo;Melhor plataforma em que já trabalhei. Pagamentos
+                  instantâneos e pedidos constantes. A gestão realmente
+                  respeita o tempo dos boosters.&rdquo;
                 </p>
               </div>
 
               {/* Why EloDark */}
               <div className="glass-card rounded-2xl p-8 border-white/5">
                 <h4 className="text-sm font-bold uppercase tracking-widest text-primary mb-6">
-                  Why EloDark?
+                  Por que a EloDark?
                 </h4>
                 <ul className="space-y-4">
                   {[
-                    "High completion bonuses",
-                    "Direct client tips (100% yours)",
-                    "Advanced VPN & Security tools",
+                    "Bônus altos por conclusão",
+                    "Gorjetas diretas dos clientes (100% suas)",
+                    "Ferramentas avançadas de VPN e Segurança",
                   ].map((item) => (
                     <li
                       key={item}

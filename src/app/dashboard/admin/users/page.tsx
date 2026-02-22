@@ -37,7 +37,7 @@ export default function AdminUsersPage() {
     },
     {
       key: "name",
-      label: "Name",
+      label: "Nome",
       render: (row) => <span className="font-medium">{row.name}</span>,
     },
     {
@@ -47,7 +47,7 @@ export default function AdminUsersPage() {
     },
     {
       key: "role",
-      label: "Role",
+      label: "Função",
       render: (row) => {
         const colors = ROLE_COLORS[row.role] || "bg-white/10 text-white/60 border-white/20";
         return (
@@ -61,7 +61,7 @@ export default function AdminUsersPage() {
     },
     {
       key: "created_at",
-      label: "Created At",
+      label: "Criado em",
       render: (row) => (
         <span className="text-white/60">
           {new Date(row.created_at).toLocaleDateString("pt-BR", {
@@ -79,11 +79,11 @@ export default function AdminUsersPage() {
   if (authLoading || !authorized) {
     return (
       <>
-        <PageHeader title="User Management" />
+        <PageHeader title="Gestão de Usuários" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Verifying access...</span>
+            <span>Verificando acesso...</span>
           </div>
         </div>
       </>
@@ -93,11 +93,11 @@ export default function AdminUsersPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="User Management" />
+        <PageHeader title="Gestão de Usuários" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -107,11 +107,11 @@ export default function AdminUsersPage() {
   if (error) {
     return (
       <>
-        <PageHeader title="User Management" />
+        <PageHeader title="Gestão de Usuários" />
         <div className="p-8">
           <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
             <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load users.</p>
+            <p className="text-white/60">Falha ao carregar usuários.</p>
             <p className="text-xs text-white/30 mt-1">{error}</p>
           </div>
         </div>
@@ -121,24 +121,24 @@ export default function AdminUsersPage() {
 
   return (
     <>
-      <PageHeader title="User Management" />
+      <PageHeader title="Gestão de Usuários" />
 
       <div className="p-8 space-y-6 max-w-7xl mx-auto">
         {/* Summary row */}
         <div className="flex items-center gap-4 text-sm text-white/40">
-          <span>{users.length} total users</span>
+          <span>{users.length} usuários no total</span>
           <span className="text-white/10">|</span>
           <span>{users.filter((u) => u.role === "admin").length} admins</span>
           <span className="text-white/10">|</span>
           <span>{users.filter((u) => u.role === "booster").length} boosters</span>
           <span className="text-white/10">|</span>
-          <span>{users.filter((u) => u.role === "user").length} users</span>
+          <span>{users.filter((u) => u.role === "user").length} usuários</span>
         </div>
 
         <DataTable
           columns={columns}
           data={users}
-          emptyMessage="No users found."
+          emptyMessage="Nenhum usuário encontrado."
         />
       </div>
     </>

@@ -14,24 +14,24 @@ interface NavItem {
 
 const navByRole: Record<string, NavItem[]> = {
   user: [
-    { href: "/dashboard", icon: "dashboard", label: "Dashboard" },
-    { href: "/dashboard/orders", icon: "shopping_cart", label: "My Orders" },
+    { href: "/dashboard", icon: "dashboard", label: "Painel" },
+    { href: "/dashboard/orders", icon: "shopping_cart", label: "Meus Pedidos" },
     { href: "/dashboard/chat", icon: "forum", label: "Chat" },
-    { href: "/dashboard/settings", icon: "settings", label: "Settings" },
+    { href: "/dashboard/settings", icon: "settings", label: "Configurações" },
   ],
   booster: [
-    { href: "/dashboard/booster", icon: "dashboard", label: "Dashboard" },
-    { href: "/dashboard/booster/available", icon: "storefront", label: "Available" },
-    { href: "/dashboard/booster/orders", icon: "assignment", label: "My Orders" },
-    { href: "/dashboard/booster/wallet", icon: "account_balance_wallet", label: "Wallet" },
+    { href: "/dashboard/booster", icon: "dashboard", label: "Painel" },
+    { href: "/dashboard/booster/available", icon: "storefront", label: "Disponíveis" },
+    { href: "/dashboard/booster/orders", icon: "assignment", label: "Meus Pedidos" },
+    { href: "/dashboard/booster/wallet", icon: "account_balance_wallet", label: "Carteira" },
     { href: "/dashboard/booster/chat", icon: "forum", label: "Chat" },
   ],
   admin: [
-    { href: "/dashboard/admin", icon: "dashboard", label: "Dashboard" },
-    { href: "/dashboard/admin/orders", icon: "shopping_cart", label: "Orders" },
+    { href: "/dashboard/admin", icon: "dashboard", label: "Painel" },
+    { href: "/dashboard/admin/orders", icon: "shopping_cart", label: "Pedidos" },
     { href: "/dashboard/admin/boosters", icon: "sports_esports", label: "Boosters" },
-    { href: "/dashboard/admin/users", icon: "people", label: "Users" },
-    { href: "/dashboard/admin/withdrawals", icon: "payments", label: "Withdrawals" },
+    { href: "/dashboard/admin/users", icon: "people", label: "Usuários" },
+    { href: "/dashboard/admin/withdrawals", icon: "payments", label: "Saques" },
   ],
 };
 
@@ -98,7 +98,7 @@ export function DashboardSidebar() {
               {(user?.name || "U").charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold truncate">{user?.name || "User"}</p>
+              <p className="text-sm font-bold truncate">{user?.name || "Usuário"}</p>
               <p className="text-[10px] text-white/40 capitalize">{role}</p>
             </div>
           </div>
@@ -106,7 +106,7 @@ export function DashboardSidebar() {
             onClick={handleLogout}
             className="w-full py-2 bg-white/5 border border-white/10 text-xs font-bold rounded-lg hover:bg-red-500/20 hover:border-red-500/30 hover:text-red-400 transition-all cursor-pointer"
           >
-            LOGOUT
+            SAIR
           </button>
         </div>
       </div>

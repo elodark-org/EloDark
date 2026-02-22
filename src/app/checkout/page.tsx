@@ -16,11 +16,11 @@ export default function CheckoutPage() {
             <Icon name="shopping_cart_checkout" className="text-primary" size={48} />
           </div>
 
-          <h2 className="text-3xl font-bold">Checkout via Stripe</h2>
+          <h2 className="text-3xl font-bold">Pagamento via Stripe</h2>
 
           <p className="text-gray-400">
             O pagamento é processado de forma segura pelo Stripe. Configure seu
-            pedido na página de boost e clique em <strong>Checkout Now</strong>{" "}
+            pedido na página de boost e clique em <strong>Finalizar Compra</strong>{" "}
             para ser redirecionado.
           </p>
 
@@ -41,13 +41,13 @@ export default function CheckoutPage() {
             <div className="flex items-center gap-1">
               <Icon name="verified_user" size={14} />
               <span className="text-[10px] font-bold uppercase">
-                Norton Secured
+                Segurança Norton
               </span>
             </div>
             <div className="flex items-center gap-1">
               <Icon name="lock" size={14} />
               <span className="text-[10px] font-bold uppercase">
-                SSL Encrypted
+                Criptografia SSL
               </span>
             </div>
           </div>

@@ -6,29 +6,29 @@ import type { FAQItem } from "@/types";
 
 const faqItems: FAQItem[] = [
   {
-    question: "Is Elo Boosting safe for my account?",
+    question: "Elo Boost é seguro para minha conta?",
     answer:
-      "Our boosting services are 100% safe. We use premium VPN protection localized to your region and high-level encryption to ensure your account remains secure and undetectable by game developers. Your privacy is our top priority.",
+      "Nossos serviços de boost são 100% seguros. Utilizamos proteção VPN premium localizada na sua região e criptografia de alto nível para garantir que sua conta permaneça segura e indetectável pelos desenvolvedores do jogo. Sua privacidade é nossa prioridade máxima.",
   },
   {
-    question: "How long will my boost take?",
+    question: "Quanto tempo meu boost vai demorar?",
     answer:
-      "Boost times vary depending on your starting rank and target goal. Typically, orders are started within 30 minutes. A standard division boost usually takes 24-48 hours. You can track live progress in your customer dashboard.",
+      "O tempo do boost varia dependendo do seu rank inicial e objetivo final. Normalmente, os pedidos são iniciados em até 30 minutos. Um boost de divisão padrão geralmente leva de 24 a 48 horas. Você pode acompanhar o progresso em tempo real no seu painel de cliente.",
   },
   {
-    question: "Can I play other games while being boosted?",
+    question: "Posso jogar outros jogos enquanto estou sendo boostado?",
     answer:
-      "Yes! You can play any other games on your PC. However, you must not log into the specific game account that is being boosted while our professional is active. We recommend setting up a schedule with your booster via our chat system.",
+      "Sim! Você pode jogar qualquer outro jogo no seu PC. No entanto, você não deve entrar na conta do jogo específico que está sendo boostado enquanto nosso profissional estiver ativo. Recomendamos combinar um horário com seu booster pelo nosso sistema de chat.",
   },
   {
-    question: "Are the boosters professional players?",
+    question: "Os boosters são jogadores profissionais?",
     answer:
-      "Absolutely. Every EloDark booster is strictly vetted and must maintain a high-tier rank (Top 0.1% of the ladder). Most are current or former semi-pro players who understand the meta and carry games with high win rates.",
+      "Com certeza. Cada booster da EloDark é rigorosamente selecionado e deve manter um rank de alto nível (Top 0,1% do ranking). A maioria são jogadores semi-profissionais atuais ou ex-jogadores que entendem o meta e carregam partidas com altas taxas de vitória.",
   },
   {
-    question: "What payment methods do you accept?",
+    question: "Quais métodos de pagamento vocês aceitam?",
     answer:
-      "We accept all major Credit/Debit cards, PayPal, and various Cryptocurrencies (BTC, ETH, USDT). All transactions are handled through secure, encrypted gateways to ensure your financial data is never stored on our servers.",
+      "Aceitamos todos os principais cartões de Crédito/Débito, PayPal e diversas Criptomoedas (BTC, ETH, USDT). Todas as transações são processadas por gateways seguros e criptografados para garantir que seus dados financeiros nunca sejam armazenados em nossos servidores.",
   },
 ];
 
@@ -66,11 +66,11 @@ export function FAQ() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-gradient bg-gradient-to-r from-accent-purple to-accent-cyan text-4xl lg:text-6xl font-black mb-4 tracking-tighter">
-            Frequently Asked Questions
+            Perguntas Frequentes
           </h2>
           <p className="text-gray-400 text-lg lg:text-xl max-w-2xl mx-auto font-light">
-            Everything you need to know about our elite boosting services. Secure,
-            fast, and professional.
+            Tudo o que você precisa saber sobre nossos serviços de boost de elite. Seguro,
+            rápido e profissional.
           </p>
         </div>
 
@@ -84,12 +84,12 @@ export function FAQ() {
         {/* Footer CTA */}
         <div className="mt-12 text-center">
           <p className="text-gray-400 text-base flex items-center justify-center gap-2">
-            Still have questions?
+            Ainda tem dúvidas?
             <Link
               href="#"
               className="text-primary font-bold hover:text-accent-cyan transition-colors flex items-center gap-1 group"
             >
-              Contact our 24/7 Support
+              Fale com nosso Suporte 24/7
               <Icon
                 name="arrow_forward"
                 size={14}

@@ -4,31 +4,31 @@ import { Footer } from "@/components/layout/footer";
 import Link from "next/link";
 
 const stats = [
-  { icon: "query_stats", label: "Win Rate", value: "100%", detail: "+100% Impact" },
-  { icon: "swords", label: "Average KDA", value: "12.4", detail: "Godlike Performance" },
-  { icon: "schedule", label: "Completion Time", value: "48h", detail: "Rapid Delivery" },
+  { icon: "query_stats", label: "Taxa de Vitória", value: "100%", detail: "+100% de Impacto" },
+  { icon: "swords", label: "KDA Médio", value: "12.4", detail: "Performance Divina" },
+  { icon: "schedule", label: "Tempo de Conclusão", value: "48h", detail: "Entrega Rápida" },
 ];
 
 const timeline = [
   {
     icon: "error",
-    title: "The Challenge",
-    text: "Our client had been playing since Season 8, consistently finishing in Bronze I. Despite thousands of matches and watching countless guides, they couldn't overcome the \"Elo Hell\" of inconsistent teammates and smurf players. The goal was simple but ambitious: reach Diamond IV to finally play in high-level lobbies.",
-    tags: ["Stuck 3 Seasons", "Low MMR Gains"],
+    title: "O Desafio",
+    text: "Nosso cliente jogava desde a Season 8, sempre terminando no Bronze I. Apesar de milhares de partidas e incontáveis guias assistidos, ele não conseguia superar o \"Elo Hell\" de teammates inconsistentes e jogadores smurf. O objetivo era simples, mas ambicioso: alcançar Diamante IV para finalmente jogar em lobbies de alto nível.",
+    tags: ["Preso há 3 Seasons", "Ganho de MMR Baixo"],
     tagColor: "bg-red-500/10 border-red-500/20 text-red-500",
     isResult: false,
   },
   {
     icon: "strategy",
-    title: "The Strategy",
-    text: "Our elite booster, 'Shadow', identified that the client's account MMR was severely damaged. He opted for a \"Hyper-Carry\" strategy using high-mobility champions to influence all lanes. By focusing on neutral objectives and punishing enemy positioning, Shadow maintained a 20-minute average game time to rapidly inflate the MMR.",
+    title: "A Estratégia",
+    text: "Nosso booster de elite, 'Shadow', identificou que o MMR da conta do cliente estava severamente danificado. Ele optou por uma estratégia de \"Hyper-Carry\" usando campeões de alta mobilidade para influenciar todas as lanes. Focando em objetivos neutros e punindo o posicionamento inimigo, Shadow manteve um tempo médio de partida de 20 minutos para recuperar o MMR rapidamente.",
     tags: [],
     isResult: false,
   },
   {
     icon: "emoji_events",
-    title: "The Result",
-    text: "Within 48 hours, the account achieved a 25-game win streak. The MMR was successfully repaired, with the client now gaining +28 LP per win in Diamond lobbies. The client can now enjoy competitive matches with skilled teammates, finally breaking the cycle of low-tier frustration.",
+    title: "O Resultado",
+    text: "Em 48 horas, a conta conquistou uma sequência de 25 vitórias consecutivas. O MMR foi reparado com sucesso, com o cliente agora ganhando +28 LP por vitória em lobbies de Diamante. O cliente agora pode aproveitar partidas competitivas com teammates habilidosos, finalmente quebrando o ciclo de frustração dos elos baixos.",
     tags: [],
     isResult: true,
   },
@@ -43,23 +43,23 @@ export default function SuccessStoriesPage() {
         <section className="relative rounded-2xl overflow-hidden mb-16 bg-gradient-to-r from-bg-primary via-bg-primary/80 to-transparent">
           <div className="relative min-h-[500px] w-full flex flex-col justify-center px-12 max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 border border-primary/40 text-primary text-xs font-bold uppercase tracking-widest mb-6 w-fit">
-              <Icon name="verified" size={12} /> Featured Success Story
+              <Icon name="verified" size={12} /> História de Sucesso em Destaque
             </div>
             <h1 className="text-5xl lg:text-7xl font-black leading-[1.1] mb-6 tracking-tighter">
-              From <span className="text-gray-500">Hardstuck</span> to <br />
+              De <span className="text-gray-500">Hardstuck</span> a <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent-cyan">
-                Hero: The Platinum Climb
+                Herói: A Escalada para o Diamante
               </span>
             </h1>
             <p className="text-lg text-gray-400 mb-8 max-w-xl leading-relaxed">
-              A deep dive into how our Challenger-tier booster &apos;Shadow&apos;
-              transformed a Bronze I account plateaued for 3 seasons into Diamond
-              IV in just 48 hours.
+              Um mergulho profundo em como nosso booster tier Challenger &apos;Shadow&apos;
+              transformou uma conta Bronze I estagnada por 3 seasons em Diamante
+              IV em apenas 48 horas.
             </p>
             <div className="flex items-center gap-8">
               <div className="flex flex-col">
                 <span className="text-xs uppercase text-gray-500 font-bold tracking-widest mb-1">
-                  Starting Rank
+                  Rank Inicial
                 </span>
                 <div className="flex items-center gap-2">
                   <div className="size-8 bg-orange-900/30 rounded-full flex items-center justify-center border border-orange-700/50">
@@ -71,7 +71,7 @@ export default function SuccessStoriesPage() {
               <Icon name="arrow_forward" className="text-primary" />
               <div className="flex flex-col">
                 <span className="text-xs uppercase text-gray-500 font-bold tracking-widest mb-1">
-                  Final Rank
+                  Rank Final
                 </span>
                 <div className="flex items-center gap-2">
                   <div className="size-8 bg-cyan-500/20 rounded-full flex items-center justify-center border border-cyan-400/50">
@@ -107,7 +107,7 @@ export default function SuccessStoriesPage() {
             <div className="space-y-8">
               <h2 className="text-3xl font-bold flex items-center gap-3">
                 <Icon name="auto_stories" className="text-primary" />
-                The Path to Victory
+                O Caminho para a Vitória
               </h2>
 
               {timeline.map((item, i) => (
@@ -160,7 +160,7 @@ export default function SuccessStoriesPage() {
             <div className="space-y-6">
               <h2 className="text-3xl font-bold flex items-center gap-3">
                 <Icon name="play_circle" className="text-primary" />
-                Proof of Mastery
+                Prova de Maestria
               </h2>
               <div className="relative aspect-video rounded-2xl overflow-hidden border-2 border-primary/30 group bg-gray-900">
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-all cursor-pointer">
@@ -171,7 +171,7 @@ export default function SuccessStoriesPage() {
                 <div className="absolute bottom-4 left-4 z-20">
                   <span className="px-3 py-1 rounded-lg glass-card text-xs font-bold uppercase tracking-widest flex items-center gap-2">
                     <span className="size-2 rounded-full bg-red-500 animate-pulse" />
-                    Live Replay: Game 24 Promotion Match
+                    Replay ao Vivo: Partida 24 de Promoção
                   </span>
                 </div>
               </div>
@@ -182,7 +182,7 @@ export default function SuccessStoriesPage() {
           <aside className="lg:col-span-4 space-y-8">
             <div className="glass-card rounded-2xl p-6 border-primary/30 sticky top-28">
               <h4 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-6">
-                Booster Behind the Climb
+                O Booster por Trás da Escalada
               </h4>
               <div className="flex items-center gap-4 mb-6">
                 <div className="relative size-16 rounded-full border-2 border-primary p-1">
@@ -199,15 +199,15 @@ export default function SuccessStoriesPage() {
               </div>
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Peak Rank</span>
-                  <span className="font-bold">Challenger 1,120 LP</span>
+                  <span className="text-gray-500">Rank Máximo</span>
+                  <span className="font-bold">Challenger 1.120 LP</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Success Rate</span>
+                  <span className="text-gray-500">Taxa de Sucesso</span>
                   <span className="font-bold text-green-400">99.2%</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Main Roles</span>
+                  <span className="text-gray-500">Roles Principais</span>
                   <span className="font-bold">Jungle / Mid</span>
                 </div>
               </div>
@@ -217,28 +217,28 @@ export default function SuccessStoriesPage() {
                 href="/boost/league-of-legends"
                 className="block w-full py-4 rounded-xl font-black text-lg bg-gradient-to-r from-primary to-accent-cyan text-white shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-center"
               >
-                START YOUR STORY
+                COMECE SUA HISTÓRIA
               </Link>
               <p className="text-center text-xs text-gray-500 mt-3">
                 <Icon name="verified_user" size={10} className="align-middle mr-1" />
-                100% Account Safety Guaranteed
+                100% de Segurança da Conta Garantida
               </p>
 
               {/* Quote */}
               <div className="mt-8 pt-8 border-t border-primary/10">
                 <Icon name="format_quote" className="text-primary mb-2" />
                 <p className="text-sm italic text-gray-400 leading-relaxed mb-4">
-                  &ldquo;I was honestly skeptical about ever reaching Diamond.
-                  Shadow made it look so easy. The coaching tips he left in the
-                  post-boost report were the cherry on top. Worth every cent.&rdquo;
+                  &ldquo;Eu estava honestamente cético sobre algum dia chegar ao Diamante.
+                  O Shadow fez parecer tão fácil. As dicas de coaching que ele deixou no
+                  relatório pós-boost foram a cereja do bolo. Valeu cada centavo.&rdquo;
                 </p>
                 <div className="flex items-center gap-3">
                   <div className="size-8 rounded-full bg-bg-primary flex items-center justify-center font-bold text-xs text-primary border border-primary/20">
                     JD
                   </div>
                   <div>
-                    <p className="text-xs font-bold">James D.</p>
-                    <p className="text-[10px] text-gray-500">Verified Client</p>
+                    <p className="text-xs font-bold">João D.</p>
+                    <p className="text-[10px] text-gray-500">Cliente Verificado</p>
                   </div>
                 </div>
               </div>

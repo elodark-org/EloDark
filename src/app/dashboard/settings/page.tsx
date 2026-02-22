@@ -14,7 +14,7 @@ export default function SettingsPage() {
   return (
     <>
       <header className="sticky top-0 z-30 flex items-center px-8 py-4 bg-bg-primary/60 backdrop-blur-md border-b border-white/5">
-        <h2 className="text-xl font-bold">Security Settings</h2>
+        <h2 className="text-xl font-bold">Configurações de Segurança</h2>
       </header>
 
       <div className="p-8 max-w-3xl mx-auto space-y-8">
@@ -22,14 +22,14 @@ export default function SettingsPage() {
         <section className="glass-card rounded-2xl p-8 border border-white/5 space-y-6">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <Icon name="person" className="text-primary" />
-            Account Information
+            Informações da Conta
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input label="Username" defaultValue="Summoner01" />
-            <Input label="Email" type="email" defaultValue="summoner@email.com" />
+            <Input label="Nome de Usuário" defaultValue="Summoner01" />
+            <Input label="E-mail" type="email" defaultValue="summoner@email.com" />
           </div>
           <Button size="md" variant="outline">
-            Update Profile
+            Atualizar Perfil
           </Button>
         </section>
 
@@ -37,58 +37,58 @@ export default function SettingsPage() {
         <section className="glass-card rounded-2xl p-8 border border-white/5 space-y-6">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <Icon name="lock" className="text-primary" />
-            Change Password
+            Alterar Senha
           </h3>
           <div className="space-y-4">
             <Input
-              label="Current Password"
+              label="Senha Atual"
               type="password"
-              placeholder="Enter current password"
+              placeholder="Digite a senha atual"
             />
             <Input
-              label="New Password"
+              label="Nova Senha"
               type="password"
-              placeholder="Min. 8 characters"
+              placeholder="Mín. 8 caracteres"
             />
             <Input
-              label="Confirm New Password"
+              label="Confirmar Nova Senha"
               type="password"
-              placeholder="Confirm new password"
+              placeholder="Confirme a nova senha"
             />
           </div>
-          <Button size="md">Update Password</Button>
+          <Button size="md">Atualizar Senha</Button>
         </section>
 
         {/* Security Options */}
         <section className="glass-card rounded-2xl p-8 border border-white/5 space-y-6">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <Icon name="shield" className="text-primary" />
-            Security Options
+            Opções de Segurança
           </h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
               <div>
-                <h4 className="font-bold text-sm">Two-Factor Authentication</h4>
+                <h4 className="font-bold text-sm">Autenticação em Dois Fatores</h4>
                 <p className="text-xs text-white/50">
-                  Add an extra layer of security
+                  Adicione uma camada extra de segurança
                 </p>
               </div>
               <Toggle checked={twoFa} onChange={setTwoFa} />
             </div>
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
               <div>
-                <h4 className="font-bold text-sm">Login Alerts</h4>
+                <h4 className="font-bold text-sm">Alertas de Login</h4>
                 <p className="text-xs text-white/50">
-                  Get notified of new sign-ins
+                  Receba notificações de novos acessos
                 </p>
               </div>
               <Toggle checked={loginAlerts} onChange={setLoginAlerts} />
             </div>
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
               <div>
-                <h4 className="font-bold text-sm">Email Notifications</h4>
+                <h4 className="font-bold text-sm">Notificações por E-mail</h4>
                 <p className="text-xs text-white/50">
-                  Order updates and promotions
+                  Atualizações de pedidos e promoções
                 </p>
               </div>
               <Toggle checked={emailNotifs} onChange={setEmailNotifs} />
@@ -100,29 +100,29 @@ export default function SettingsPage() {
         <section className="glass-card rounded-2xl p-8 border border-white/5 space-y-6">
           <h3 className="text-lg font-bold flex items-center gap-2">
             <Icon name="devices" className="text-primary" />
-            Active Sessions
+            Sessões Ativas
           </h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
               <div className="flex items-center gap-3">
                 <Icon name="computer" className="text-primary" />
                 <div>
-                  <p className="text-sm font-bold">Chrome on macOS</p>
-                  <p className="text-xs text-white/40">Current session</p>
+                  <p className="text-sm font-bold">Chrome no macOS</p>
+                  <p className="text-xs text-white/40">Sessão atual</p>
                 </div>
               </div>
-              <span className="text-xs text-green-400 font-bold">Active</span>
+              <span className="text-xs text-green-400 font-bold">Ativo</span>
             </div>
             <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/10">
               <div className="flex items-center gap-3">
                 <Icon name="phone_iphone" className="text-white/40" />
                 <div>
-                  <p className="text-sm font-bold">Safari on iPhone</p>
-                  <p className="text-xs text-white/40">2 days ago</p>
+                  <p className="text-sm font-bold">Safari no iPhone</p>
+                  <p className="text-xs text-white/40">2 dias atrás</p>
                 </div>
               </div>
               <button className="text-xs text-red-400 font-bold hover:underline cursor-pointer">
-                Revoke
+                Revogar
               </button>
             </div>
           </div>

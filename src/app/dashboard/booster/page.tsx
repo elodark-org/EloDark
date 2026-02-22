@@ -42,11 +42,11 @@ export default function BoosterDashboardPage() {
   if (guardLoading || !authorized) {
     return (
       <>
-        <PageHeader title="Booster Dashboard" />
+        <PageHeader title="Painel do Booster" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -56,11 +56,11 @@ export default function BoosterDashboardPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Booster Dashboard" />
+        <PageHeader title="Painel do Booster" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -70,11 +70,11 @@ export default function BoosterDashboardPage() {
   if (error) {
     return (
       <>
-        <PageHeader title="Booster Dashboard" />
+        <PageHeader title="Painel do Booster" />
         <div className="p-8">
           <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
             <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load dashboard data.</p>
+            <p className="text-white/60">Falha ao carregar dados do painel.</p>
             <p className="text-xs text-white/30 mt-1">{error}</p>
           </div>
         </div>
@@ -95,21 +95,21 @@ export default function BoosterDashboardPage() {
     },
     {
       key: "service_type",
-      label: "Service",
+      label: "Serviço",
       render: (row) => (
         <span className="capitalize">{row.service_type.replace(/-/g, " ")}</span>
       ),
     },
     {
       key: "user_name",
-      label: "Client",
+      label: "Cliente",
       render: (row) => (
         <span className="text-white/70">{row.user_name || "---"}</span>
       ),
     },
     {
       key: "price",
-      label: "Commission",
+      label: "Comissão",
       render: (row) => (
         <span className="font-bold text-green-400">
           {formatBRL(parseFloat(row.price) * COMMISSION_RATE)}
@@ -123,7 +123,7 @@ export default function BoosterDashboardPage() {
     },
     {
       key: "created_at",
-      label: "Date",
+      label: "Data",
       render: (row) => (
         <span className="text-white/60">
           {new Date(row.created_at).toLocaleDateString("pt-BR")}
@@ -135,7 +135,7 @@ export default function BoosterDashboardPage() {
   return (
     <>
       <PageHeader
-        title="Booster Dashboard"
+        title="Painel do Booster"
         actions={
           <div className="flex items-center gap-3">
             <Link
@@ -143,7 +143,7 @@ export default function BoosterDashboardPage() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 border border-primary/30 rounded-lg text-sm font-bold text-primary hover:bg-primary/30 transition-all"
             >
               <Icon name="storefront" size={18} />
-              Available Orders
+              Pedidos Disponíveis
             </Link>
           </div>
         }
@@ -154,25 +154,25 @@ export default function BoosterDashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
             icon="play_circle"
-            label="Active Orders"
+            label="Pedidos Ativos"
             value={activeOrders.length}
             iconColor="text-blue-400"
           />
           <StatCard
             icon="check_circle"
-            label="Completed"
+            label="Concluídos"
             value={completedOrders.length}
             iconColor="text-green-400"
           />
           <StatCard
             icon="payments"
-            label="Total Earned"
+            label="Total Ganho"
             value={wallet ? formatBRL(wallet.total_earned) : "R$ 0.00"}
             iconColor="text-accent-gold"
           />
           <StatCard
             icon="account_balance_wallet"
-            label="Available Balance"
+            label="Saldo Disponível"
             value={wallet ? formatBRL(wallet.available_balance) : "R$ 0.00"}
             iconColor="text-primary"
           />
@@ -183,20 +183,20 @@ export default function BoosterDashboardPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold flex items-center gap-2">
               <Icon name="bolt" className="text-primary" />
-              In Progress
+              Em Andamento
             </h2>
             <Link
               href="/dashboard/booster/orders"
               className="text-xs text-primary font-bold hover:underline uppercase"
             >
-              View All Orders
+              Ver Todos os Pedidos
             </Link>
           </div>
 
           <DataTable
             columns={columns}
             data={activeOrders}
-            emptyMessage="No active orders. Check available services!"
+            emptyMessage="Nenhum pedido ativo. Confira os serviços disponíveis!"
           />
         </div>
       </div>

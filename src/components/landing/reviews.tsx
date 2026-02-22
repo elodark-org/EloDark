@@ -12,8 +12,8 @@ const reviews: Review[] = [
     game: "League of Legends",
     gameColor: "purple",
     rating: 5,
-    text: '"Insane speed. Got me from Silver to Plat in a week. Booster was super chill and gave me tips along the way. Highly recommend!"',
-    date: "2 days ago",
+    text: '"Velocidade insana. Me levou do Prata ao Platina em uma semana. O booster foi super tranquilo e me deu dicas durante o processo. Recomendo demais!"',
+    date: "2 dias atrás",
     verified: true,
   },
   {
@@ -24,8 +24,8 @@ const reviews: Review[] = [
     game: "Valorant",
     gameColor: "cyan",
     rating: 5,
-    text: '"Was skeptical at first but the duo queue option is legit. Learned a lot while ranking up. The process was smooth and support was always there."',
-    date: "1 week ago",
+    text: '"Estava cética no início, mas a opção de duo queue é real. Aprendi muito enquanto subia de rank. O processo foi tranquilo e o suporte estava sempre disponível."',
+    date: "1 semana atrás",
     verified: true,
   },
   {
@@ -36,8 +36,8 @@ const reviews: Review[] = [
     game: "Valorant",
     gameColor: "red",
     rating: 5,
-    text: '"Customer support helped me fix an order issue instantly. 10/10 service. I\'ve used other sites before but this one is by far the most professional."',
-    date: "3 weeks ago",
+    text: '"O suporte ao cliente me ajudou a resolver um problema no pedido instantaneamente. Serviço nota 10. Já usei outros sites antes, mas este é de longe o mais profissional."',
+    date: "3 semanas atrás",
     verified: true,
   },
 ];
@@ -107,7 +107,7 @@ function ReviewCard({ review }: { review: Review }) {
             <div className="flex items-center gap-1.5 text-green-400">
               <Icon name="check_circle" size={16} />
               <span className="text-xs font-semibold tracking-wide uppercase">
-                Verified Purchase
+                Compra Verificada
               </span>
             </div>
           </div>
@@ -135,9 +135,9 @@ export function Reviews() {
             <Icon name="star_half" filled size={32} />
           </div>
           <p className="text-white/70 text-lg font-medium">
-            Based on{" "}
+            Baseado em{" "}
             <span className="text-white font-bold border-b border-white/20">
-              2,847 verified reviews
+              2.847 avaliações verificadas
             </span>
           </p>
           <div className="flex items-center gap-6 mt-2 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
@@ -167,7 +167,7 @@ export function Reviews() {
         >
           <span className="absolute inset-0 bg-primary/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <span className="relative text-sm font-bold text-primary tracking-wide group-hover:text-white transition-colors duration-300">
-            Read All 2,847 Reviews
+            Ler Todas as 2.847 Avaliações
           </span>
           <Icon
             name="arrow_forward"
