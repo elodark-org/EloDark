@@ -34,7 +34,7 @@ export default function OrdersPage() {
     },
     {
       key: "service_type",
-      label: "Service Type",
+      label: "Tipo de Serviço",
       render: (row) => (
         <span className="capitalize font-medium">{row.service_type.replace(/-/g, " ")}</span>
       ),
@@ -48,19 +48,19 @@ export default function OrdersPage() {
       key: "booster_name",
       label: "Booster",
       render: (row) => (
-        <span className="text-white/60">{row.booster_name || "Awaiting assignment"}</span>
+        <span className="text-white/60">{row.booster_name || "Aguardando atribuição"}</span>
       ),
     },
     {
       key: "price",
-      label: "Price",
+      label: "Preço",
       render: (row) => (
         <span className="font-bold">R$ {parseFloat(row.price).toFixed(2)}</span>
       ),
     },
     {
       key: "created_at",
-      label: "Date",
+      label: "Data",
       render: (row) => (
         <span className="text-white/60">
           {new Date(row.created_at).toLocaleDateString("pt-BR")}
@@ -75,7 +75,7 @@ export default function OrdersPage() {
           href={`/dashboard/orders/${row.id}`}
           className="inline-flex items-center gap-1 text-xs text-primary hover:underline font-bold"
         >
-          Details
+          Detalhes
           <Icon name="chevron_right" size={16} />
         </Link>
       ),
@@ -85,11 +85,11 @@ export default function OrdersPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="My Orders" />
+        <PageHeader title="Meus Pedidos" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading orders...</span>
+            <span>Carregando pedidos...</span>
           </div>
         </div>
       </>
@@ -99,11 +99,11 @@ export default function OrdersPage() {
   if (error) {
     return (
       <>
-        <PageHeader title="My Orders" />
+        <PageHeader title="Meus Pedidos" />
         <div className="p-8">
           <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
             <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load orders.</p>
+            <p className="text-white/60">Falha ao carregar pedidos.</p>
             <p className="text-xs text-white/30 mt-1">{error}</p>
           </div>
         </div>
@@ -113,12 +113,12 @@ export default function OrdersPage() {
 
   return (
     <>
-      <PageHeader title="My Orders" />
+      <PageHeader title="Meus Pedidos" />
       <div className="p-8 max-w-7xl mx-auto">
         <DataTable
           columns={columns}
           data={orders}
-          emptyMessage="You don't have any orders yet. Browse our services to get started!"
+          emptyMessage="Você ainda não tem nenhum pedido. Explore nossos serviços para começar!"
         />
       </div>
     </>

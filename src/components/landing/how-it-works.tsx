@@ -5,25 +5,25 @@ import type { Step } from "@/types";
 const steps: Step[] = [
   {
     number: "01",
-    title: "Choose Your Boost",
+    title: "Escolha Seu Boost",
     description:
-      "Select your current rank, desired goal, and customize your order. Choose specific agents, champions, or duo queue options.",
+      "Selecione seu rank atual, objetivo desejado e personalize seu pedido. Escolha agentes, campeões ou opções de duo queue específicos.",
     icon: "ads_click",
     color: "purple",
   },
   {
     number: "02",
-    title: "We Match Your Pro",
+    title: "Encontramos Seu Pro",
     description:
-      "Our AI-driven algorithm instantly assigns a top-tier Challenger booster. Your account is 100% anonymous and VPN protected.",
+      "Nosso algoritmo inteligente designa instantaneamente um booster Challenger de alto nível. Sua conta é 100% anônima e protegida por VPN.",
     icon: "shield_person",
     color: "cyan",
   },
   {
     number: "03",
-    title: "Track & Dominate",
+    title: "Acompanhe e Domine",
     description:
-      "Watch your rank soar in real-time via your private dashboard. Chat with your booster and reclaim your rightful place on the ladder.",
+      "Veja seu rank subir em tempo real pelo seu painel privado. Converse com seu booster e reconquiste seu lugar merecido no ranking.",
     icon: "rocket_launch",
     color: "gold",
   },
@@ -57,10 +57,10 @@ const colorMap = {
 };
 
 const trustBadges = [
-  { icon: "vpn_key", label: "VPN Protected", color: "text-accent-cyan" },
-  { icon: "support_agent", label: "24/7 Support", color: "text-accent-purple" },
-  { icon: "currency_exchange", label: "Money-Back Guarantee", color: "text-accent-gold" },
-  { icon: "lock", label: "SSL Encrypted", color: "text-green-400" },
+  { icon: "vpn_key", label: "Proteção VPN", color: "text-accent-cyan" },
+  { icon: "support_agent", label: "Suporte 24/7", color: "text-accent-purple" },
+  { icon: "currency_exchange", label: "Garantia de Reembolso", color: "text-accent-gold" },
+  { icon: "lock", label: "Criptografia SSL", color: "text-green-400" },
 ];
 
 function StepCard({ step }: { step: Step }) {
@@ -85,7 +85,7 @@ function StepCard({ step }: { step: Step }) {
 
         <div className="mt-12 space-y-4">
           <span className={`${c.text} font-bold tracking-widest text-sm uppercase`}>
-            Step {step.number}
+            Passo {step.number}
           </span>
           <h3 className="text-2xl font-bold text-white">{step.title}</h3>
           <p className="text-gray-400 leading-relaxed">{step.description}</p>
@@ -110,12 +110,12 @@ export function HowItWorks() {
         <div className="text-center space-y-4">
           <h2 className="text-5xl md:text-6xl font-bold tracking-tight">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent-purple via-primary to-accent-cyan">
-              HOW IT WORKS
+              COMO FUNCIONA
             </span>
           </h2>
           <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto font-light">
-            Get boosted in 3 simple steps. Safe, anonymous, and faster than the
-            speed of light.
+            Suba de elo em 3 passos simples. Seguro, anônimo e mais rápido que a
+            velocidade da luz.
           </p>
         </div>
 
@@ -141,7 +141,7 @@ export function HowItWorks() {
             iconRight="arrow_forward"
             className="shadow-[0_0_40px_rgba(46,123,255,0.3)] hover:shadow-[0_0_60px_rgba(46,123,255,0.5)] text-lg px-12 py-5"
           >
-            Start Your Boost Now
+            Comece Seu Boost Agora
           </Button>
 
           <div className="flex flex-wrap justify-center gap-4 md:gap-8">

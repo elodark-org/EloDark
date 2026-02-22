@@ -43,8 +43,12 @@ export interface Order {
   service_type: string;
   config: Record<string, unknown>;
   price: string;
-  status: "pending" | "active" | "available" | "in_progress" | "completed" | "cancelled";
+  status: "pending" | "active" | "available" | "in_progress" | "awaiting_approval" | "completed" | "cancelled";
   notes: string | null;
+  completion_image_url: string | null;
+  admin_approved: boolean;
+  admin_approved_by: number | null;
+  admin_approved_at: string | null;
   created_at: string;
   updated_at: string;
   // joined fields

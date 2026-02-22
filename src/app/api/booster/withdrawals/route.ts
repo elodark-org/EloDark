@@ -63,8 +63,8 @@ export async function POST(req: NextRequest) {
 
     // Calculate available balance
     const [earned] = await sql`
-      SELECT COALESCE(SUM(price * 0.40), 0) as total
-      FROM orders WHERE booster_id = ${booster.id} AND status = 'completed'
+      SELECT COALESCE(SUM(price * 0.60), 0) as total
+      FROM orders WHERE booster_id = ${booster.id} AND status = 'completed' AND admin_approved = true
     `;
     const [withdrawn] = await sql`
       SELECT COALESCE(SUM(amount), 0) as total

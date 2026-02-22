@@ -26,7 +26,7 @@ export default function LoginPage() {
       else if (user.role === "admin") router.push("/dashboard/admin");
       else router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(err instanceof Error ? err.message : "Falha ao entrar");
     } finally {
       setLoading(false);
     }
@@ -53,9 +53,9 @@ export default function LoginPage() {
         {/* Card */}
         <div className="glass-card rounded-2xl p-8 space-y-6">
           <div className="text-center">
-            <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
+            <h1 className="text-2xl font-bold mb-2">Bem-vindo de Volta</h1>
             <p className="text-gray-400 text-sm">
-              Log in to your account to continue
+              Entre na sua conta para continuar
             </p>
           </div>
 
@@ -67,17 +67,17 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label="Email"
+              label="E-mail"
               type="email"
-              placeholder="you@example.com"
+              placeholder="voce@exemplo.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <Input
-              label="Password"
+              label="Senha"
               type="password"
-              placeholder="Enter your password"
+              placeholder="Digite sua senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -89,13 +89,13 @@ export default function LoginPage() {
                   type="checkbox"
                   className="rounded bg-gray-800 border-gray-700 text-primary focus:ring-primary"
                 />
-                Remember me
+                Lembrar de mim
               </label>
               <Link
                 href="#"
                 className="text-primary hover:text-accent-cyan transition-colors"
               >
-                Forgot password?
+                Esqueceu a senha?
               </Link>
             </div>
 
@@ -105,17 +105,17 @@ export default function LoginPage() {
               className="w-full"
               disabled={loading}
             >
-              {loading ? "Logging in..." : "Log In"}
+              {loading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
 
           <p className="text-center text-gray-400 text-sm">
-            Don&apos;t have an account?{" "}
+            Ainda não tem uma conta?{" "}
             <Link
               href="/register"
               className="text-primary font-bold hover:text-accent-cyan transition-colors"
             >
-              Sign Up
+              Cadastre-se
             </Link>
           </p>
         </div>

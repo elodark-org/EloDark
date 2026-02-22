@@ -41,7 +41,7 @@ scripts/
 
 ### Roles (3 perfis)
 - **user**: cliente que compra boost
-- **booster**: jogador que executa o serviço (comissão 40%)
+- **booster**: jogador que executa o serviço (comissão 60%)
 - **admin**: gestão completa da plataforma
 
 ### Auth Flow

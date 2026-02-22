@@ -16,6 +16,7 @@ const STATUS_TABS = [
   "active",
   "available",
   "in_progress",
+  "awaiting_approval",
   "completed",
   "cancelled",
 ] as const;
@@ -24,7 +25,8 @@ const STATUS_TRANSITIONS: Record<string, string[]> = {
   pending: ["active", "available", "cancelled"],
   active: ["available", "in_progress", "cancelled"],
   available: ["in_progress", "cancelled"],
-  in_progress: ["completed", "cancelled"],
+  in_progress: ["awaiting_approval", "completed", "cancelled"],
+  awaiting_approval: ["completed", "in_progress", "cancelled"],
   completed: [],
   cancelled: [],
 };
@@ -38,6 +40,7 @@ export default function AdminOrdersPage() {
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [assignInputs, setAssignInputs] = useState<Record<number, string>>({});
   const [statusMenuOpen, setStatusMenuOpen] = useState<number | null>(null);
+  const [proofModalOrder, setProofModalOrder] = useState<Order | null>(null);
 
   const fetchOrders = useCallback(() => {
     api
@@ -65,7 +68,23 @@ export default function AdminOrdersPage() {
       );
       setOrders((prev) => prev.map((o) => (o.id === orderId ? order : o)));
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to update status");
+      alert(err instanceof Error ? err.message : "Falha ao atualizar status");
+    } finally {
+      setActionLoading(null);
+    }
+  }
+
+  async function handleApproveReject(orderId: number, action: "approve" | "reject") {
+    setActionLoading(orderId);
+    try {
+      const { order } = await api.put<{ order: Order }>(
+        `/admin/orders/${orderId}/approve`,
+        { action }
+      );
+      setOrders((prev) => prev.map((o) => (o.id === orderId ? order : o)));
+      setProofModalOrder(null);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : `Falha ao ${action === "approve" ? "aprovar" : "rejeitar"} pedido`);
     } finally {
       setActionLoading(null);
     }
@@ -83,7 +102,7 @@ export default function AdminOrdersPage() {
       setOrders((prev) => prev.map((o) => (o.id === orderId ? order : o)));
       setAssignInputs((prev) => ({ ...prev, [orderId]: "" }));
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to assign booster");
+      alert(err instanceof Error ? err.message : "Falha ao atribuir booster");
     } finally {
       setActionLoading(null);
     }
@@ -98,7 +117,7 @@ export default function AdminOrdersPage() {
       );
       setOrders((prev) => prev.map((o) => (o.id === orderId ? order : o)));
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to release booster");
+      alert(err instanceof Error ? err.message : "Falha ao liberar booster");
     } finally {
       setActionLoading(null);
     }
@@ -112,14 +131,14 @@ export default function AdminOrdersPage() {
     },
     {
       key: "user_name",
-      label: "Client",
+      label: "Cliente",
       render: (row) => (
-        <span className="text-white/80">{row.user_name || `User #${row.user_id}`}</span>
+        <span className="text-white/80">{row.user_name || `Usuário #${row.user_id}`}</span>
       ),
     },
     {
       key: "service_type",
-      label: "Service",
+      label: "Serviço",
       render: (row) => (
         <span className="capitalize">{row.service_type.replace(/-/g, " ")}</span>
       ),
@@ -140,14 +159,14 @@ export default function AdminOrdersPage() {
     },
     {
       key: "price",
-      label: "Price",
+      label: "Preço",
       render: (row) => (
         <span className="font-bold">R$ {parseFloat(row.price).toFixed(2)}</span>
       ),
     },
     {
       key: "created_at",
-      label: "Date",
+      label: "Data",
       render: (row) => (
         <span className="text-white/60">
           {new Date(row.created_at).toLocaleDateString("pt-BR")}
@@ -156,15 +175,51 @@ export default function AdminOrdersPage() {
     },
     {
       key: "actions",
-      label: "Actions",
+      label: "Ações",
       render: (row) => {
         const isLoading = actionLoading === row.id;
         const transitions = STATUS_TRANSITIONS[row.status] || [];
 
         return (
           <div className="flex items-center gap-2 flex-wrap">
+            {/* Approve/Reject for awaiting_approval */}
+            {row.status === "awaiting_approval" && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon="image"
+                  disabled={isLoading}
+                  onClick={() => setProofModalOrder(row)}
+                  className="text-orange-400 hover:text-orange-300"
+                >
+                  Ver Comprovante
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon="check_circle"
+                  disabled={isLoading}
+                  onClick={() => handleApproveReject(row.id, "approve")}
+                  className="text-green-400 hover:text-green-300"
+                >
+                  Aprovar
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  icon="cancel"
+                  disabled={isLoading}
+                  onClick={() => handleApproveReject(row.id, "reject")}
+                  className="text-red-400 hover:text-red-300"
+                >
+                  Rejeitar
+                </Button>
+              </>
+            )}
+
             {/* Status change */}
-            {transitions.length > 0 && (
+            {transitions.length > 0 && row.status !== "awaiting_approval" && (
               <div className="relative">
                 <Button
                   variant="ghost"
@@ -194,7 +249,7 @@ export default function AdminOrdersPage() {
             )}
 
             {/* Assign booster */}
-            {row.status !== "completed" && row.status !== "cancelled" && (
+            {row.status !== "completed" && row.status !== "cancelled" && row.status !== "awaiting_approval" && (
               <div className="flex items-center gap-1">
                 <input
                   type="number"
@@ -216,7 +271,7 @@ export default function AdminOrdersPage() {
             )}
 
             {/* Release booster */}
-            {row.booster_id && row.status !== "completed" && row.status !== "cancelled" && (
+            {row.booster_id && row.status !== "completed" && row.status !== "cancelled" && row.status !== "awaiting_approval" && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -237,11 +292,11 @@ export default function AdminOrdersPage() {
   if (authLoading || !authorized) {
     return (
       <>
-        <PageHeader title="Order Management" />
+        <PageHeader title="Gestão de Pedidos" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Verifying access...</span>
+            <span>Verificando acesso...</span>
           </div>
         </div>
       </>
@@ -251,11 +306,11 @@ export default function AdminOrdersPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Order Management" />
+        <PageHeader title="Gestão de Pedidos" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -265,11 +320,11 @@ export default function AdminOrdersPage() {
   if (error) {
     return (
       <>
-        <PageHeader title="Order Management" />
+        <PageHeader title="Gestão de Pedidos" />
         <div className="p-8">
           <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
             <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load orders.</p>
+            <p className="text-white/60">Falha ao carregar pedidos.</p>
             <p className="text-xs text-white/30 mt-1">{error}</p>
           </div>
         </div>
@@ -280,10 +335,10 @@ export default function AdminOrdersPage() {
   return (
     <>
       <PageHeader
-        title="Order Management"
+        title="Gestão de Pedidos"
         actions={
           <Button variant="ghost" size="sm" icon="refresh" onClick={() => { setLoading(true); fetchOrders(); }}>
-            Refresh
+            Atualizar
           </Button>
         }
       />
@@ -313,9 +368,71 @@ export default function AdminOrdersPage() {
         <DataTable
           columns={columns}
           data={filteredOrders}
-          emptyMessage="No orders found for this filter."
+          emptyMessage="Nenhum pedido encontrado para este filtro."
         />
       </div>
+
+      {/* Proof Image Modal */}
+      {proofModalOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="glass-card rounded-2xl border border-white/10 p-8 max-w-2xl w-full mx-4 space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-400">
+                  <Icon name="fact_check" size={22} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg">Comprovante de Conclus&atilde;o</h3>
+                  <p className="text-xs text-white/40">
+                    Pedido #{proofModalOrder.id} &mdash;{" "}
+                    <span className="capitalize">{proofModalOrder.service_type.replace(/-/g, " ")}</span>
+                  </p>
+                </div>
+              </div>
+              <button onClick={() => setProofModalOrder(null)} className="text-white/40 hover:text-white transition-colors">
+                <Icon name="close" size={24} />
+              </button>
+            </div>
+
+            {proofModalOrder.completion_image_url ? (
+              <div className="rounded-xl overflow-hidden border border-white/10">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={proofModalOrder.completion_image_url}
+                  alt="Comprovante de conclus&atilde;o"
+                  className="w-full max-h-96 object-contain bg-black/30"
+                />
+              </div>
+            ) : (
+              <div className="text-center py-8 text-white/40">
+                <Icon name="image_not_supported" size={48} />
+                <p className="mt-2 text-sm">Nenhuma imagem de comprovante encontrada</p>
+              </div>
+            )}
+
+            <div className="flex items-center gap-3 justify-end">
+              <Button
+                variant="ghost"
+                size="sm"
+                icon="cancel"
+                disabled={actionLoading === proofModalOrder.id}
+                onClick={() => handleApproveReject(proofModalOrder.id, "reject")}
+                className="text-red-400 hover:text-red-300"
+              >
+                Rejeitar
+              </Button>
+              <Button
+                size="sm"
+                icon="check_circle"
+                disabled={actionLoading === proofModalOrder.id}
+                onClick={() => handleApproveReject(proofModalOrder.id, "approve")}
+              >
+                Aprovar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

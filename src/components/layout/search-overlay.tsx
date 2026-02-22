@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Icon } from "@/components/ui/icon";
 
-const trendingSearches = ["Duo Queue", "Iron to Gold", "Placement Matches"];
+const trendingSearches = ["Duo Queue", "Ferro ao Ouro", "Partidas de MD10"];
 
 const gameResults = [
   { name: "League of Legends", slug: "league-of-legends" },
@@ -17,7 +17,7 @@ const boosterResults = [
   { name: "ApexMaster", rating: "4.8", orders: "89+", online: false },
 ];
 
-const recentSearches = ["LoL Master", "Valorant Radiant", "Coaching"];
+const recentSearches = ["LoL Mestre", "Valorant Radiante", "Coaching"];
 
 interface SearchOverlayProps {
   open: boolean;
@@ -100,7 +100,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-2xl py-8 pl-16 pr-8 text-2xl md:text-3xl text-white placeholder-gray-500 focus:ring-0 focus:outline-none focus:shadow-[0_0_20px_rgba(46,123,255,0.4)] focus:border-primary transition-all duration-300"
-              placeholder="Search for games, boosters, or ranks..."
+              placeholder="Buscar jogos, boosters ou ranks..."
               type="text"
             />
           </div>
@@ -108,7 +108,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           {/* Trending */}
           <div className="mt-8 flex flex-wrap items-center gap-4 px-2">
             <span className="text-sm font-semibold text-gray-500 uppercase tracking-widest">
-              Trending:
+              Em Alta:
             </span>
             <div className="flex flex-wrap gap-3">
               {trendingSearches.map((t) => (
@@ -129,10 +129,10 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
             <section>
               <div className="flex items-center justify-between mb-6 border-b border-white/5 pb-2">
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Icon name="sports_esports" className="text-primary" /> Games
+                  <Icon name="sports_esports" className="text-primary" /> Jogos
                 </h2>
                 <a className="text-xs text-primary font-bold hover:underline" href="/games">
-                  View All
+                  Ver Todos
                 </a>
               </div>
               <div className="space-y-3">
@@ -166,7 +166,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                   <Icon name="verified" className="text-primary" /> Top Boosters
                 </h2>
                 <a className="text-xs text-primary font-bold hover:underline" href="/boosters">
-                  Leaderboard
+                  Ranking
                 </a>
               </div>
               <div className="space-y-3">
@@ -195,7 +195,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                         </div>
                       </div>
                       <p className="text-xs text-gray-500">
-                        {b.orders} Orders Completed
+                        {b.orders} Pedidos Concluídos
                       </p>
                     </div>
                   </a>
@@ -207,7 +207,7 @@ export function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           {/* Recent Searches */}
           <footer className="mt-20 flex flex-col items-center">
             <p className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-4">
-              Recent Searches
+              Buscas Recentes
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               {recentSearches.map((s) => (

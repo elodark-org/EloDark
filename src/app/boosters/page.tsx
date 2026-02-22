@@ -31,11 +31,11 @@ const topBoosters = [
 ];
 
 const leaderboard = [
-  { rank: 4, name: "Viper", games: ["LoL", "Val"], winRate: "98.5%", status: "Available" },
-  { rank: 5, name: "Ghost", games: ["Valorant"], winRate: "97.9%", status: "In-Game" },
-  { rank: 6, name: "Raven", games: ["LoL"], winRate: "97.2%", status: "Available" },
-  { rank: 7, name: "Blitz", games: ["CS2", "Val"], winRate: "96.8%", status: "In-Game" },
-  { rank: 8, name: "Luna", games: ["LoL"], winRate: "96.5%", status: "Available" },
+  { rank: 4, name: "Viper", games: ["LoL", "Val"], winRate: "98.5%", status: "Disponível" },
+  { rank: 5, name: "Ghost", games: ["Valorant"], winRate: "97.9%", status: "Em Jogo" },
+  { rank: 6, name: "Raven", games: ["LoL"], winRate: "97.2%", status: "Disponível" },
+  { rank: 7, name: "Blitz", games: ["CS2", "Val"], winRate: "96.8%", status: "Em Jogo" },
+  { rank: 8, name: "Luna", games: ["LoL"], winRate: "96.5%", status: "Disponível" },
 ];
 
 export default function BoostersPage() {
@@ -46,11 +46,11 @@ export default function BoostersPage() {
         {/* Hero Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-7xl font-black mb-4 bg-gradient-to-r from-primary via-accent-purple to-accent-cyan bg-clip-text text-transparent">
-            Elite Squad
+            Esquadrão Elite
           </h1>
           <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-            The top 1% of competitive players worldwide. Vetted for excellence,
-            performance, and professionalism.
+            O top 1% dos jogadores competitivos do mundo. Selecionados por
+            excelência, desempenho e profissionalismo.
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export default function BoostersPage() {
 
                 <div className={`grid grid-cols-2 w-full gap-4 text-center border-t ${isKing ? "border-white/10 pt-6" : "border-white/5 pt-4"}`}>
                   <div>
-                    <p className="text-[10px] text-gray-500 uppercase font-bold mb-1">Rating</p>
+                    <p className="text-[10px] text-gray-500 uppercase font-bold mb-1">Avaliação</p>
                     <div className="flex items-center justify-center text-accent-gold gap-1">
                       <span className={`font-bold ${isKing ? "text-lg font-black" : "text-sm"}`}>
                         {b.rating}
@@ -125,7 +125,7 @@ export default function BoostersPage() {
                   </div>
                   <div>
                     <p className="text-[10px] text-gray-500 uppercase font-bold mb-1">
-                      {b.winRate ? "Win Rate" : "Orders"}
+                      {b.winRate ? "Win Rate" : "Pedidos"}
                     </p>
                     <p className={`font-bold ${isKing ? "text-lg font-black" : "text-sm"}`}>
                       {isKing ? b.winRate : b.orders || b.winRate}
@@ -142,7 +142,7 @@ export default function BoostersPage() {
           {/* Leaderboard Table */}
           <div className="flex-1">
             <div className="flex items-center justify-between mb-6 px-4">
-              <h2 className="text-2xl font-bold">Elite Rankings 4-10</h2>
+              <h2 className="text-2xl font-bold">Rankings Elite 4-10</h2>
               <div className="flex gap-2">
                 <button className="glass-card p-2 rounded-lg hover:bg-white/10 transition-colors">
                   <Icon name="filter_list" size={16} />
@@ -158,11 +158,11 @@ export default function BoostersPage() {
                 <thead>
                   <tr className="bg-white/5 text-gray-400 text-xs font-bold uppercase tracking-widest">
                     <th className="px-6 py-4">Rank</th>
-                    <th className="px-6 py-4">Booster Name</th>
-                    <th className="px-6 py-4">Games</th>
+                    <th className="px-6 py-4">Nome do Booster</th>
+                    <th className="px-6 py-4">Jogos</th>
                     <th className="px-6 py-4">Win Rate</th>
                     <th className="px-6 py-4">Status</th>
-                    <th className="px-6 py-4 text-right">Action</th>
+                    <th className="px-6 py-4 text-right">Ação</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -199,12 +199,12 @@ export default function BoostersPage() {
                         <div className="flex items-center gap-2">
                           <div
                             className={`size-2 rounded-full animate-pulse ${
-                              b.status === "Available" ? "bg-green-500" : "bg-primary"
+                              b.status === "Disponível" ? "bg-green-500" : "bg-primary"
                             }`}
                           />
                           <span
                             className={`text-xs font-medium ${
-                              b.status === "Available" ? "text-green-500" : "text-primary"
+                              b.status === "Disponível" ? "text-green-500" : "text-primary"
                             }`}
                           >
                             {b.status}
@@ -216,7 +216,7 @@ export default function BoostersPage() {
                           href={`/boosters/${b.name.toLowerCase()}`}
                           className="text-xs font-bold text-primary hover:text-white transition-colors"
                         >
-                          View Profile
+                          Ver Perfil
                         </Link>
                       </td>
                     </tr>
@@ -232,13 +232,13 @@ export default function BoostersPage() {
               <div className="size-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6">
                 <Icon name="verified_user" className="text-primary" size={32} />
               </div>
-              <h3 className="text-2xl font-bold mb-4">Become a Pro</h3>
+              <h3 className="text-2xl font-bold mb-4">Seja um Pro</h3>
               <p className="text-gray-400 mb-8 text-sm leading-relaxed">
-                Think you have what it takes to join the top 1%? We&apos;re always
-                looking for world-class talent to join the EloDark roster.
+                Acha que tem o que é preciso para entrar no top 1%? Estamos sempre
+                em busca de talentos de classe mundial para o time EloDark.
               </p>
               <ul className="space-y-4 mb-10">
-                {["High ELO Verified", "Professional conduct", "Instant payouts"].map((item) => (
+                {["ELO Alto Verificado", "Conduta profissional", "Pagamentos instantâneos"].map((item) => (
                   <li key={item} className="flex items-center gap-3 text-sm">
                     <Icon name="check_circle" className="text-primary" size={20} />
                     {item}
@@ -249,7 +249,7 @@ export default function BoostersPage() {
                 href="/apply"
                 className="block w-full bg-primary hover:bg-primary/90 transition-all text-white py-4 rounded-xl font-bold text-sm tracking-wide shadow-xl shadow-primary/20 text-center"
               >
-                Apply Now
+                Candidatar-se
               </Link>
             </div>
 
@@ -258,17 +258,17 @@ export default function BoostersPage() {
                 <div className="size-8 bg-accent-cyan rounded flex items-center justify-center">
                   <Icon name="support_agent" className="text-bg-primary" size={18} />
                 </div>
-                <h4 className="font-bold">Need a Booster?</h4>
+                <h4 className="font-bold">Precisa de um Booster?</h4>
               </div>
               <p className="text-xs text-gray-400 mb-4">
-                Our matchmakers can find the perfect specialist for your specific
-                goals within 5 minutes.
+                Nossos especialistas podem encontrar o booster perfeito para seus
+                objetivos em até 5 minutos.
               </p>
               <Link
                 href="/dashboard/chat"
                 className="text-accent-cyan text-xs font-bold flex items-center gap-2 hover:underline"
               >
-                Open Live Chat
+                Abrir Chat ao Vivo
                 <Icon name="arrow_forward" size={14} />
               </Link>
             </div>

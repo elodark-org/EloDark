@@ -25,7 +25,7 @@ export default function RegisterPage() {
       await register(email, password, username);
       router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
+      setError(err instanceof Error ? err.message : "Falha ao criar conta");
     } finally {
       setLoading(false);
     }
@@ -52,9 +52,9 @@ export default function RegisterPage() {
         {/* Card */}
         <div className="glass-card rounded-2xl p-8 space-y-6">
           <div className="text-center">
-            <h1 className="text-2xl font-bold mb-2">Create Account</h1>
+            <h1 className="text-2xl font-bold mb-2">Criar Conta</h1>
             <p className="text-gray-400 text-sm">
-              Join EloDark and start climbing today
+              Junte-se ao EloDark e comece a subir de elo hoje
             </p>
           </div>
 
@@ -66,24 +66,24 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
-              label="Username"
-              placeholder="Your summoner name"
+              label="Nome de Usuário"
+              placeholder="Seu nome de invocador"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
             <Input
-              label="Email"
+              label="E-mail"
               type="email"
-              placeholder="you@example.com"
+              placeholder="voce@exemplo.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <Input
-              label="Password"
+              label="Senha"
               type="password"
-              placeholder="Min. 8 characters"
+              placeholder="Mín. 8 caracteres"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -96,17 +96,17 @@ export default function RegisterPage() {
               className="w-full"
               disabled={loading}
             >
-              {loading ? "Creating account..." : "Create Account"}
+              {loading ? "Criando conta..." : "Criar Conta"}
             </Button>
           </form>
 
           <p className="text-center text-gray-400 text-sm">
-            Already have an account?{" "}
+            Já tem uma conta?{" "}
             <Link
               href="/login"
               className="text-primary font-bold hover:text-accent-cyan transition-colors"
             >
-              Log In
+              Entrar
             </Link>
           </p>
         </div>

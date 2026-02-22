@@ -27,7 +27,7 @@ export default function ChatPage() {
         <div className="flex-1 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading conversations...</span>
+            <span>Carregando conversas...</span>
           </div>
         </div>
       </div>
@@ -41,7 +41,7 @@ export default function ChatPage() {
         <div className="flex-1 flex items-center justify-center p-8">
           <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
             <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load conversations.</p>
+            <p className="text-white/60">Falha ao carregar conversas.</p>
             <p className="text-xs text-white/30 mt-1">{error}</p>
           </div>
         </div>

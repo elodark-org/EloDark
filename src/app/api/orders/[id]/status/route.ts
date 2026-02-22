@@ -24,9 +24,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const status = payload.status;
     const notes = parseOptionalString(payload.notes, { maxLength: 3000 });
 
-    const validStatuses = ["in_progress", "completed"];
+    const validStatuses = ["in_progress"];
     if (typeof status !== "string" || !validStatuses.includes(status)) {
-      return NextResponse.json({ error: `Status inválido. Booster pode usar: ${validStatuses.join(", ")}` }, { status: 400 });
+      return NextResponse.json({ error: "Status inválido. Para concluir um pedido, use o endpoint /complete com comprovante de imagem." }, { status: 400 });
     }
 
     if (user.role === "booster") {

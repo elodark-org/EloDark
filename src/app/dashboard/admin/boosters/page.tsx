@@ -48,7 +48,7 @@ export default function AdminBoostersPage() {
       setAddForm({ user_id: "", game_name: "", rank: "" });
       setShowAddForm(false);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to add booster");
+      alert(err instanceof Error ? err.message : "Falha ao adicionar booster");
     } finally {
       setAddLoading(false);
     }
@@ -63,7 +63,7 @@ export default function AdminBoostersPage() {
       );
       setBoosters((prev) => prev.map((b) => (b.id === booster.id ? updated : b)));
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to toggle booster");
+      alert(err instanceof Error ? err.message : "Falha ao alternar booster");
     } finally {
       setActionLoading(null);
     }
@@ -84,7 +84,7 @@ export default function AdminBoostersPage() {
       setEditingId(null);
       setEditForm({ game_name: "", rank: "" });
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to update booster");
+      alert(err instanceof Error ? err.message : "Falha ao atualizar booster");
     } finally {
       setActionLoading(null);
     }
@@ -97,7 +97,7 @@ export default function AdminBoostersPage() {
       setBoosters((prev) => prev.filter((b) => b.id !== id));
       setDeleteConfirm(null);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to delete booster");
+      alert(err instanceof Error ? err.message : "Falha ao excluir booster");
     } finally {
       setActionLoading(null);
     }
@@ -117,7 +117,7 @@ export default function AdminBoostersPage() {
     },
     {
       key: "game_name",
-      label: "Name",
+      label: "Nome",
       render: (row) => {
         if (editingId === row.id) {
           return (
@@ -138,10 +138,10 @@ export default function AdminBoostersPage() {
     },
     {
       key: "user_name",
-      label: "User",
+      label: "Usuário",
       render: (row) => (
         <div className="text-white/60 text-xs">
-          <p>{row.user_name || `User #${row.user_id}`}</p>
+          <p>{row.user_name || `Usuário #${row.user_id}`}</p>
           {row.user_email && <p className="text-white/30">{row.user_email}</p>}
         </div>
       ),
@@ -164,12 +164,12 @@ export default function AdminBoostersPage() {
     },
     {
       key: "win_rate",
-      label: "Win Rate",
+      label: "Taxa de Vitória",
       render: (row) => <span className="text-green-400 font-bold">{row.win_rate}%</span>,
     },
     {
       key: "active",
-      label: "Active",
+      label: "Ativo",
       render: (row) => {
         const isLoading = actionLoading === row.id;
         return (
@@ -191,7 +191,7 @@ export default function AdminBoostersPage() {
     },
     {
       key: "actions",
-      label: "Actions",
+      label: "Ações",
       render: (row) => {
         const isLoading = actionLoading === row.id;
 
@@ -205,14 +205,14 @@ export default function AdminBoostersPage() {
                 disabled={isLoading}
                 onClick={() => handleEdit(row.id)}
               >
-                Save
+                Salvar
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => { setEditingId(null); setEditForm({ game_name: "", rank: "" }); }}
               >
-                Cancel
+                Cancelar
               </Button>
             </div>
           );
@@ -221,7 +221,7 @@ export default function AdminBoostersPage() {
         if (deleteConfirm === row.id) {
           return (
             <div className="flex items-center gap-2">
-              <span className="text-xs text-red-400">Delete?</span>
+              <span className="text-xs text-red-400">Excluir?</span>
               <Button
                 variant="ghost"
                 size="sm"
@@ -229,14 +229,14 @@ export default function AdminBoostersPage() {
                 disabled={isLoading}
                 onClick={() => handleDelete(row.id)}
               >
-                Yes
+                Sim
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setDeleteConfirm(null)}
               >
-                No
+                Não
               </Button>
             </div>
           );
@@ -267,11 +267,11 @@ export default function AdminBoostersPage() {
   if (authLoading || !authorized) {
     return (
       <>
-        <PageHeader title="Booster Management" />
+        <PageHeader title="Gestão de Boosters" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Verifying access...</span>
+            <span>Verificando acesso...</span>
           </div>
         </div>
       </>
@@ -281,11 +281,11 @@ export default function AdminBoostersPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Booster Management" />
+        <PageHeader title="Gestão de Boosters" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -295,11 +295,11 @@ export default function AdminBoostersPage() {
   if (error) {
     return (
       <>
-        <PageHeader title="Booster Management" />
+        <PageHeader title="Gestão de Boosters" />
         <div className="p-8">
           <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
             <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load boosters.</p>
+            <p className="text-white/60">Falha ao carregar boosters.</p>
             <p className="text-xs text-white/30 mt-1">{error}</p>
           </div>
         </div>
@@ -310,7 +310,7 @@ export default function AdminBoostersPage() {
   return (
     <>
       <PageHeader
-        title="Booster Management"
+        title="Gestão de Boosters"
         actions={
           <Button
             variant={showAddForm ? "ghost" : "primary"}
@@ -318,7 +318,7 @@ export default function AdminBoostersPage() {
             icon={showAddForm ? "close" : "person_add"}
             onClick={() => setShowAddForm(!showAddForm)}
           >
-            {showAddForm ? "Cancel" : "Add Booster"}
+            {showAddForm ? "Cancelar" : "Adicionar Booster"}
           </Button>
         }
       />
@@ -328,24 +328,24 @@ export default function AdminBoostersPage() {
         {showAddForm && (
           <div className="glass-card rounded-2xl p-6 border border-primary/20 space-y-4">
             <h3 className="text-sm font-bold text-white/60 uppercase tracking-wider">
-              New Booster
+              Novo Booster
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs text-white/40 mb-1.5">User ID</label>
+                <label className="block text-xs text-white/40 mb-1.5">ID do Usuário</label>
                 <input
                   type="number"
-                  placeholder="e.g. 42"
+                  placeholder="ex: 42"
                   value={addForm.user_id}
                   onChange={(e) => setAddForm((f) => ({ ...f, user_id: e.target.value }))}
                   className="w-full px-4 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
                 />
               </div>
               <div>
-                <label className="block text-xs text-white/40 mb-1.5">Game Name</label>
+                <label className="block text-xs text-white/40 mb-1.5">Nome do Jogo</label>
                 <input
                   type="text"
-                  placeholder="e.g. ShadowStrike"
+                  placeholder="ex: ShadowStrike"
                   value={addForm.game_name}
                   onChange={(e) => setAddForm((f) => ({ ...f, game_name: e.target.value }))}
                   className="w-full px-4 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
@@ -355,7 +355,7 @@ export default function AdminBoostersPage() {
                 <label className="block text-xs text-white/40 mb-1.5">Rank</label>
                 <input
                   type="text"
-                  placeholder="e.g. Challenger"
+                  placeholder="ex: Challenger"
                   value={addForm.rank}
                   onChange={(e) => setAddForm((f) => ({ ...f, rank: e.target.value }))}
                   className="w-full px-4 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
@@ -370,7 +370,7 @@ export default function AdminBoostersPage() {
                 disabled={addLoading || !addForm.user_id || !addForm.game_name || !addForm.rank}
                 onClick={handleAdd}
               >
-                {addLoading ? "Adding..." : "Add Booster"}
+                {addLoading ? "Adicionando..." : "Adicionar Booster"}
               </Button>
             </div>
           </div>
@@ -379,7 +379,7 @@ export default function AdminBoostersPage() {
         <DataTable
           columns={columns}
           data={boosters}
-          emptyMessage="No boosters registered yet."
+          emptyMessage="Nenhum booster cadastrado ainda."
         />
       </div>
     </>

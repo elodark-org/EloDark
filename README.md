@@ -32,7 +32,7 @@ Plataforma de elo boosting para jogos competitivos. Conecta clientes que querem 
 ### Dashboard — Booster (`/dashboard/booster`)
 - Serviços disponíveis para claim
 - Meus pedidos com ações de status
-- Carteira: ganhos (comissão 40%), saldo, saques via PIX
+- Carteira: ganhos (comissão 60%), saldo, saques via PIX
 - Chat com clientes
 
 ### Dashboard — Admin (`/dashboard/admin`)
@@ -142,9 +142,9 @@ O schema completo está em `scripts/db-setup.ts`.
 - Cliente cria um pedido de boost e paga via Stripe
 - Pedido fica disponível para boosters claimarem
 - Booster executa o serviço e marca como concluído
-- Booster recebe **40%** do valor do pedido
+- Booster recebe **60%** do valor do pedido
 - Booster solicita saque via **PIX**, admin aprova/rejeita
-- Plataforma retém **60%** como receita
+- Plataforma retém **40%** como receita
 
 ## Licença
 

@@ -49,7 +49,7 @@ export default function AdminWithdrawalsPage() {
       );
       setWithdrawals((prev) => prev.map((w) => (w.id === id ? withdrawal : w)));
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to approve withdrawal");
+      alert(err instanceof Error ? err.message : "Falha ao aprovar saque");
     } finally {
       setActionLoading(null);
     }
@@ -66,7 +66,7 @@ export default function AdminWithdrawalsPage() {
       setRejectingId(null);
       setRejectNotes("");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to reject withdrawal");
+      alert(err instanceof Error ? err.message : "Falha ao rejeitar saque");
     } finally {
       setActionLoading(null);
     }
@@ -89,7 +89,7 @@ export default function AdminWithdrawalsPage() {
     },
     {
       key: "amount",
-      label: "Amount",
+      label: "Valor",
       render: (row) => (
         <span className="font-bold text-green-400">
           R$ {parseFloat(row.amount).toFixed(2)}
@@ -98,7 +98,7 @@ export default function AdminWithdrawalsPage() {
     },
     {
       key: "pix_key",
-      label: "PIX Key",
+      label: "Chave PIX",
       render: (row) => (
         <span className="text-white/60 text-xs font-mono break-all max-w-[180px] inline-block">
           {row.pix_key}
@@ -107,7 +107,7 @@ export default function AdminWithdrawalsPage() {
     },
     {
       key: "pix_type",
-      label: "Type",
+      label: "Tipo",
       render: (row) => (
         <span className="text-xs text-white/40 uppercase font-bold">{row.pix_type}</span>
       ),
@@ -119,7 +119,7 @@ export default function AdminWithdrawalsPage() {
     },
     {
       key: "created_at",
-      label: "Date",
+      label: "Data",
       render: (row) => (
         <span className="text-white/60">
           {new Date(row.created_at).toLocaleDateString("pt-BR")}
@@ -128,7 +128,7 @@ export default function AdminWithdrawalsPage() {
     },
     {
       key: "actions",
-      label: "Actions",
+      label: "Ações",
       render: (row) => {
         const isLoading = actionLoading === row.id;
 
@@ -148,7 +148,7 @@ export default function AdminWithdrawalsPage() {
             <div className="flex flex-col gap-2 min-w-[220px]">
               <input
                 type="text"
-                placeholder="Reason (optional)"
+                placeholder="Motivo (opcional)"
                 value={rejectNotes}
                 onChange={(e) => setRejectNotes(e.target.value)}
                 className="w-full px-3 py-1.5 text-xs bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/30 focus:outline-none focus:border-red-500/50"
@@ -161,14 +161,14 @@ export default function AdminWithdrawalsPage() {
                   disabled={isLoading}
                   onClick={() => handleReject(row.id)}
                 >
-                  {isLoading ? "..." : "Confirm Reject"}
+                  {isLoading ? "..." : "Confirmar Rejeição"}
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => { setRejectingId(null); setRejectNotes(""); }}
                 >
-                  Cancel
+                  Cancelar
                 </Button>
               </div>
             </div>
@@ -185,7 +185,7 @@ export default function AdminWithdrawalsPage() {
               disabled={isLoading}
               onClick={() => handleApprove(row.id)}
             >
-              Approve
+              Aprovar
             </Button>
             <Button
               variant="ghost"
@@ -195,7 +195,7 @@ export default function AdminWithdrawalsPage() {
               disabled={isLoading}
               onClick={() => { setRejectingId(row.id); setRejectNotes(""); }}
             >
-              Reject
+              Rejeitar
             </Button>
             {isLoading && <Icon name="hourglass_top" className="animate-spin text-white/40" size={16} />}
           </div>
@@ -207,11 +207,11 @@ export default function AdminWithdrawalsPage() {
   if (authLoading || !authorized) {
     return (
       <>
-        <PageHeader title="Withdrawal Management" />
+        <PageHeader title="Gestão de Saques" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Verifying access...</span>
+            <span>Verificando acesso...</span>
           </div>
         </div>
       </>
@@ -221,11 +221,11 @@ export default function AdminWithdrawalsPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Withdrawal Management" />
+        <PageHeader title="Gestão de Saques" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -235,11 +235,11 @@ export default function AdminWithdrawalsPage() {
   if (error) {
     return (
       <>
-        <PageHeader title="Withdrawal Management" />
+        <PageHeader title="Gestão de Saques" />
         <div className="p-8">
           <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
             <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load withdrawals.</p>
+            <p className="text-white/60">Falha ao carregar saques.</p>
             <p className="text-xs text-white/30 mt-1">{error}</p>
           </div>
         </div>
@@ -250,10 +250,10 @@ export default function AdminWithdrawalsPage() {
   return (
     <>
       <PageHeader
-        title="Withdrawal Management"
+        title="Gestão de Saques"
         actions={
           <Button variant="ghost" size="sm" icon="refresh" onClick={() => { setLoading(true); fetchWithdrawals(); }}>
-            Refresh
+            Atualizar
           </Button>
         }
       />
@@ -285,7 +285,7 @@ export default function AdminWithdrawalsPage() {
         <DataTable
           columns={columns}
           data={filteredWithdrawals}
-          emptyMessage="No withdrawals found for this filter."
+          emptyMessage="Nenhum saque encontrado para este filtro."
         />
       </div>
     </>

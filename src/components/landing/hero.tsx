@@ -5,28 +5,28 @@ import { Button } from "@/components/ui/button";
 const stats = [
   {
     icon: "shopping_cart",
-    label: "Orders",
+    label: "Pedidos",
     value: "50,000+",
     color: "primary",
   },
   {
     icon: "emoji_events",
-    label: "Satisfaction",
+    label: "Satisfação",
     value: "99.7%",
     color: "accent-gold",
   },
   {
     icon: "group",
-    label: "Pro Boosters",
+    label: "Boosters Pro",
     value: "300+",
     color: "accent-cyan",
   },
 ] as const;
 
 const features = [
-  { icon: "encrypted", label: "VPN Protection", color: "text-primary" },
-  { icon: "schedule", label: "24/7 Support", color: "text-accent-cyan" },
-  { icon: "money_off", label: "Money-back Guarantee", color: "text-accent-purple" },
+  { icon: "encrypted", label: "Proteção VPN", color: "text-primary" },
+  { icon: "schedule", label: "Suporte 24/7", color: "text-accent-cyan" },
+  { icon: "money_off", label: "Garantia de Reembolso", color: "text-accent-purple" },
 ];
 
 function StatCard({
@@ -85,7 +85,7 @@ export function Hero() {
                 ))}
               </div>
               <span className="text-gray-400 text-sm font-medium ml-1">
-                4.9/5 Rating
+                4.9/5 Avaliação
               </span>
             </div>
           </div>
@@ -94,23 +94,23 @@ export function Hero() {
           <div className="space-y-4">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
               <span className="bg-gradient-to-r from-accent-purple via-primary to-accent-cyan text-gradient block pb-2">
-                Dominate
+                Domine
               </span>
-              <span className="text-white">Your Rank</span>
+              <span className="text-white">Seu Rank</span>
             </h1>
             <p className="text-lg sm:text-xl text-gray-400 max-w-lg font-light border-l-2 border-primary/50 pl-4">
-              Elite boosters. Unmatched speed. Total account security. Join the
-              ranks of the elite today.
+              Boosters de elite. Velocidade incomparável. Segurança total da conta. Junte-se
+              à elite hoje.
             </p>
           </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 pt-4">
             <Button size="lg" icon="rocket_launch">
-              Start Boosting
+              Começar Boost
             </Button>
             <Button size="lg" variant="outline" iconRight="arrow_forward">
-              Meet Our Pros
+              Conheça Nossos Pros
             </Button>
           </div>
 
@@ -131,7 +131,7 @@ export function Hero() {
             <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent z-10 mix-blend-overlay" />
             <Image
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcSNlopJKsL5wqh4Q2X_0bPtSk60NvA0R-1znH1CYkEOmklr1KNBuzHU0stPQdJ1UbhAd1DSYBYRClmpuPEx2tF4Q-ta3Qvj3EPYxZ3GLYTs32Ko5nwwLckvEzd_xR1HWzp3DqeXehPJxPVloHpVLaB3tevBI8TG_VpP24PdD338VDhNS_21zkJMBcyHzQ6K6GAWznPQ4JSWBX8Id_1RQKfkAH1AfgwwdqsrXo8nxlMVoOVj3JgUalcgH4e8o9-R1JVq1WMQ3v206Y"
-              alt="Cyberpunk gamer character"
+              alt="Personagem gamer cyberpunk"
               fill
               className="object-cover group-hover:scale-110 transition-transform duration-700"
               priority

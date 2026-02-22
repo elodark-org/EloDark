@@ -2,10 +2,10 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 
 const footerLinks = [
-  { href: "#", label: "Terms of Service" },
-  { href: "#", label: "Privacy Policy" },
-  { href: "#", label: "Refund Policy" },
-  { href: "#", label: "Support" },
+  { href: "#", label: "Termos de Serviço" },
+  { href: "#", label: "Política de Privacidade" },
+  { href: "#", label: "Política de Reembolso" },
+  { href: "#", label: "Suporte" },
 ];
 
 const socialLinks = [
@@ -53,8 +53,8 @@ export function Footer() {
         </div>
 
         <p className="text-gray-600 text-sm">
-          &copy; {new Date().getFullYear()} EloDark Elite Boosting. The premium
-          standard in gaming excellence.
+          &copy; {new Date().getFullYear()} EloDark Elite Boosting. O padrão
+          premium em excelência gamer.
         </p>
       </div>
     </footer>

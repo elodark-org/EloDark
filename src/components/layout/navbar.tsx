@@ -9,11 +9,11 @@ import { SearchOverlay } from "@/components/layout/search-overlay";
 import { useAuth } from "@/hooks/use-auth";
 
 const navLinks = [
-  { href: "/#games", label: "Games" },
+  { href: "/#games", label: "Jogos" },
   { href: "/boosters", label: "Boosters" },
-  { href: "/#reviews", label: "Reviews" },
-  { href: "/#how-it-works", label: "How It Works" },
-  { href: "/#faq", label: "Support" },
+  { href: "/#reviews", label: "Avaliações" },
+  { href: "/#how-it-works", label: "Como Funciona" },
+  { href: "/#faq", label: "Suporte" },
 ];
 
 export function Navbar() {
@@ -56,7 +56,7 @@ export function Navbar() {
           <button
             onClick={() => setSearchOpen(true)}
             className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-all"
-            aria-label="Search"
+            aria-label="Buscar"
           >
             <Icon name="search" size={20} />
           </button>
@@ -76,14 +76,14 @@ export function Navbar() {
                 href="/login"
                 className="hidden sm:inline-flex text-sm font-medium text-gray-300 hover:text-white transition-colors"
               >
-                Log In
+                Entrar
               </Link>
               <Link href="/register">
                 <Button
                   size="md"
                   className="hidden sm:flex shadow-[0_0_15px_rgba(46,123,255,0.3)]"
                 >
-                  Sign Up
+                  Cadastrar
                 </Button>
               </Link>
             </>
@@ -122,7 +122,7 @@ export function Navbar() {
                         onClick={() => setProfileOpen(false)}
                       >
                         <Icon name="dashboard" size={18} />
-                        Dashboard
+                        Painel
                       </Link>
                       <Link
                         href="/dashboard/settings"
@@ -130,7 +130,7 @@ export function Navbar() {
                         onClick={() => setProfileOpen(false)}
                       >
                         <Icon name="settings" size={18} />
-                        Settings
+                        Configurações
                       </Link>
                       <Link
                         href="/dashboard/chat"
@@ -138,7 +138,7 @@ export function Navbar() {
                         onClick={() => setProfileOpen(false)}
                       >
                         <Icon name="forum" size={18} />
-                        Messages
+                        Mensagens
                       </Link>
                     </div>
                     <div className="border-t border-white/5 py-1">
@@ -151,7 +151,7 @@ export function Navbar() {
                         className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/5 transition-all"
                       >
                         <Icon name="logout" size={18} />
-                        Log Out
+                        Sair
                       </button>
                     </div>
                   </div>
@@ -167,7 +167,7 @@ export function Navbar() {
                 className="shadow-[0_0_15px_rgba(46,123,255,0.3)]"
                 iconRight="arrow_forward"
               >
-                Order Now
+                Pedir Agora
               </Button>
             </Link>
           )}
@@ -203,11 +203,11 @@ export function Navbar() {
                   className="text-gray-300 hover:text-white text-sm font-medium py-2"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Log In
+                  Entrar
                 </Link>
                 <Link href="/register" onClick={() => setMobileOpen(false)}>
                   <Button size="md" className="w-full">
-                    Sign Up
+                    Cadastrar
                   </Button>
                 </Link>
               </>
@@ -220,7 +220,7 @@ export function Navbar() {
                   onClick={() => setMobileOpen(false)}
                 >
                   <Icon name="dashboard" size={18} />
-                  Dashboard
+                  Painel
                 </Link>
                 <button
                   onClick={() => {
@@ -231,7 +231,7 @@ export function Navbar() {
                   className="text-red-400 hover:text-red-300 text-sm font-medium py-2 flex items-center gap-2 text-left"
                 >
                   <Icon name="logout" size={18} />
-                  Log Out
+                  Sair
                 </button>
               </>
             )}

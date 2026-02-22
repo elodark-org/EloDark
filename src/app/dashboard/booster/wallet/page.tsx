@@ -18,8 +18,8 @@ function formatBRL(value: number) {
 const PIX_TYPES = [
   { value: "cpf", label: "CPF" },
   { value: "email", label: "E-mail" },
-  { value: "phone", label: "Phone" },
-  { value: "random", label: "Random Key" },
+  { value: "phone", label: "Telefone" },
+  { value: "random", label: "Chave Aleatória" },
 ] as const;
 
 export default function BoosterWalletPage() {
@@ -47,7 +47,7 @@ export default function BoosterWalletPage() {
       setWithdrawals(withdrawalsData.withdrawals);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load wallet");
+      setError(err instanceof Error ? err.message : "Falha ao carregar carteira");
     } finally {
       setLoading(false);
     }
@@ -65,15 +65,15 @@ export default function BoosterWalletPage() {
 
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
-      setFormError("Enter a valid amount.");
+      setFormError("Insira um valor válido.");
       return;
     }
     if (!pixKey.trim()) {
-      setFormError("Enter your PIX key.");
+      setFormError("Insira sua chave PIX.");
       return;
     }
     if (wallet && numAmount > wallet.available_balance) {
-      setFormError("Amount exceeds available balance.");
+      setFormError("Valor excede o saldo disponível.");
       return;
     }
 
@@ -90,7 +90,7 @@ export default function BoosterWalletPage() {
       setPixType("cpf");
       await fetchData();
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Withdrawal failed");
+      setFormError(err instanceof Error ? err.message : "Falha ao solicitar saque");
     } finally {
       setSubmitting(false);
     }
@@ -106,21 +106,21 @@ export default function BoosterWalletPage() {
     },
     {
       key: "amount",
-      label: "Amount",
+      label: "Valor",
       render: (row) => (
         <span className="font-bold">{formatBRL(parseFloat(row.amount))}</span>
       ),
     },
     {
       key: "pix_key",
-      label: "PIX Key",
+      label: "Chave PIX",
       render: (row) => (
         <span className="text-white/60 text-xs font-mono">{row.pix_key}</span>
       ),
     },
     {
       key: "pix_type",
-      label: "Type",
+      label: "Tipo",
       render: (row) => (
         <span className="text-white/70 uppercase text-xs font-bold">
           {row.pix_type}
@@ -134,7 +134,7 @@ export default function BoosterWalletPage() {
     },
     {
       key: "created_at",
-      label: "Date",
+      label: "Data",
       render: (row) => (
         <span className="text-white/60">
           {new Date(row.created_at).toLocaleDateString("pt-BR")}
@@ -146,11 +146,11 @@ export default function BoosterWalletPage() {
   if (guardLoading || !authorized) {
     return (
       <>
-        <PageHeader title="Wallet" />
+        <PageHeader title="Carteira" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -160,11 +160,11 @@ export default function BoosterWalletPage() {
   if (loading) {
     return (
       <>
-        <PageHeader title="Wallet" />
+        <PageHeader title="Carteira" />
         <div className="p-8 flex items-center justify-center">
           <div className="flex items-center gap-3 text-white/40">
             <Icon name="hourglass_top" className="animate-spin" />
-            <span>Loading...</span>
+            <span>Carregando...</span>
           </div>
         </div>
       </>
@@ -174,11 +174,11 @@ export default function BoosterWalletPage() {
   if (error) {
     return (
       <>
-        <PageHeader title="Wallet" />
+        <PageHeader title="Carteira" />
         <div className="p-8">
           <div className="glass-card rounded-2xl p-8 border border-red-500/20 text-center">
             <Icon name="error" className="text-red-400 mb-2" size={32} />
-            <p className="text-white/60">Failed to load wallet data.</p>
+            <p className="text-white/60">Falha ao carregar dados da carteira.</p>
             <p className="text-xs text-white/30 mt-1">{error}</p>
           </div>
         </div>
@@ -188,26 +188,27 @@ export default function BoosterWalletPage() {
 
   return (
     <>
-      <PageHeader title="Wallet" />
+      <PageHeader title="Carteira" />
 
       <div className="p-8 space-y-8 max-w-7xl mx-auto">
+
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <StatCard
             icon="payments"
-            label="Total Earned"
+            label="Total Ganho"
             value={wallet ? formatBRL(wallet.total_earned) : "R$ 0.00"}
             iconColor="text-accent-gold"
           />
           <StatCard
             icon="account_balance_wallet"
-            label="Available Balance"
+            label="Saldo Disponível"
             value={wallet ? formatBRL(wallet.available_balance) : "R$ 0.00"}
             iconColor="text-green-400"
           />
           <StatCard
             icon="schedule"
-            label="Pending Withdrawals"
+            label="Saques Pendentes"
             value={wallet ? formatBRL(wallet.pending_withdrawals) : "R$ 0.00"}
             iconColor="text-yellow-400"
           />
@@ -217,7 +218,7 @@ export default function BoosterWalletPage() {
         <div className="space-y-4">
           <h2 className="text-lg font-bold flex items-center gap-2">
             <Icon name="send" className="text-primary" />
-            Request Withdrawal
+            Solicitar Saque
           </h2>
 
           <form
@@ -228,7 +229,7 @@ export default function BoosterWalletPage() {
               {/* Amount */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-white/40 uppercase tracking-widest">
-                  Amount (R$)
+                  Valor (R$)
                 </label>
                 <input
                   type="number"
@@ -244,11 +245,11 @@ export default function BoosterWalletPage() {
               {/* PIX Key */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-white/40 uppercase tracking-widest">
-                  PIX Key
+                  Chave PIX
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter your PIX key"
+                  placeholder="Insira sua chave PIX"
                   value={pixKey}
                   onChange={(e) => setPixKey(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm placeholder:text-white/30 focus:outline-none focus:border-primary/50 transition-all"
@@ -258,7 +259,7 @@ export default function BoosterWalletPage() {
               {/* PIX Type */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-white/40 uppercase tracking-widest">
-                  PIX Type
+                  Tipo PIX
                 </label>
                 <select
                   value={pixType}
@@ -290,7 +291,7 @@ export default function BoosterWalletPage() {
             {formSuccess && (
               <div className="flex items-center gap-2 text-sm text-green-400">
                 <Icon name="check_circle" size={16} />
-                Withdrawal request submitted successfully!
+                Solicitação de saque enviada com sucesso!
               </div>
             )}
 
@@ -300,7 +301,7 @@ export default function BoosterWalletPage() {
               disabled={submitting}
               className="w-full md:w-auto"
             >
-              {submitting ? "Submitting..." : "Request Withdrawal"}
+              {submitting ? "Enviando..." : "Solicitar Saque"}
             </Button>
           </form>
         </div>
@@ -309,13 +310,13 @@ export default function BoosterWalletPage() {
         <div className="space-y-4">
           <h2 className="text-lg font-bold flex items-center gap-2">
             <Icon name="history" className="text-primary" />
-            Withdrawal History
+            Histórico de Saques
           </h2>
 
           <DataTable
             columns={columns}
             data={withdrawals}
-            emptyMessage="No withdrawal history yet."
+            emptyMessage="Nenhum histórico de saque ainda."
           />
         </div>
       </div>

@@ -1,24 +1,24 @@
 import { Icon } from "@/components/ui/icon";
 
 const activities = [
-  { type: "boost", user: "xDarkSlayer", action: "Gold II → Platinum IV completed", time: "2 min ago", icon: "rocket_launch", color: "text-primary" },
-  { type: "order", user: "NightHawk99", action: "New order: Diamond boost started", time: "8 min ago", icon: "shopping_cart", color: "text-accent-cyan" },
-  { type: "review", user: "ProGamer_X", action: "Left a 5-star review", time: "15 min ago", icon: "star", color: "text-accent-gold" },
-  { type: "boost", user: "ShadowFury", action: "Silver I → Gold IV completed", time: "22 min ago", icon: "rocket_launch", color: "text-primary" },
-  { type: "join", user: "MysticBlade", action: "Joined EloDark Premium", time: "35 min ago", icon: "person_add", color: "text-green-400" },
-  { type: "order", user: "ThunderStrike", action: "New order: Coaching session booked", time: "1h ago", icon: "school", color: "text-accent-purple" },
-  { type: "boost", user: "PhoenixRise", action: "Platinum III → Diamond IV completed", time: "1h ago", icon: "rocket_launch", color: "text-primary" },
-  { type: "review", user: "EliteSniper", action: "Left a 5-star review", time: "2h ago", icon: "star", color: "text-accent-gold" },
+  { type: "boost", user: "xDarkSlayer", action: "Ouro II → Platina IV concluído", time: "2 min atrás", icon: "rocket_launch", color: "text-primary" },
+  { type: "order", user: "NightHawk99", action: "Novo pedido: Boost Diamante iniciado", time: "8 min atrás", icon: "shopping_cart", color: "text-accent-cyan" },
+  { type: "review", user: "ProGamer_X", action: "Deixou uma avaliação de 5 estrelas", time: "15 min atrás", icon: "star", color: "text-accent-gold" },
+  { type: "boost", user: "ShadowFury", action: "Prata I → Ouro IV concluído", time: "22 min atrás", icon: "rocket_launch", color: "text-primary" },
+  { type: "join", user: "MysticBlade", action: "Entrou no EloDark Premium", time: "35 min atrás", icon: "person_add", color: "text-green-400" },
+  { type: "order", user: "ThunderStrike", action: "Novo pedido: Sessão de coaching agendada", time: "1h atrás", icon: "school", color: "text-accent-purple" },
+  { type: "boost", user: "PhoenixRise", action: "Platina III → Diamante IV concluído", time: "1h atrás", icon: "rocket_launch", color: "text-primary" },
+  { type: "review", user: "EliteSniper", action: "Deixou uma avaliação de 5 estrelas", time: "2h atrás", icon: "star", color: "text-accent-gold" },
 ];
 
 export default function ActivityPage() {
   return (
     <>
       <header className="sticky top-0 z-30 flex items-center justify-between px-8 py-4 bg-bg-primary/60 backdrop-blur-md border-b border-white/5">
-        <h2 className="text-xl font-bold">Live Activity Feed</h2>
+        <h2 className="text-xl font-bold">Atividades em Tempo Real</h2>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 border border-green-500/20">
           <div className="size-2 bg-green-500 rounded-full animate-pulse" />
-          <span className="text-xs font-medium text-green-400">Live</span>
+          <span className="text-xs font-medium text-green-400">Ao vivo</span>
         </div>
       </header>
 
