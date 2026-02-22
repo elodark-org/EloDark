@@ -23,7 +23,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const status = payload.status;
 
-    const validStatuses = ["pending", "active", "available", "in_progress", "completed", "cancelled"];
+    const validStatuses = ["pending", "active", "available", "in_progress", "awaiting_approval", "completed", "cancelled"];
     if (typeof status !== "string" || !validStatuses.includes(status)) {
       return NextResponse.json({ error: `Status inválido. Use: ${validStatuses.join(", ")}` }, { status: 400 });
     }

@@ -5,6 +5,7 @@ const statusColors: Record<string, string> = {
   active: "bg-blue-500/10 text-blue-400 border-blue-500/30",
   available: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
   in_progress: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+  awaiting_approval: "bg-orange-500/10 text-orange-400 border-orange-500/30",
   completed: "bg-green-500/10 text-green-400 border-green-500/30",
   approved: "bg-green-500/10 text-green-400 border-green-500/30",
   cancelled: "bg-red-500/10 text-red-400 border-red-500/30",
