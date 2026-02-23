@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
     const origin = req.headers.get("origin") || "http://localhost:3000";
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      payment_method_types: ["card", "boleto", "pix"],
       line_items: [{
         price_data: {
           currency: "brl",
@@ -92,12 +92,15 @@ export async function POST(req: NextRequest) {
         order_id: order.id.toString(),
         service_type: serviceType,
       },
-      billing_address_collection: "auto",
       locale: "pt-BR",
       custom_text: {
         submit: { message: "Ao finalizar, um booster será atribuído ao seu pedido em breve." },
       },
       ...(customerEmail ? { customer_email: customerEmail } : {}),
+      payment_intent_data: {
+        description: `EloDark — ${serviceNames[serviceType]} — Pedido #${order.id}`,
+        statement_descriptor: "ELODARK BOOST",
+      },
     });
 
     // Store stripe session id on the order
