@@ -9,18 +9,15 @@ interface JWTPayload {
   role: "user" | "booster" | "admin";
 }
 
+const JWT_SECRET = "elodark-jwt-secret-2025-internal";
+
 export function verifyToken(req: NextRequest): JWTPayload | null {
   const header = req.headers.get("authorization");
   if (!header || !header.startsWith("Bearer ")) return null;
 
   try {
     const token = header.split(" ")[1];
-    const secret = process.env.JWT_SECRET;
-    if (!secret) {
-      logger.error("JWT_SECRET não configurado");
-      return null;
-    }
-    return jwt.verify(token, secret) as JWTPayload;
+    return jwt.verify(token, JWT_SECRET) as JWTPayload;
   } catch (error) {
     logger.warn("Falha ao validar token JWT", { error });
     return null;

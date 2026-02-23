@@ -114,9 +114,7 @@ export default function ApplyPage() {
                     <select className="bg-white/5 border border-white/10 rounded-lg text-white focus:ring-primary focus:border-primary px-4 py-3">
                       <option>League of Legends</option>
                       <option>Valorant</option>
-                      <option>Dota 2</option>
                       <option>Counter-Strike 2</option>
-                      <option>Marvel Rivals</option>
                     </select>
                   </div>
                   <div className="flex flex-col gap-2">

@@ -29,32 +29,6 @@ const games: Game[] = [
       "https://lh3.googleusercontent.com/aida-public/AB6AXuCUFYWu0aIk5qFnwNA-csG1toEsCMXhTjK9LcFKFjEZFfS5j_RI39UgGI1ukW4PpiRhw7BEhttJuDd-5Tx3IOXMcdG7q6_JhLhGy1H7hjT0kFFH--Xc8OyS1DGXM3sD2sUEPsEflOVWzV7iarP9nPGO79UWVQQyPOBZxux9axnw7O7thDYE5fOTYRwWZY8Lb9dVz57-G7c63xVaEU3FmOx4C-H8HB25mWPs05jTSH39Imo1mxWx7FyKKTVIz6xZl_tOeQX-HVMkN314",
     startingPrice: "R$ 29,90",
   },
-  {
-    id: "dota",
-    name: "Dota 2",
-    slug: "dota-2",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAcJ7JPEgHxg2jfXctQsPUTXmWz2yrVkosbkcU26R14Lpkud7DXtn47eawIywY0Jyn3tMsCayOWG3FNQNCdw93KGKblRt0KpkeeLyzmPhGXUo8NZLF9hG5P0agCAWOv-U1Th7RxgM7TG7F2HSw5mmfBYflrsAcSu0y8zghNMmBlDclK9eik9UiU_rJLYM6at3Q180iNg73oYA9m4i3gABGcuIHBmrhK6rmV497NIKE_6Dzb1ICGNwmS6wQDialTNNByEwfhL67eBE0q",
-    startingPrice: "R$ 22,90",
-  },
-  {
-    id: "marvel",
-    name: "Marvel Rivals",
-    slug: "marvel-rivals",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBapfZH6ft4mU3574QFGgg8ADF87YoNfInsdv66_lE4QoWWDiYj-wJsEVcwAicUaxCFvSXNxrVmlYwzcg1FHTt6ByX2QMEXJQilQKNb9Bf6Vea3iRWzOr6uSyzPz7QoZngfu56x64bxXTGhxMY9FLuEKlr396RWSeHSbrBgsSg1fh8X4mvlPOttUWfHzDxo3aGO4RQsnYbYfBkhxB38WUtaz2gcnP8yu2IHNccdA-1L5VVHsJqSQUmCvy_2oFaUEqRvRuKXb6rs2ogq",
-    startingPrice: "R$ 49,90",
-    badge: "new",
-    accentColor: "cyan",
-  },
-  {
-    id: "rl",
-    name: "Rocket League",
-    slug: "rocket-league",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAF0nXYubZoWLEz1iJPOtAyeHastb2sqoVKHM3h2oYsLD5huBrE9vXmVMn-Aki3jE3NAisNMpmmjiIZBQj7WiNHmP7GzwAOwITvFUvdyo5zy7hLx2Qlrk8LsZUaozK7x2XCZy8Q64M0fioD_-1BbJ5jjaAd1U-uC3qWmg2jmJkcpZ0AIzc46byKgA6GFsI7EPmzEP_v_CIaAum2wj2ZARQiZQ4IwLdSYf69szv5NJWhXOqOw4gj4cqhDQZXymNdimvhap3TYrFoD1aM",
-    startingPrice: "R$ 19,90",
-  },
 ];
 
 function GameCard({ game }: { game: Game }) {
