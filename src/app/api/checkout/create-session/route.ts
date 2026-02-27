@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
-import { getStripe } from "@/lib/stripe";
+import { getPaymentMethodTypes, getStripe } from "@/lib/stripe";
 import { logger } from "@/lib/logger";
 import {
   isPlainObject,
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
     const origin = req.headers.get("origin") || "http://localhost:3000";
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "boleto", "pix"],
+      payment_method_types: getPaymentMethodTypes(),
       line_items: [{
         price_data: {
           currency: "brl",
