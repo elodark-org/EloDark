@@ -155,35 +155,58 @@ const valorantPriceSteps: number[] = [
   1,           // Radiante (placeholder)
 ];
 
+// ── Tabela de preços DuoBoost Valorant (fonte: elovalorant.com.br/js/duoboost.js) ──
+const valorantDuoPriceSteps: number[] = [
+  15,  15,  15,  // Ferro
+  20,  20,  20,  // Bronze
+  28,  28,  28,  // Prata
+  40,  40,  40,  // Ouro
+  67,  67,  67,  // Platina
+  103, 103, 103, // Diamante
+  119, 119, 119, // Ascendente
+  199, 199, 299, // Imortal
+  1,             // Radiante (placeholder)
+];
+
 // ── Cálculo de preço Valorant ──
 // Cada rank tem 3 divisões (1=mais baixa, 3=mais alta), Radiante tem 1.
 // No sistema interno: div=4 → posição 0 (mais baixa), div=3 → 1, div=2 → 2.
+function valorantLinearIndex(rankId: string, div: number, ranks: RankInfo[]): number {
+  let total = 0;
+  for (const rank of ranks) {
+    if (rank.id === rankId) {
+      if (rank.divisions === 1) return total;
+      const pos = [4, 3, 2].indexOf(div);
+      return total + (pos >= 0 ? pos : 0);
+    }
+    total += rank.divisions;
+  }
+  return total;
+}
+
 function calculateValorantBoostPrice(
-  fromRankId: string,
-  fromDiv: number,
-  toRankId: string,
-  toDiv: number,
+  fromRankId: string, fromDiv: number,
+  toRankId: string, toDiv: number,
   ranks: RankInfo[]
 ): number {
-  function toLinearIndex(rankId: string, div: number): number {
-    let total = 0;
-    for (const rank of ranks) {
-      if (rank.id === rankId) {
-        if (rank.divisions === 1) return total;
-        const pos = [4, 3, 2].indexOf(div);
-        return total + (pos >= 0 ? pos : 0);
-      }
-      total += rank.divisions;
-    }
-    return total;
-  }
-
-  const fromIdx = toLinearIndex(fromRankId, fromDiv);
-  const toIdx   = toLinearIndex(toRankId, toDiv);
+  const fromIdx = valorantLinearIndex(fromRankId, fromDiv, ranks);
+  const toIdx   = valorantLinearIndex(toRankId, toDiv, ranks);
   if (toIdx <= fromIdx) return 0;
-
   let sum = 0;
   for (let i = fromIdx; i < toIdx; i++) sum += valorantPriceSteps[i] ?? 0;
+  return sum;
+}
+
+function calculateValorantDuoBoostPrice(
+  fromRankId: string, fromDiv: number,
+  toRankId: string, toDiv: number,
+  ranks: RankInfo[]
+): number {
+  const fromIdx = valorantLinearIndex(fromRankId, fromDiv, ranks);
+  const toIdx   = valorantLinearIndex(toRankId, toDiv, ranks);
+  if (toIdx <= fromIdx) return 0;
+  let sum = 0;
+  for (let i = fromIdx; i < toIdx; i++) sum += valorantDuoPriceSteps[i] ?? 0;
   return sum;
 }
 
@@ -276,7 +299,11 @@ export default function OrderConfiguratorPage() {
     );
   }, [currentRank, currentDiv, desiredRank, desiredDiv, lpRange, hasDynamicPricing, gameSlug, ranks]);
 
-  const duoPrice = options.duoQueue ? basePrice * 0.65 : 0;
+  const duoPrice = options.duoQueue
+    ? (gameSlug === "valorant"
+        ? Math.max(0, calculateValorantDuoBoostPrice(currentRank, currentDiv, desiredRank, desiredDiv, ranks) - basePrice)
+        : basePrice * 0.65)
+    : 0;
   const rolePrice = options.selectRole ? basePrice * 0.15 : 0;
   const expressPrice = options.expressOrder ? basePrice * 0.25 : 0;
   const total = basePrice + duoPrice + rolePrice + expressPrice;
@@ -573,7 +600,7 @@ export default function OrderConfiguratorPage() {
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-[10px] font-bold bg-primary/20 text-primary px-2 py-1 rounded">
-                    +65%
+                    {gameSlug === "valorant" ? "DUO BOOST" : "+65%"}
                   </span>
                   <Toggle
                     checked={options.duoQueue}
@@ -716,7 +743,7 @@ export default function OrderConfiguratorPage() {
                   )}
                   {options.duoQueue && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-white/60">Duo Queue (+65%)</span>
+                      <span className="text-white/60">{gameSlug === "valorant" ? "Duo Boost" : "Duo Queue (+65%)"}</span>
                       <span className="font-medium">R$ {duoPrice.toFixed(2)}</span>
                     </div>
                   )}
