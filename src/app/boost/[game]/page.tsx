@@ -264,7 +264,7 @@ export default function OrderConfiguratorPage() {
   const [winsQuantity, setWinsQuantity] = useState(1);
   const [coachPackageIndex, setCoachPackageIndex] = useState(0);
 
-  function getDivLabel
+  function getDivLabel(div: number): string {
     if (gameSlug === "valorant") {
       const map: Record<number, string> = { 4: "1", 3: "2", 2: "3", 1: "3" };
       return map[div] ?? String(div);
