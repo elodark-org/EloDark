@@ -210,6 +210,21 @@ function calculateValorantDuoBoostPrice(
   return sum;
 }
 
+// ── Preços de Vitórias Valorant (fonte: elovalorant.com.br/js/wins.js) ──
+const valorantWinPrices: Record<string, number> = {
+  iron: 2, bronze: 4, silver: 7, gold: 11, platinum: 13,
+  diamond: 20, ascendant: 25, immortal: 30, radiant: 50,
+};
+
+// ── Pacotes de Coach Valorant (fonte: elovalorant.com.br/js/coach.js) ──
+const coachPackages = [
+  { label: "Pacote Básico", desc: "1h – Coach Radiante analisa sua partida ao vivo via Discord", price: 49 },
+  { label: "Pacote Evolução", desc: "1h30 – Análise ao vivo + treinos práticos personalizados", price: 74 },
+  { label: "Pacote ProPlayer", desc: "3h (3 sessões) – Correção detalhada e treinamento avançado", price: 139 },
+  { label: "ProPlayer + Psicólogo eSports", desc: "3h Coach + 1h Psicólogo eSports [RECOMENDADO]", price: 149 },
+  { label: "Coach para Equipes", desc: "Análise estratégica, comunicação e mentalidade de equipe", price: 149 },
+];
+
 const gameTitles: Record<string, string> = {
   "league-of-legends": "League of Legends",
   valorant: "Valorant",
@@ -243,7 +258,13 @@ export default function OrderConfiguratorPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
-  function getDivLabel(div: number): string {
+  // Tipo e estado para múltiplos serviços (apenas Valorant)
+  type ServiceType = "elo-boost" | "md5" | "vitorias" | "coach";
+  const [serviceType, setServiceType] = useState<ServiceType>("elo-boost");
+  const [winsQuantity, setWinsQuantity] = useState(1);
+  const [coachPackageIndex, setCoachPackageIndex] = useState(0);
+
+  function getDivLabel
     if (gameSlug === "valorant") {
       const map: Record<number, string> = { 4: "1", 3: "2", 2: "3", 1: "3" };
       return map[div] ?? String(div);
@@ -287,6 +308,9 @@ export default function OrderConfiguratorPage() {
 
   // ── Cálculo de preço ──
   const basePrice = useMemo(() => {
+    if (serviceType === "md5") return 45;
+    if (serviceType === "vitorias") return (valorantWinPrices[currentRank] ?? 2) * winsQuantity;
+    if (serviceType === "coach") return coachPackages[coachPackageIndex].price;
     if (!hasDynamicPricing) return 32.0;
     if (gameSlug === "valorant") {
       return calculateValorantBoostPrice(currentRank, currentDiv, desiredRank, desiredDiv, ranks);
@@ -297,15 +321,16 @@ export default function OrderConfiguratorPage() {
       lpRanges[lpRange].discount,
       ranks
     );
-  }, [currentRank, currentDiv, desiredRank, desiredDiv, lpRange, hasDynamicPricing, gameSlug, ranks]);
+  }, [serviceType, winsQuantity, coachPackageIndex, currentRank, currentDiv, desiredRank, desiredDiv, lpRange, hasDynamicPricing, gameSlug, ranks]);
 
-  const duoPrice = options.duoQueue
+  const isEloBoost = serviceType === "elo-boost";
+  const duoPrice = (isEloBoost && options.duoQueue)
     ? (gameSlug === "valorant"
         ? Math.max(0, calculateValorantDuoBoostPrice(currentRank, currentDiv, desiredRank, desiredDiv, ranks) - basePrice)
         : basePrice * 0.65)
     : 0;
-  const rolePrice = options.selectRole ? basePrice * 0.15 : 0;
-  const expressPrice = options.expressOrder ? basePrice * 0.25 : 0;
+  const rolePrice = (isEloBoost && options.selectRole) ? basePrice * 0.15 : 0;
+  const expressPrice = (isEloBoost && options.expressOrder) ? basePrice * 0.25 : 0;
   const total = basePrice + duoPrice + rolePrice + expressPrice;
 
   // Divisões disponíveis para o rank selecionado
@@ -340,31 +365,46 @@ export default function OrderConfiguratorPage() {
     setIsLoading(true);
     setCheckoutError(null);
     try {
-      const currentLabel = currentRankData.divisions > 1
-        ? `${currentRankData.label} ${getDivLabel(currentDiv)}`
-        : currentRankData.label;
-      const desiredLabel = desiredRankData.divisions > 1
-        ? `${desiredRankData.label} ${getDivLabel(desiredDiv)}`
-        : desiredRankData.label;
+      let serviceConfig: Record<string, any> = { game: gameSlug };
+      if (serviceType === "elo-boost") {
+        const currentLabel = currentRankData.divisions > 1
+          ? `${currentRankData.label} ${getDivLabel(currentDiv)}`
+          : currentRankData.label;
+        const desiredLabel = desiredRankData.divisions > 1
+          ? `${desiredRankData.label} ${getDivLabel(desiredDiv)}`
+          : desiredRankData.label;
+        serviceConfig = {
+          game: gameSlug,
+          current_rank: currentLabel,
+          desired_rank: desiredLabel,
+          current_lp: lpRanges[lpRange].label,
+          options: {
+            duo_queue: options.duoQueue,
+            select_role: options.selectRole,
+            express_order: options.expressOrder,
+            offline_mode: options.offlineMode,
+          },
+        };
+      } else if (serviceType === "md5") {
+        serviceConfig = { game: gameSlug, elo: currentRankData.label };
+      } else if (serviceType === "vitorias") {
+        serviceConfig = {
+          game: gameSlug,
+          elo: currentRankData.label,
+          quantity: winsQuantity,
+          price_per_win: valorantWinPrices[currentRank] ?? 2,
+        };
+      } else if (serviceType === "coach") {
+        serviceConfig = { game: gameSlug, package: coachPackages[coachPackageIndex].label };
+      }
 
       const res = await fetch("/api/checkout/create-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          service_type: "elo-boost",
+          service_type: serviceType,
           price: Math.round(total * 100) / 100,
-          config: {
-            game: gameSlug,
-            current_rank: currentLabel,
-            desired_rank: desiredLabel,
-            current_lp: lpRanges[lpRange].label,
-            options: {
-              duo_queue: options.duoQueue,
-              select_role: options.selectRole,
-              express_order: options.expressOrder,
-              offline_mode: options.offlineMode,
-            },
-          },
+          config: serviceConfig,
         }),
       });
       const data = await res.json();
@@ -404,9 +444,36 @@ export default function OrderConfiguratorPage() {
           </p>
         </div>
 
+        {/* Service Tabs — apenas Valorant */}
+        {gameSlug === "valorant" && (
+          <div className="flex gap-3 flex-wrap mb-8">
+            {([
+              { type: "elo-boost" as ServiceType, icon: "trending_up", label: "Elo Boost" },
+              { type: "md5" as ServiceType, icon: "shield", label: "MD5" },
+              { type: "vitorias" as ServiceType, icon: "emoji_events", label: "Vitórias" },
+              { type: "coach" as ServiceType, icon: "school", label: "Coach" },
+            ]).map(({ type, icon, label }) => (
+              <button
+                key={type}
+                onClick={() => setServiceType(type)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer ${
+                  serviceType === type
+                    ? "bg-primary text-white shadow-[0_0_16px_rgba(46,123,255,0.5)]"
+                    : "glass-card border border-white/10 text-white/60 hover:text-white hover:border-primary/40"
+                }`}
+              >
+                <Icon name={icon} size={16} />
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left: Configurator */}
           <div className="lg:col-span-8 space-y-10">
+            {/* ── Elo Boost ── */}
+            {isEloBoost && (<>
             {/* Current Rank */}
             <section>
               <div className="flex items-center gap-3 mb-6">
@@ -683,6 +750,125 @@ export default function OrderConfiguratorPage() {
                 </div>
               </div>
             </section>
+            </>)}
+
+            {/* ── MD5 ── */}
+            {serviceType === "md5" && (
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Icon name="shield" className="text-primary" />
+                  <h3 className="text-xl font-bold">MD5 — Partidas de Colocação</h3>
+                </div>
+                <p className="text-white/60 text-sm">
+                  Um ProPlayer Radiante jogará as 5 partidas qualificatórias do novo ato em sua conta, garantindo a melhor colocação possível.
+                </p>
+                <div>
+                  <span className="text-xs font-bold text-white/40 uppercase tracking-wider mb-3 block">Seu Elo Atual</span>
+                  <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-9 gap-3">
+                    {ranks.map((rank) => (
+                      <button key={rank.id} onClick={() => handleSelectCurrentRank(rank.id)}
+                        className={`group cursor-pointer glass-card rounded-xl flex flex-col items-center justify-center p-3 border-2 transition-all ${
+                          currentRank === rank.id ? "border-primary bg-primary/20 shadow-[0_0_20px_rgba(46,123,255,0.4)]" : "border-transparent hover:border-primary/40"
+                        }`}>
+                        <Image src={rank.image} alt={rank.label} width={currentRank === rank.id ? 48 : 40} height={currentRank === rank.id ? 48 : 40}
+                          className={`mb-1 transition-opacity ${currentRank === rank.id ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`} />
+                        <span className={`text-[10px] font-bold uppercase tracking-wider ${currentRank === rank.id ? "text-primary" : "text-white/40 group-hover:text-white"}`}>{rank.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="glass-card p-5 rounded-xl border border-primary/20 flex items-center justify-between">
+                  <div>
+                    <p className="font-bold">5 Partidas Qualificatórias</p>
+                    <p className="text-sm text-white/50">Serviço Solo ou Duo disponível</p>
+                  </div>
+                  <div className="text-3xl font-black text-primary">R$ 45,00</div>
+                </div>
+              </div>
+            )}
+
+            {/* ── Vitórias ── */}
+            {serviceType === "vitorias" && (
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Icon name="emoji_events" className="text-primary" />
+                  <h3 className="text-xl font-bold">Vitórias Avulsas</h3>
+                </div>
+                <p className="text-white/60 text-sm">
+                  Compre vitórias avulsas no seu elo atual. Você recebe o número líquido de vitórias contratadas.
+                </p>
+                <div>
+                  <span className="text-xs font-bold text-white/40 uppercase tracking-wider mb-3 block">Seu Elo Atual</span>
+                  <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-9 gap-3">
+                    {ranks.map((rank) => (
+                      <button key={rank.id} onClick={() => handleSelectCurrentRank(rank.id)}
+                        className={`group cursor-pointer glass-card rounded-xl flex flex-col items-center justify-center p-3 border-2 transition-all ${
+                          currentRank === rank.id ? "border-primary bg-primary/20 shadow-[0_0_20px_rgba(46,123,255,0.4)]" : "border-transparent hover:border-primary/40"
+                        }`}>
+                        <Image src={rank.image} alt={rank.label} width={currentRank === rank.id ? 48 : 40} height={currentRank === rank.id ? 48 : 40}
+                          className={`mb-1 transition-opacity ${currentRank === rank.id ? "opacity-100" : "opacity-60 group-hover:opacity-100"}`} />
+                        <span className={`text-[10px] font-bold uppercase tracking-wider ${currentRank === rank.id ? "text-primary" : "text-white/40 group-hover:text-white"}`}>{rank.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-white/40 uppercase tracking-wider mb-3 block">Quantidade de Vitórias</span>
+                  <div className="flex gap-2 flex-wrap">
+                    {[1, 2, 3, 4, 5, 10].map((q) => (
+                      <button key={q} onClick={() => setWinsQuantity(q)}
+                        className={`px-5 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${
+                          winsQuantity === q ? "bg-primary text-white shadow-[0_0_12px_rgba(46,123,255,0.5)]" : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
+                        }`}>
+                        {q}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="glass-card p-5 rounded-xl border border-primary/20 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-white/40 uppercase tracking-wider mb-1">Preço por Vitória</p>
+                    <p className="text-2xl font-black">R$ {(valorantWinPrices[currentRank] ?? 2).toFixed(2)}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-white/40 uppercase tracking-wider mb-1">{winsQuantity}x vitória(s)</p>
+                    <p className="text-2xl font-black text-primary">R$ {((valorantWinPrices[currentRank] ?? 2) * winsQuantity).toFixed(2)}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── Coach ── */}
+            {serviceType === "coach" && (
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Icon name="school" className="text-primary" />
+                  <h3 className="text-xl font-bold">Aulas com Coach Radiante</h3>
+                </div>
+                <p className="text-white/60 text-sm">
+                  Aprenda com profissionais Radiantes. Escolha o pacote ideal para o seu nível e objetivo.
+                </p>
+                <div className="space-y-3">
+                  {coachPackages.map((pkg, i) => (
+                    <button key={i} onClick={() => setCoachPackageIndex(i)}
+                      className={`w-full glass-card p-4 rounded-xl border-2 transition-all text-left flex items-center justify-between gap-4 cursor-pointer ${
+                        coachPackageIndex === i ? "border-primary bg-primary/10" : "border-transparent hover:border-primary/30"
+                      }`}>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          {i === 3 && (
+                            <span className="text-[10px] font-black bg-accent-gold text-black px-2 py-0.5 rounded uppercase">Recomendado</span>
+                          )}
+                          <h4 className="font-bold text-sm">{pkg.label}</h4>
+                        </div>
+                        <p className="text-xs text-white/50">{pkg.desc}</p>
+                      </div>
+                      <p className="font-black text-lg text-primary shrink-0">R$ {pkg.price}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right: Sticky Summary */}
@@ -696,70 +882,87 @@ export default function OrderConfiguratorPage() {
               </h3>
 
               <div className="space-y-4 mb-8 relative z-10">
-                {/* Rank Display */}
-                <div className="flex justify-between items-center p-4 rounded-lg bg-white/5 border border-white/5">
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
-                      Atual
-                    </span>
-                    <Image
-                      src={currentRankData.image}
-                      alt={currentRankData.label}
-                      width={40}
-                      height={40}
-                    />
-                    <span className="text-xs font-bold capitalize">
-                      {currentSummaryLabel}
-                    </span>
+                {/* Service info display */}
+                {isEloBoost && (
+                  <div className="flex justify-between items-center p-4 rounded-lg bg-white/5 border border-white/5">
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Atual</span>
+                      <Image src={currentRankData.image} alt={currentRankData.label} width={40} height={40} />
+                      <span className="text-xs font-bold capitalize">{currentSummaryLabel}</span>
+                    </div>
+                    <Icon name="arrow_forward" className="text-primary/40" size={18} />
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Desejado</span>
+                      <Image src={desiredRankData.image} alt={desiredRankData.label} width={40} height={40} />
+                      <span className="text-xs font-bold text-primary">{desiredSummaryLabel}</span>
+                    </div>
                   </div>
-                  <Icon name="arrow_forward" className="text-primary/40" size={18} />
-                  <div className="flex flex-col items-center gap-1">
-                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
-                      Desejado
-                    </span>
-                    <Image
-                      src={desiredRankData.image}
-                      alt={desiredRankData.label}
-                      width={40}
-                      height={40}
-                    />
-                    <span className="text-xs font-bold text-primary">
-                      {desiredSummaryLabel}
-                    </span>
+                )}
+                {(serviceType === "md5" || serviceType === "vitorias") && (
+                  <div className="flex items-center gap-4 p-4 rounded-lg bg-white/5 border border-white/5">
+                    <Image src={currentRankData.image} alt={currentRankData.label} width={44} height={44} />
+                    <div className="flex-1">
+                      <p className="text-[10px] text-white/40 uppercase tracking-widest mb-0.5">Elo</p>
+                      <p className="font-bold">{currentRankData.label}</p>
+                    </div>
+                    {serviceType === "vitorias" && (
+                      <div className="text-right">
+                        <p className="text-[10px] text-white/40 uppercase tracking-widest mb-0.5">Vitórias</p>
+                        <p className="font-bold text-primary">{winsQuantity}x</p>
+                      </div>
+                    )}
+                    {serviceType === "md5" && (
+                      <div className="text-right">
+                        <p className="text-[10px] text-white/40 uppercase tracking-widest mb-0.5">Serviço</p>
+                        <p className="font-bold text-primary">5 Partidas</p>
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
+                {serviceType === "coach" && (
+                  <div className="p-4 rounded-lg bg-white/5 border border-white/5">
+                    <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Pacote Selecionado</p>
+                    <p className="font-bold text-sm">{coachPackages[coachPackageIndex].label}</p>
+                    <p className="text-[11px] text-white/50 mt-1">{coachPackages[coachPackageIndex].desc}</p>
+                  </div>
+                )}
 
                 {/* Pricing */}
                 <div className="space-y-3 px-1">
                   <div className="flex justify-between text-sm">
-                    <span className="text-white/60">Boost de Elo</span>
+                    <span className="text-white/60">
+                      {isEloBoost ? "Boost de Elo" :
+                       serviceType === "md5" ? "MD5 (5 partidas)" :
+                       serviceType === "vitorias" ? `${winsQuantity}x Vitória(s)` :
+                       coachPackages[coachPackageIndex].label}
+                    </span>
                     <span className="font-medium">R$ {basePrice.toFixed(2)}</span>
                   </div>
-                  {hasDynamicPricing && lpRanges[lpRange].discount > 0 && (
+                  {isEloBoost && hasDynamicPricing && lpRanges[lpRange].discount > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-green-400/80">Desconto PDL ({lpRanges[lpRange].label})</span>
                       <span className="text-green-400 font-bold">Aplicado</span>
                     </div>
                   )}
-                  {options.duoQueue && (
+                  {isEloBoost && options.duoQueue && (
                     <div className="flex justify-between text-sm">
                       <span className="text-white/60">{gameSlug === "valorant" ? "Duo Boost" : "Duo Queue (+65%)"}</span>
                       <span className="font-medium">R$ {duoPrice.toFixed(2)}</span>
                     </div>
                   )}
-                  {options.selectRole && (
+                  {isEloBoost && options.selectRole && (
                     <div className="flex justify-between text-sm">
                       <span className="text-white/60">{gameSlug === "valorant" ? "Escolha de Agente (+15%)" : "Seleção de Role (+15%)"}</span>
                       <span className="font-medium">R$ {rolePrice.toFixed(2)}</span>
                     </div>
                   )}
-                  {options.expressOrder && (
+                  {isEloBoost && options.expressOrder && (
                     <div className="flex justify-between text-sm">
                       <span className="text-white/60">Expresso (+25%)</span>
                       <span className="font-medium">R$ {expressPrice.toFixed(2)}</span>
                     </div>
                   )}
-                  {options.offlineMode && (
+                  {isEloBoost && options.offlineMode && (
                     <div className="flex justify-between text-sm">
                       <span className="text-white/60">Modo Offline</span>
                       <span className="text-green-400 font-bold">GRÁTIS</span>
@@ -770,7 +973,12 @@ export default function OrderConfiguratorPage() {
                       <Icon name="schedule" className="text-primary" size={14} />
                       <span className="text-xs text-white/60">Prazo Estimado</span>
                     </div>
-                    <span className="text-xs font-bold">2 - 4 Dias</span>
+                    <span className="text-xs font-bold">
+                      {serviceType === "md5" ? "1 - 2 Dias" :
+                       serviceType === "vitorias" ? `${winsQuantity + 1} - ${winsQuantity * 2} Dias` :
+                       serviceType === "coach" ? "A combinar" :
+                       "2 - 4 Dias"}
+                    </span>
                   </div>
                 </div>
               </div>
