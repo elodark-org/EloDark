@@ -27,31 +27,30 @@ export default function BoostersPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  // top 3 já vêm ordenados por win_rate DESC da API
-  const top3 = boosters.slice(0, 3);
-  const rest = boosters.slice(3);
-
-  // Pódio: rank2 (esq) | rank1 (centro, maior) | rank3 (dir)
-  const podium: (Booster & { pos: number })[] = [];
-  if (top3[1]) podium.push({ ...top3[1], pos: 2 });
-  if (top3[0]) podium.push({ ...top3[0], pos: 1 });
-  if (top3[2]) podium.push({ ...top3[2], pos: 3 });
-
   return (
     <>
       <Navbar />
-      <main className="max-w-7xl mx-auto px-6 py-12 w-full">
+      <main className="max-w-7xl mx-auto px-6 py-16 w-full">
+
         {/* Hero */}
         <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+            </span>
+            {loading ? "Carregando..." : `${boosters.length} boosters ativos`}
+          </div>
           <h1 className="text-5xl md:text-7xl font-black mb-4 bg-gradient-to-r from-primary via-accent-purple to-accent-cyan bg-clip-text text-transparent">
             Esquadrão Elite
           </h1>
           <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-            O top 1% dos jogadores competitivos do Brasil. Selecionados por
-            excelência, desempenho e profissionalismo.
+            O top 1% dos jogadores competitivos do Brasil.
+            Selecionados por excelência, desempenho e profissionalismo.
           </p>
         </div>
 
+        {/* Boosters Grid */}
         {loading ? (
           <div className="flex items-center justify-center py-32 text-white/30">
             <Icon name="hourglass_top" className="animate-spin mr-3" size={24} />
@@ -63,183 +62,96 @@ export default function BoostersPage() {
             <p>Nenhum booster cadastrado ainda.</p>
           </div>
         ) : (
-          <>
-            {/* Top 3 Pódio */}
-            {top3.length > 0 && (
-              <div className="flex flex-col lg:flex-row items-end justify-center gap-6 mb-20 px-4">
-                {podium.map((b) => {
-                  const isKing = b.pos === 1;
-                  return (
-                    <div
-                      key={b.id}
-                      className={`glass-card rounded-xl flex flex-col items-center relative w-full ${
-                        isKing
-                          ? "lg:w-80 p-8 border-2 border-accent-gold shadow-[0_0_30px_rgba(255,215,0,0.2)] lg:scale-105 z-10"
-                          : `lg:w-72 p-6 ${b.pos === 2 ? "border-primary/20" : "border-accent-cyan/20"}`
-                      }`}
-                    >
-                      {isKing ? (
-                        <div className="absolute -top-6 text-accent-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
-                          <Icon name="rewarded_ads" size={36} filled />
-                        </div>
-                      ) : (
-                        <div className="absolute -top-4 bg-gray-800 px-3 py-1 rounded-full text-xs font-bold border border-white/10">
-                          #{b.pos} Rank
-                        </div>
-                      )}
-
-                      <div
-                        className={`rounded-full flex items-center justify-center mb-4 ${
-                          isKing
-                            ? "size-32 border-4 border-accent-gold shadow-[0_0_30px_rgba(255,215,0,0.2)] text-6xl"
-                            : `size-24 border-2 ${
-                                b.pos === 2 ? "border-primary/30" : "border-accent-cyan/30"
-                              } text-4xl`
-                        } bg-white/5`}
-                      >
-                        {b.avatar_emoji || "🎮"}
-                      </div>
-
-                      <h3 className={`font-bold mb-1 ${isKing ? "text-2xl font-black" : "text-xl"}`}>
-                        {b.game_name}
-                      </h3>
-                      <p className={`text-xs font-bold tracking-widest uppercase mb-4 ${
-                        isKing ? "text-accent-gold" : "text-white/40"
-                      }`}>
-                        {b.rank}
-                      </p>
-
-                      <div className={`grid grid-cols-2 w-full gap-4 text-center border-t ${
-                        isKing ? "border-white/10 pt-6" : "border-white/5 pt-4"
-                      }`}>
-                        <div>
-                          <p className="text-[10px] text-gray-500 uppercase font-bold mb-1">Win Rate</p>
-                          <p className={`font-bold text-accent-cyan ${
-                            isKing ? "text-lg font-black" : "text-sm"
-                          }`}>
-                            {b.win_rate}%
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] text-gray-500 uppercase font-bold mb-1">Pedidos</p>
-                          <p className={`font-bold ${isKing ? "text-lg font-black" : "text-sm"}`}>
-                            {b.games_played ?? 0}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* Tabela restante */}
-            <div className="flex flex-col xl:flex-row gap-8">
-              <div className="flex-1">
-                {rest.length > 0 && (
-                  <>
-                    <div className="flex items-center justify-between mb-6 px-4">
-                      <h2 className="text-2xl font-bold">
-                        Rankings Elite {top3.length + 1}–{boosters.length}
-                      </h2>
-                    </div>
-
-                    <div className="glass-card rounded-xl overflow-hidden">
-                      <table className="w-full text-left">
-                        <thead>
-                          <tr className="bg-white/5 text-gray-400 text-xs font-bold uppercase tracking-widest">
-                            <th className="px-6 py-4">#</th>
-                            <th className="px-6 py-4">Booster</th>
-                            <th className="px-6 py-4">Rank</th>
-                            <th className="px-6 py-4">Win Rate</th>
-                            <th className="px-6 py-4">Pedidos</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                          {rest.map((b, i) => (
-                            <tr
-                              key={b.id}
-                              className="hover:bg-primary/5 hover:shadow-[inset_0_0_15px_rgba(46,123,255,0.1)] transition-all group"
-                            >
-                              <td className="px-6 py-5 font-bold text-gray-500 group-hover:text-primary">
-                                #{top3.length + i + 1}
-                              </td>
-                              <td className="px-6 py-5">
-                                <div className="flex items-center gap-3">
-                                  <div className="size-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xl">
-                                    {b.avatar_emoji || "🎮"}
-                                  </div>
-                                  <span className="font-bold">{b.game_name}</span>
-                                </div>
-                              </td>
-                              <td className="px-6 py-5">
-                                <span className="text-accent-gold text-xs font-bold uppercase">{b.rank}</span>
-                              </td>
-                              <td className="px-6 py-5">
-                                <span className="text-accent-cyan font-bold">{b.win_rate}%</span>
-                              </td>
-                              <td className="px-6 py-5 text-white/60">
-                                {b.games_played ?? 0}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* Sidebar */}
-              <div className="xl:w-80 space-y-8">
-                <div className="glass-card rounded-xl p-8 border-primary/20 sticky top-24">
-                  <div className="size-16 bg-primary/20 rounded-2xl flex items-center justify-center mb-6">
-                    <Icon name="verified_user" className="text-primary" size={32} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-20">
+            {boosters.map((b, i) => {
+              const isFirst = i === 0;
+              return (
+                <div
+                  key={b.id}
+                  className={`glass-card rounded-2xl p-6 flex flex-col items-center text-center gap-3 ${
+                    isFirst
+                      ? "border-2 border-accent-gold shadow-[0_0_24px_rgba(255,215,0,0.15)]"
+                      : "border border-white/5"
+                  }`}
+                >
+                  {/* Posição */}
+                  <div className={`text-xs font-bold px-3 py-1 rounded-full ${
+                    isFirst
+                      ? "bg-accent-gold/20 text-accent-gold"
+                      : "bg-white/5 text-white/40"
+                  }`}>
+                    {isFirst ? (
+                      <span className="flex items-center gap-1">
+                        <Icon name="rewarded_ads" size={12} filled /> #1
+                      </span>
+                    ) : (
+                      `#${i + 1}`
+                    )}
                   </div>
-                  <h3 className="text-2xl font-bold mb-4">Seja um Pro</h3>
-                  <p className="text-gray-400 mb-8 text-sm leading-relaxed">
-                    Acha que tem o que é preciso para entrar no top 1%? Estamos sempre
-                    em busca de talentos de classe mundial para o time EloDark.
-                  </p>
-                  <ul className="space-y-4 mb-10">
-                    {["ELO Alto Verificado", "Conduta profissional", "Pagamentos instantâneos"].map((item) => (
-                      <li key={item} className="flex items-center gap-3 text-sm">
-                        <Icon name="check_circle" className="text-primary" size={20} />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href="/apply"
-                    className="block w-full bg-primary hover:bg-primary/90 transition-all text-white py-4 rounded-xl font-bold text-sm tracking-wide shadow-xl shadow-primary/20 text-center"
-                  >
-                    Candidatar-se
-                  </Link>
-                </div>
 
-                <div className="glass-card rounded-xl p-6 bg-gradient-to-br from-accent-cyan/5 to-primary/5 border-accent-cyan/10">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="size-8 bg-accent-cyan rounded flex items-center justify-center">
-                      <Icon name="support_agent" className="text-bg-primary" size={18} />
-                    </div>
-                    <h4 className="font-bold">Precisa de um Booster?</h4>
+                  {/* Avatar */}
+                  <div className={`flex items-center justify-center rounded-full bg-white/5 ${
+                    isFirst
+                      ? "size-24 text-5xl border-2 border-accent-gold/50"
+                      : "size-20 text-4xl border border-white/10"
+                  }`}>
+                    {b.avatar_emoji || "🎮"}
                   </div>
-                  <p className="text-xs text-gray-400 mb-4">
-                    Nossos especialistas podem encontrar o booster perfeito para seus
-                    objetivos em até 5 minutos.
-                  </p>
-                  <Link
-                    href="/dashboard/chat"
-                    className="text-accent-cyan text-xs font-bold flex items-center gap-2 hover:underline"
-                  >
-                    Abrir Chat ao Vivo
-                    <Icon name="arrow_forward" size={14} />
-                  </Link>
+
+                  {/* Nome e rank */}
+                  <div>
+                    <h3 className={`font-bold ${isFirst ? "text-xl" : "text-base"}`}>
+                      {b.game_name}
+                    </h3>
+                    <p className={`text-xs font-bold uppercase tracking-wider mt-0.5 ${
+                      isFirst ? "text-accent-gold" : "text-white/40"
+                    }`}>
+                      {b.rank}
+                    </p>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="w-full grid grid-cols-2 gap-2 pt-3 border-t border-white/5">
+                    <div className="bg-white/5 rounded-lg py-2">
+                      <p className="text-[10px] text-white/30 uppercase font-bold">Win Rate</p>
+                      <p className="text-sm font-bold text-accent-cyan">{b.win_rate}%</p>
+                    </div>
+                    <div className="bg-white/5 rounded-lg py-2">
+                      <p className="text-[10px] text-white/30 uppercase font-bold">Pedidos</p>
+                      <p className="text-sm font-bold text-white">{b.games_played ?? 0}</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </>
+              );
+            })}
+          </div>
         )}
+
+        {/* CTA Banner */}
+        <div className="glass-card rounded-2xl p-8 md:p-12 border border-primary/20 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-2">Quer fazer parte da equipe?</h2>
+            <p className="text-gray-400 text-sm max-w-lg">
+              Estamos sempre em busca dos melhores jogadores do Brasil.
+              Mostre seu elo e comece a faturar.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+            <Link
+              href="/apply"
+              className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl transition-all text-sm text-center shadow-lg shadow-primary/20"
+            >
+              Candidatar-se
+            </Link>
+            <Link
+              href="/boost/lol"
+              className="px-8 py-3 glass-card border border-white/10 hover:bg-white/10 text-white font-bold rounded-xl transition-all text-sm text-center"
+            >
+              Contratar um Booster
+            </Link>
+          </div>
+        </div>
+
       </main>
       <Footer />
     </>
