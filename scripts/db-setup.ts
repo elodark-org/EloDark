@@ -106,6 +106,42 @@ async function createTables() {
   `;
   console.log("  ✅ Tabela withdrawals criada");
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS pending_registrations (
+      id            SERIAL PRIMARY KEY,
+      name          VARCHAR(100) NOT NULL,
+      email         VARCHAR(255) NOT NULL,
+      password_hash VARCHAR(255) NOT NULL,
+      code          VARCHAR(6) NOT NULL,
+      expires_at    TIMESTAMP NOT NULL,
+      created_at    TIMESTAMP NOT NULL DEFAULT NOW()
+    )
+  `;
+  console.log("  ✅ Tabela pending_registrations criada");
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_pr_email ON pending_registrations(email)
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS password_reset_codes (
+      id         SERIAL PRIMARY KEY,
+      user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      code       VARCHAR(6) NOT NULL,
+      expires_at TIMESTAMP NOT NULL,
+      used       BOOLEAN NOT NULL DEFAULT false,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    )
+  `;
+  console.log("  ✅ Tabela password_reset_codes criada");
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_prc_user_id ON password_reset_codes(user_id)
+  `;
+  await sql`
+    CREATE INDEX IF NOT EXISTS idx_prc_code ON password_reset_codes(code)
+  `;
+
   console.log("🎉 Todas as tabelas criadas com sucesso!");
 }
 

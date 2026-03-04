@@ -46,9 +46,16 @@ export function useAuth() {
 
   const register = useCallback(
     async (email: string, password: string, name: string) => {
+      await api.post<{ message: string }>("/auth/register", { name, email, password });
+    },
+    []
+  );
+
+  const verifyEmail = useCallback(
+    async (email: string, code: string) => {
       const data = await api.post<{ token: string; user: User }>(
-        "/auth/register",
-        { name, email, password }
+        "/auth/verify-email",
+        { email, code }
       );
       localStorage.setItem("token", data.token);
       setState({ user: data.user, loading: false });
@@ -62,5 +69,5 @@ export function useAuth() {
     setState({ user: null, loading: false });
   }, []);
 
-  return { ...state, login, register, logout };
+  return { ...state, login, register, verifyEmail, logout };
 }
