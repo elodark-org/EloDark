@@ -225,6 +225,20 @@ const coachPackages = [
   { label: "Coach para Equipes", desc: "Análise estratégica, comunicação e mentalidade de equipe", price: 149 },
 ];
 
+// ── Preços de Vitórias LoL (fonte: elorocket.com, valores em R$) ──
+const lolWinPrices: Record<string, number> = {
+  iron: 3, bronze: 5, silver: 8, gold: 12, platinum: 18, emerald: 25, diamond: 40, master: 70,
+};
+
+// ── Pacotes de Coach LoL ──
+const lolCoachPackages = [
+  { label: "Pacote Básico", desc: "1h – Coach Desafiante analisa sua partida ao vivo via Discord", price: 49 },
+  { label: "Pacote Evolução", desc: "1h30 – Análise ao vivo + treinos práticos personalizados", price: 74 },
+  { label: "Pacote ProPlayer", desc: "3h (3 sessões) – Correção detalhada e treinamento avançado", price: 139 },
+  { label: "ProPlayer + Psicólogo eSports", desc: "3h Coach + 1h Psicólogo eSports [RECOMENDADO]", price: 149 },
+  { label: "Coach para Equipes", desc: "Análise estratégica, comunicação e mentalidade de equipe", price: 149 },
+];
+
 const gameTitles: Record<string, string> = {
   "league-of-legends": "League of Legends",
   valorant: "Valorant",
@@ -258,11 +272,17 @@ export default function OrderConfiguratorPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
-  // Tipo e estado para múltiplos serviços (apenas Valorant)
+  // Tipo e estado para múltiplos serviços (LoL e Valorant)
   type ServiceType = "elo-boost" | "md5" | "vitorias" | "coach";
   const [serviceType, setServiceType] = useState<ServiceType>("elo-boost");
   const [winsQuantity, setWinsQuantity] = useState(1);
   const [coachPackageIndex, setCoachPackageIndex] = useState(0);
+
+  // Dados específicos por jogo para MD5/Vitórias/Coach
+  const winPrices = gameSlug === "league-of-legends" ? lolWinPrices : valorantWinPrices;
+  const activeCoachPackages = gameSlug === "league-of-legends" ? lolCoachPackages : coachPackages;
+  const md5Price = gameSlug === "league-of-legends" ? 59 : 45;
+  const md5Partidas = gameSlug === "league-of-legends" ? 10 : 5;
 
   function getDivLabel(div: number): string {
     if (gameSlug === "valorant") {
@@ -308,9 +328,12 @@ export default function OrderConfiguratorPage() {
 
   // ── Cálculo de preço ──
   const basePrice = useMemo(() => {
-    if (serviceType === "md5") return 45;
-    if (serviceType === "vitorias") return (valorantWinPrices[currentRank] ?? 2) * winsQuantity;
-    if (serviceType === "coach") return coachPackages[coachPackageIndex].price;
+    const _winPrices = gameSlug === "league-of-legends" ? lolWinPrices : valorantWinPrices;
+    const _coachPkgs = gameSlug === "league-of-legends" ? lolCoachPackages : coachPackages;
+    const _md5Price = gameSlug === "league-of-legends" ? 59 : 45;
+    if (serviceType === "md5") return _md5Price;
+    if (serviceType === "vitorias") return (_winPrices[currentRank] ?? 2) * winsQuantity;
+    if (serviceType === "coach") return _coachPkgs[coachPackageIndex].price;
     if (!hasDynamicPricing) return 32.0;
     if (gameSlug === "valorant") {
       return calculateValorantBoostPrice(currentRank, currentDiv, desiredRank, desiredDiv, ranks);
@@ -392,10 +415,10 @@ export default function OrderConfiguratorPage() {
           game: gameSlug,
           elo: currentRankData.label,
           quantity: winsQuantity,
-          price_per_win: valorantWinPrices[currentRank] ?? 2,
+          price_per_win: winPrices[currentRank] ?? 2,
         };
       } else if (serviceType === "coach") {
-        serviceConfig = { game: gameSlug, package: coachPackages[coachPackageIndex].label };
+        serviceConfig = { game: gameSlug, package: activeCoachPackages[coachPackageIndex].label };
       }
 
       const res = await fetch("/api/checkout/create-session", {
@@ -444,8 +467,8 @@ export default function OrderConfiguratorPage() {
           </p>
         </div>
 
-        {/* Service Tabs — apenas Valorant */}
-        {gameSlug === "valorant" && (
+        {/* Service Tabs — LoL e Valorant */}
+        {(gameSlug === "valorant" || gameSlug === "league-of-legends") && (
           <div className="flex gap-3 flex-wrap mb-8">
             {([
               { type: "elo-boost" as ServiceType, icon: "trending_up", label: "Elo Boost" },
@@ -757,10 +780,14 @@ export default function OrderConfiguratorPage() {
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-2">
                   <Icon name="shield" className="text-primary" />
-                  <h3 className="text-xl font-bold">MD5 — Partidas de Colocação</h3>
+                  <h3 className="text-xl font-bold">
+                    {gameSlug === "league-of-legends" ? "MD10 — Partidas de Colocação" : "MD5 — Partidas de Colocação"}
+                  </h3>
                 </div>
                 <p className="text-white/60 text-sm">
-                  Um ProPlayer Radiante jogará as 5 partidas qualificatórias do novo ato em sua conta, garantindo a melhor colocação possível.
+                  {gameSlug === "league-of-legends"
+                    ? "Um ProPlayer Desafiante jogará as 10 partidas qualificatórias do novo split em sua conta, garantindo a melhor colocação possível."
+                    : "Um ProPlayer Radiante jogará as 5 partidas qualificatórias do novo ato em sua conta, garantindo a melhor colocação possível."}
                 </p>
                 <div>
                   <span className="text-xs font-bold text-white/40 uppercase tracking-wider mb-3 block">Seu Elo Atual</span>
@@ -779,10 +806,10 @@ export default function OrderConfiguratorPage() {
                 </div>
                 <div className="glass-card p-5 rounded-xl border border-primary/20 flex items-center justify-between">
                   <div>
-                    <p className="font-bold">5 Partidas Qualificatórias</p>
+                    <p className="font-bold">{md5Partidas} Partidas Qualificatórias</p>
                     <p className="text-sm text-white/50">Serviço Solo ou Duo disponível</p>
                   </div>
-                  <div className="text-3xl font-black text-primary">R$ 45,00</div>
+                  <div className="text-3xl font-black text-primary">R$ {md5Price.toFixed(2)}</div>
                 </div>
               </div>
             )}
@@ -828,11 +855,11 @@ export default function OrderConfiguratorPage() {
                 <div className="glass-card p-5 rounded-xl border border-primary/20 flex items-center justify-between">
                   <div>
                     <p className="text-xs text-white/40 uppercase tracking-wider mb-1">Preço por Vitória</p>
-                    <p className="text-2xl font-black">R$ {(valorantWinPrices[currentRank] ?? 2).toFixed(2)}</p>
+                    <p className="text-2xl font-black">R$ {(winPrices[currentRank] ?? 2).toFixed(2)}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-white/40 uppercase tracking-wider mb-1">{winsQuantity}x vitória(s)</p>
-                    <p className="text-2xl font-black text-primary">R$ {((valorantWinPrices[currentRank] ?? 2) * winsQuantity).toFixed(2)}</p>
+                    <p className="text-2xl font-black text-primary">R$ {((winPrices[currentRank] ?? 2) * winsQuantity).toFixed(2)}</p>
                   </div>
                 </div>
               </div>
@@ -843,13 +870,17 @@ export default function OrderConfiguratorPage() {
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-2">
                   <Icon name="school" className="text-primary" />
-                  <h3 className="text-xl font-bold">Aulas com Coach Radiante</h3>
+                  <h3 className="text-xl font-bold">
+                    {gameSlug === "league-of-legends" ? "Aulas com Coach Desafiante" : "Aulas com Coach Radiante"}
+                  </h3>
                 </div>
                 <p className="text-white/60 text-sm">
-                  Aprenda com profissionais Radiantes. Escolha o pacote ideal para o seu nível e objetivo.
+                  {gameSlug === "league-of-legends"
+                    ? "Aprenda com profissionais Desafiantes. Escolha o pacote ideal para o seu nível e objetivo."
+                    : "Aprenda com profissionais Radiantes. Escolha o pacote ideal para o seu nível e objetivo."}
                 </p>
                 <div className="space-y-3">
-                  {coachPackages.map((pkg, i) => (
+                  {activeCoachPackages.map((pkg, i) => (
                     <button key={i} onClick={() => setCoachPackageIndex(i)}
                       className={`w-full glass-card p-4 rounded-xl border-2 transition-all text-left flex items-center justify-between gap-4 cursor-pointer ${
                         coachPackageIndex === i ? "border-primary bg-primary/10" : "border-transparent hover:border-primary/30"
@@ -922,8 +953,8 @@ export default function OrderConfiguratorPage() {
                 {serviceType === "coach" && (
                   <div className="p-4 rounded-lg bg-white/5 border border-white/5">
                     <p className="text-[10px] text-white/40 uppercase tracking-widest mb-1">Pacote Selecionado</p>
-                    <p className="font-bold text-sm">{coachPackages[coachPackageIndex].label}</p>
-                    <p className="text-[11px] text-white/50 mt-1">{coachPackages[coachPackageIndex].desc}</p>
+                    <p className="font-bold text-sm">{activeCoachPackages[coachPackageIndex].label}</p>
+                    <p className="text-[11px] text-white/50 mt-1">{activeCoachPackages[coachPackageIndex].desc}</p>
                   </div>
                 )}
 
@@ -932,9 +963,9 @@ export default function OrderConfiguratorPage() {
                   <div className="flex justify-between text-sm">
                     <span className="text-white/60">
                       {isEloBoost ? "Boost de Elo" :
-                       serviceType === "md5" ? "MD5 (5 partidas)" :
+                       serviceType === "md5" ? `${gameSlug === "league-of-legends" ? "MD10" : "MD5"} (${md5Partidas} partidas)` :
                        serviceType === "vitorias" ? `${winsQuantity}x Vitória(s)` :
-                       coachPackages[coachPackageIndex].label}
+                       activeCoachPackages[coachPackageIndex].label}
                     </span>
                     <span className="font-medium">R$ {basePrice.toFixed(2)}</span>
                   </div>

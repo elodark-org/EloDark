@@ -99,6 +99,7 @@ STRIPE_SECRET_KEY=...                # Stripe server key
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=  # Stripe client key
 ADMIN_EMAIL=admin@elodark.com        # Email do admin seed
 ADMIN_PASSWORD=...                   # Senha do admin seed
+RESEND_API_KEY=...                   # Resend API key (envio de emails)
 ```
 
 ## Regras

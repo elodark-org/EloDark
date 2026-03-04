@@ -3,6 +3,7 @@ import { sql } from "@/lib/db";
 import { getStripe } from "@/lib/stripe";
 import { logger } from "@/lib/logger";
 import { parsePositiveInt } from "@/lib/validation";
+import { sendOrderConfirmation } from "@/lib/email";
 
 // GET /api/checkout/verify/:sessionId — no auth required (guest checkout)
 export async function GET(req: NextRequest, { params }: { params: Promise<{ sessionId: string }> }) {
@@ -23,6 +24,20 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ sess
       if (order && order.status === "pending") {
         await sql`UPDATE orders SET status = 'active', updated_at = NOW() WHERE id = ${orderId}`;
         logger.info("Pedido ativado após pagamento confirmado", { orderId });
+
+        // Enviar email de confirmação ao cliente
+        const customerEmail = session.customer_details?.email;
+        if (customerEmail) {
+          const [orderData] = await sql`SELECT service_type, price, config FROM orders WHERE id = ${orderId}`;
+          if (orderData) {
+            sendOrderConfirmation(customerEmail, {
+              orderId,
+              serviceType: orderData.service_type,
+              price: orderData.price,
+              config: typeof orderData.config === "string" ? JSON.parse(orderData.config) : orderData.config,
+            });
+          }
+        }
       }
     }
 
