@@ -12,6 +12,7 @@ Plataforma de elo boosting para jogos competitivos. Conecta clientes que querem 
 | Banco de Dados | Neon PostgreSQL |
 | Autenticação | JWT |
 | Pagamento | Stripe Checkout |
+| Email | Resend |
 
 ## Features
 
@@ -42,14 +43,33 @@ Plataforma de elo boosting para jogos competitivos. Conecta clientes que querem 
 - Listagem de usuários
 - Aprovação/rejeição de saques
 
-### API (29 routes)
-- Auth: register, login, me
+### API (33 routes)
+- Auth: register, verify-email, login, me, forgot-password, reset-password
 - Orders: CRUD, claim, status, available
 - Chat: mensagens por order
 - Boosters: listagem pública + admin CRUD
 - Reviews: criar e listar
 - Admin: stats, orders, users, boosters, withdrawals
 - Checkout: Stripe session, verify, webhook, sync
+
+### Serviço de Email (Resend)
+Todos os emails são enviados via [Resend](https://resend.com) de forma assíncrona (fire-and-forget).
+
+| Evento | Função | Endpoint |
+|--------|--------|----------|
+| Cadastro — verificação | `sendVerificationEmail` | `POST /api/auth/register` |
+| Conta criada | `sendWelcomeEmail` | `POST /api/auth/verify-email` |
+| Reset de senha | `sendPasswordResetEmail` | `POST /api/auth/forgot-password` |
+| Confirmação de pedido | `sendOrderConfirmation` | webhook Stripe |
+| Atualização de status | `sendOrderStatusUpdate` | `PATCH /api/orders/[id]/status` |
+
+#### Fluxo de Cadastro
+1. `POST /api/auth/register` — valida dados, salva registro pendente e envia código de 6 dígitos por email (expira em 15 min)
+2. `POST /api/auth/verify-email` — valida o código, cria a conta e retorna o JWT token
+
+#### Fluxo de Reset de Senha
+1. `POST /api/auth/forgot-password` — recebe `{ email }`, envia código de 6 dígitos (expira em 15 min)
+2. `POST /api/auth/reset-password` — recebe `{ email, code, newPassword }`, valida e redefine a senha
 
 ## Setup
 
@@ -89,11 +109,17 @@ JWT_SECRET=sua_chave_secreta
 # Stripe
 STRIPE_SECRET_KEY=sk_...
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Resend (email)
+RESEND_API_KEY=re_...
 
 # Admin seed (opcional)
 ADMIN_EMAIL=admin@elodark.com
 ADMIN_PASSWORD=admin123
 ```
+
+> Se `RESEND_API_KEY` não estiver configurada, os emails são silenciosamente ignorados e um aviso é logado. O sistema funciona normalmente sem ela.
 
 ## Comandos
 
@@ -133,9 +159,20 @@ src/
 
 ## Banco de Dados
 
-6 tabelas: `users`, `boosters`, `orders`, `reviews`, `messages`, `withdrawals`
+8 tabelas: `users`, `boosters`, `orders`, `reviews`, `messages`, `withdrawals`, `pending_registrations`, `password_reset_codes`
 
-O schema completo está em `scripts/db-setup.ts`.
+| Tabela | Descrição |
+|--------|-----------|
+| `users` | Contas confirmadas |
+| `boosters` | Perfis de boosters |
+| `orders` | Pedidos de boost |
+| `reviews` | Avaliações |
+| `messages` | Chat por pedido |
+| `withdrawals` | Saques via PIX |
+| `pending_registrations` | Cadastros aguardando verificação de email (15 min) |
+| `password_reset_codes` | Códigos de reset de senha (15 min) |
+
+O schema completo está em `scripts/db-setup.ts`. A migration das tabelas de email está em `migrations/001_password_reset_codes.sql`.
 
 ## Modelo de Negócio
 
