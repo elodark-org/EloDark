@@ -225,8 +225,8 @@ const coachPackages = [
   { label: "Coach para Equipes", desc: "Análise estratégica, comunicação e mentalidade de equipe", price: 149 },
 ];
 
-// ── Preços de MD10 LoL por elo (10 partidas qualificatórias) ──
-const lolMd10Prices: Record<string, number> = {
+// ── Preços de MD5 LoL por elo (5 partidas qualificatórias) ──
+const lolMd5Prices: Record<string, number> = {
   iron: 39, bronze: 44, silver: 49, gold: 59, platinum: 74, emerald: 99, diamond: 139, master: 179,
 };
 
@@ -286,8 +286,8 @@ export default function OrderConfiguratorPage() {
   // Dados específicos por jogo para MD5/Vitórias/Coach
   const winPrices = gameSlug === "league-of-legends" ? lolWinPrices : valorantWinPrices;
   const activeCoachPackages = gameSlug === "league-of-legends" ? lolCoachPackages : coachPackages;
-  const md5Price = gameSlug === "league-of-legends" ? (lolMd10Prices[currentRank] ?? 59) : 45;
-  const md5Partidas = gameSlug === "league-of-legends" ? 10 : 5;
+  const md5Price = gameSlug === "league-of-legends" ? (lolMd5Prices[currentRank] ?? 59) : 45;
+  const md5Partidas = 5;
 
   function getDivLabel(div: number): string {
     if (gameSlug === "valorant") {
@@ -335,7 +335,7 @@ export default function OrderConfiguratorPage() {
   const basePrice = useMemo(() => {
     const _winPrices = gameSlug === "league-of-legends" ? lolWinPrices : valorantWinPrices;
     const _coachPkgs = gameSlug === "league-of-legends" ? lolCoachPackages : coachPackages;
-    const _md5Price = gameSlug === "league-of-legends" ? (lolMd10Prices[currentRank] ?? 59) : 45;
+    const _md5Price = gameSlug === "league-of-legends" ? (lolMd5Prices[currentRank] ?? 59) : 45;
     if (serviceType === "md5") return _md5Price;
     if (serviceType === "vitorias") return (_winPrices[currentRank] ?? 2) * winsQuantity;
     if (serviceType === "coach") return _coachPkgs[coachPackageIndex].price;
@@ -785,13 +785,11 @@ export default function OrderConfiguratorPage() {
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-2">
                   <Icon name="shield" className="text-primary" />
-                  <h3 className="text-xl font-bold">
-                    {gameSlug === "league-of-legends" ? "MD10 — Partidas de Colocação" : "MD5 — Partidas de Colocação"}
-                  </h3>
+                  <h3 className="text-xl font-bold">MD5 — Partidas de Colocação</h3>
                 </div>
                 <p className="text-white/60 text-sm">
                   {gameSlug === "league-of-legends"
-                    ? "Um ProPlayer Desafiante jogará as 10 partidas qualificatórias do novo split em sua conta, garantindo a melhor colocação possível."
+                    ? "Um ProPlayer Desafiante jogará as 5 partidas qualificatórias do novo split em sua conta, garantindo a melhor colocação possível."
                     : "Um ProPlayer Radiante jogará as 5 partidas qualificatórias do novo ato em sua conta, garantindo a melhor colocação possível."}
                 </p>
                 <div>
@@ -968,7 +966,7 @@ export default function OrderConfiguratorPage() {
                   <div className="flex justify-between text-sm">
                     <span className="text-white/60">
                       {isEloBoost ? "Boost de Elo" :
-                       serviceType === "md5" ? `${gameSlug === "league-of-legends" ? "MD10" : "MD5"} (${md5Partidas} partidas)` :
+                       serviceType === "md5" ? `MD5 (${md5Partidas} partidas)` :
                        serviceType === "vitorias" ? `${winsQuantity}x Vitória(s)` :
                        activeCoachPackages[coachPackageIndex].label}
                     </span>
