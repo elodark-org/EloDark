@@ -166,6 +166,52 @@ export async function sendPasswordResetEmail(to: string, name: string, code: str
   }
 }
 
+export async function sendApplicationEmail(data: {
+  name: string;
+  email: string;
+  game: string;
+  nick: string;
+  rank: string;
+  proof_link?: string;
+  discord: string;
+}): Promise<void> {
+  const resend = getResend();
+  const adminEmail = process.env.ADMIN_EMAIL || "admin@elodark.com";
+  if (!resend) {
+    logger.warn("Resend não configurado, candidatura não enviada por email", { from: data.email });
+    return;
+  }
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: adminEmail,
+      subject: `Nova Candidatura de Booster — ${data.name} (${data.game})`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0a0a0f; color: #ffffff; padding: 40px; border-radius: 16px;">
+          <h1 style="color: #6c63ff; margin-bottom: 8px;">Nova Candidatura de Booster 🎮</h1>
+          <p style="color: #ffffffa0; font-size: 16px;">Um novo jogador se candidatou para ser booster na EloDark.</p>
+          <div style="background: #ffffff08; border: 1px solid #6c63ff40; border-radius: 12px; padding: 20px; margin: 24px 0;">
+            <p style="margin: 6px 0; color: #ffffffa0;"><strong style="color: #fff;">Nome:</strong> ${data.name}</p>
+            <p style="margin: 6px 0; color: #ffffffa0;"><strong style="color: #fff;">Email:</strong> ${data.email}</p>
+            <p style="margin: 6px 0; color: #ffffffa0;"><strong style="color: #fff;">Jogo:</strong> ${data.game}</p>
+            <p style="margin: 6px 0; color: #ffffffa0;"><strong style="color: #fff;">Nick:</strong> ${data.nick}</p>
+            <p style="margin: 6px 0; color: #ffffffa0;"><strong style="color: #fff;">Rank Máximo:</strong> ${data.rank}</p>
+            <p style="margin: 6px 0; color: #ffffffa0;"><strong style="color: #fff;">Discord:</strong> ${data.discord}</p>
+            ${data.proof_link ? `<p style="margin: 6px 0; color: #ffffffa0;"><strong style="color: #fff;">Comprovação:</strong> <a href="${data.proof_link}" style="color: #6c63ff;">${data.proof_link}</a></p>` : ""}
+            <p style="margin: 6px 0; color: #ffffffa0;"><strong style="color: #fff;">Região:</strong> Brasil (BR)</p>
+          </div>
+          <hr style="border: none; border-top: 1px solid #ffffff10; margin: 24px 0;" />
+          <p style="color: #ffffff30; font-size: 12px; text-align: center;">© EloDark — Painel Administrativo</p>
+        </div>
+      `,
+    });
+    logger.info("Email de candidatura enviado ao admin", { applicant: data.email });
+  } catch (err) {
+    logger.error("Erro ao enviar email de candidatura", err, { applicant: data.email });
+  }
+}
+
 export async function sendOrderStatusUpdate(
   to: string,
   data: { orderId: number; status: string; serviceName?: string }
