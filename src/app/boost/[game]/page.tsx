@@ -139,6 +139,54 @@ function calculateLolBoostPrice(
   return total;
 }
 
+// ── Tabela de preços Valorant (fonte: elovalorant.com.br/js/eloboost2.js) ──
+// Cada entrada é o custo para avançar UMA divisão a partir daquela posição.
+// Sequência: Ferro 1→2→3, Bronze 1→2→3, Prata, Ouro, Platina, Diamante,
+//            Ascendente, Imortal 1→2→3 (i3=180), Radiante
+const valorantPriceSteps: number[] = [
+  1,  1,  1,   // Ferro
+  6,  6,  6,   // Bronze
+  10, 10, 10,  // Prata
+  18, 18, 18,  // Ouro
+  23, 23, 23,  // Platina
+  42, 42, 42,  // Diamante
+  59, 59, 59,  // Ascendente
+  99, 99, 180, // Imortal (i3 inclui transição para Radiante)
+  1,           // Radiante (placeholder)
+];
+
+// ── Cálculo de preço Valorant ──
+// Cada rank tem 3 divisões (1=mais baixa, 3=mais alta), Radiante tem 1.
+// No sistema interno: div=4 → posição 0 (mais baixa), div=3 → 1, div=2 → 2.
+function calculateValorantBoostPrice(
+  fromRankId: string,
+  fromDiv: number,
+  toRankId: string,
+  toDiv: number,
+  ranks: RankInfo[]
+): number {
+  function toLinearIndex(rankId: string, div: number): number {
+    let total = 0;
+    for (const rank of ranks) {
+      if (rank.id === rankId) {
+        if (rank.divisions === 1) return total;
+        const pos = [4, 3, 2].indexOf(div);
+        return total + (pos >= 0 ? pos : 0);
+      }
+      total += rank.divisions;
+    }
+    return total;
+  }
+
+  const fromIdx = toLinearIndex(fromRankId, fromDiv);
+  const toIdx   = toLinearIndex(toRankId, toDiv);
+  if (toIdx <= fromIdx) return 0;
+
+  let sum = 0;
+  for (let i = fromIdx; i < toIdx; i++) sum += valorantPriceSteps[i] ?? 0;
+  return sum;
+}
+
 const gameTitles: Record<string, string> = {
   "league-of-legends": "League of Legends",
   valorant: "Valorant",
@@ -146,7 +194,7 @@ const gameTitles: Record<string, string> = {
 };
 
 // Jogos que suportam precificação dinâmica
-const gamesWithPricing = new Set(["league-of-legends"]);
+const gamesWithPricing = new Set(["league-of-legends", "valorant"]);
 
 export default function OrderConfiguratorPage() {
   const params = useParams();
@@ -172,19 +220,30 @@ export default function OrderConfiguratorPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
+  function getDivLabel(div: number): string {
+    if (gameSlug === "valorant") {
+      const map: Record<number, string> = { 4: "1", 3: "2", 2: "3", 1: "3" };
+      return map[div] ?? String(div);
+    }
+    return divisionLabels[divisionValues.indexOf(div)];
+  }
+  const showLpRanges = hasDynamicPricing && gameSlug !== "valorant";
+
   const currentRankData = ranks.find(r => r.id === currentRank) || ranks[0];
   const desiredRankData = ranks.find(r => r.id === desiredRank) || ranks[ranks.length - 1];
 
   // Quando muda o rank atual, ajustar divisão se necessário
   useEffect(() => {
-    if (currentDiv > currentRankData.divisions) {
-      setCurrentDiv(currentRankData.divisions);
+    const validDivs = divisionValues.slice(0, currentRankData.divisions);
+    if (!validDivs.includes(currentDiv)) {
+      setCurrentDiv(currentRankData.divisions > 1 ? 4 : 1);
     }
   }, [currentRank, currentRankData.divisions, currentDiv]);
 
   useEffect(() => {
-    if (desiredDiv > desiredRankData.divisions) {
-      setDesiredDiv(desiredRankData.divisions);
+    const validDivs = divisionValues.slice(0, desiredRankData.divisions);
+    if (!validDivs.includes(desiredDiv)) {
+      setDesiredDiv(desiredRankData.divisions > 1 ? 4 : 1);
     }
   }, [desiredRank, desiredRankData.divisions, desiredDiv]);
 
@@ -196,7 +255,7 @@ export default function OrderConfiguratorPage() {
       // Mover desired para o próximo rank válido
       if (ci < ranks.length - 1) {
         setDesiredRank(ranks[ci + 1].id);
-        setDesiredDiv(ranks[ci + 1].divisions);
+        setDesiredDiv(ranks[ci + 1].divisions > 1 ? 4 : 1);
       } else {
         setDesiredDiv(1);
       }
@@ -206,13 +265,16 @@ export default function OrderConfiguratorPage() {
   // ── Cálculo de preço ──
   const basePrice = useMemo(() => {
     if (!hasDynamicPricing) return 32.0;
+    if (gameSlug === "valorant") {
+      return calculateValorantBoostPrice(currentRank, currentDiv, desiredRank, desiredDiv, ranks);
+    }
     return calculateLolBoostPrice(
       currentRank, currentDiv,
       desiredRank, desiredDiv,
       lpRanges[lpRange].discount,
       ranks
     );
-  }, [currentRank, currentDiv, desiredRank, desiredDiv, lpRange, hasDynamicPricing, ranks]);
+  }, [currentRank, currentDiv, desiredRank, desiredDiv, lpRange, hasDynamicPricing, gameSlug, ranks]);
 
   const duoPrice = options.duoQueue ? basePrice * 0.65 : 0;
   const rolePrice = options.selectRole ? basePrice * 0.15 : 0;
@@ -237,13 +299,13 @@ export default function OrderConfiguratorPage() {
   function handleSelectCurrentRank(rankId: string) {
     setCurrentRank(rankId);
     const r = ranks.find(r => r.id === rankId);
-    if (r) setCurrentDiv(r.divisions);
+    if (r) setCurrentDiv(r.divisions > 1 ? 4 : 1);
   }
 
   function handleSelectDesiredRank(rankId: string) {
     setDesiredRank(rankId);
     const r = ranks.find(r => r.id === rankId);
-    if (r) setDesiredDiv(1);
+    if (r) setDesiredDiv(r.divisions > 1 ? 4 : 1);
   }
 
   async function handleCheckout() {
@@ -252,10 +314,10 @@ export default function OrderConfiguratorPage() {
     setCheckoutError(null);
     try {
       const currentLabel = currentRankData.divisions > 1
-        ? `${currentRankData.label} ${divisionLabels[divisionValues.indexOf(currentDiv)]}`
+        ? `${currentRankData.label} ${getDivLabel(currentDiv)}`
         : currentRankData.label;
       const desiredLabel = desiredRankData.divisions > 1
-        ? `${desiredRankData.label} ${divisionLabels[divisionValues.indexOf(desiredDiv)]}`
+        ? `${desiredRankData.label} ${getDivLabel(desiredDiv)}`
         : desiredRankData.label;
 
       const res = await fetch("/api/checkout/create-session", {
@@ -297,10 +359,10 @@ export default function OrderConfiguratorPage() {
 
   // Labels para o resumo
   const currentSummaryLabel = currentRankData.divisions > 1
-    ? `${currentRankData.label} ${divisionLabels[divisionValues.indexOf(currentDiv)]}`
+    ? `${currentRankData.label} ${getDivLabel(currentDiv)}`
     : currentRankData.label;
   const desiredSummaryLabel = desiredRankData.divisions > 1
-    ? `${desiredRankData.label} ${divisionLabels[divisionValues.indexOf(desiredDiv)]}`
+    ? `${desiredRankData.label} ${getDivLabel(desiredDiv)}`
     : desiredRankData.label;
 
   return (
@@ -376,14 +438,14 @@ export default function OrderConfiguratorPage() {
                                 : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
                             }`}
                           >
-                            {divisionLabels[divisionValues.indexOf(d)]}
+                            {getDivLabel(d)}
                           </button>
                         ))}
                       </div>
                     </div>
                   )}
 
-                  {hasDynamicPricing && (
+                  {showLpRanges && (
                     <div>
                       <span className="text-xs font-bold text-white/40 uppercase tracking-wider mb-2 block">PDL Atual</span>
                       <div className="flex gap-2 flex-wrap">
@@ -487,7 +549,7 @@ export default function OrderConfiguratorPage() {
                                 : "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
                           }`}
                         >
-                          {divisionLabels[divisionValues.indexOf(d)]}
+                          {getDivLabel(d)}
                         </button>
                       );
                     })}
