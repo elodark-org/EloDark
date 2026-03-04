@@ -810,7 +810,7 @@ export default function OrderConfiguratorPage() {
                 <div className="glass-card p-5 rounded-xl border border-primary/20 flex items-center justify-between">
                   <div>
                     <p className="font-bold">{md5Partidas} Partidas Qualificatórias</p>
-                    <p className="text-sm text-white/50">Serviço Solo ou Duo disponível</p>
+                    <p className="text-sm text-white/50">Serviço Solo</p>
                   </div>
                   <div className="text-3xl font-black text-primary">R$ {md5Price.toFixed(2)}</div>
                 </div>
