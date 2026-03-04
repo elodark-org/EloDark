@@ -144,7 +144,7 @@ export default function BoostersPage() {
               Candidatar-se
             </Link>
             <Link
-              href="/boost/lol"
+              href="/boost/league-of-legends"
               className="px-8 py-3 glass-card border border-white/10 hover:bg-white/10 text-white font-bold rounded-xl transition-all text-sm text-center"
             >
               Contratar um Booster

@@ -255,7 +255,10 @@ const gamesWithPricing = new Set(["league-of-legends", "valorant"]);
 
 export default function OrderConfiguratorPage() {
   const params = useParams();
-  const gameSlug = params.game as string;
+  const rawSlug = params.game as string;
+  // Aliases: lol → league-of-legends, val → valorant
+  const slugAliases: Record<string, string> = { lol: "league-of-legends", val: "valorant" };
+  const gameSlug = slugAliases[rawSlug] ?? rawSlug;
   const gameTitle = gameTitles[gameSlug] || gameSlug;
   const hasDynamicPricing = gamesWithPricing.has(gameSlug);
 
