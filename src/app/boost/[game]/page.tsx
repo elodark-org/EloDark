@@ -589,8 +589,8 @@ export default function OrderConfiguratorPage() {
                     <Icon name="person_pin" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm">Escolher Role</h4>
-                    <p className="text-xs text-white/50">Mid, Top, Jung, etc.</p>
+                    <h4 className="font-bold text-sm">{gameSlug === "valorant" ? "Escolher Agente" : "Escolher Role"}</h4>
+                    <p className="text-xs text-white/50">{gameSlug === "valorant" ? "Duelista, Sentinela, etc." : "Mid, Top, Jung, etc."}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -722,7 +722,7 @@ export default function OrderConfiguratorPage() {
                   )}
                   {options.selectRole && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-white/60">Seleção de Role (+15%)</span>
+                      <span className="text-white/60">{gameSlug === "valorant" ? "Escolha de Agente (+15%)" : "Seleção de Role (+15%)"}</span>
                       <span className="font-medium">R$ {rolePrice.toFixed(2)}</span>
                     </div>
                   )}
