@@ -225,6 +225,11 @@ const coachPackages = [
   { label: "Coach para Equipes", desc: "Análise estratégica, comunicação e mentalidade de equipe", price: 149 },
 ];
 
+// ── Preços de MD10 LoL por elo (10 partidas qualificatórias) ──
+const lolMd10Prices: Record<string, number> = {
+  iron: 39, bronze: 44, silver: 49, gold: 59, platinum: 74, emerald: 99, diamond: 139, master: 179,
+};
+
 // ── Preços de Vitórias LoL (fonte: elorocket.com, valores em R$) ──
 const lolWinPrices: Record<string, number> = {
   iron: 3, bronze: 5, silver: 8, gold: 12, platinum: 18, emerald: 25, diamond: 40, master: 70,
@@ -281,7 +286,7 @@ export default function OrderConfiguratorPage() {
   // Dados específicos por jogo para MD5/Vitórias/Coach
   const winPrices = gameSlug === "league-of-legends" ? lolWinPrices : valorantWinPrices;
   const activeCoachPackages = gameSlug === "league-of-legends" ? lolCoachPackages : coachPackages;
-  const md5Price = gameSlug === "league-of-legends" ? 59 : 45;
+  const md5Price = gameSlug === "league-of-legends" ? (lolMd10Prices[currentRank] ?? 59) : 45;
   const md5Partidas = gameSlug === "league-of-legends" ? 10 : 5;
 
   function getDivLabel(div: number): string {
@@ -330,7 +335,7 @@ export default function OrderConfiguratorPage() {
   const basePrice = useMemo(() => {
     const _winPrices = gameSlug === "league-of-legends" ? lolWinPrices : valorantWinPrices;
     const _coachPkgs = gameSlug === "league-of-legends" ? lolCoachPackages : coachPackages;
-    const _md5Price = gameSlug === "league-of-legends" ? 59 : 45;
+    const _md5Price = gameSlug === "league-of-legends" ? (lolMd10Prices[currentRank] ?? 59) : 45;
     if (serviceType === "md5") return _md5Price;
     if (serviceType === "vitorias") return (_winPrices[currentRank] ?? 2) * winsQuantity;
     if (serviceType === "coach") return _coachPkgs[coachPackageIndex].price;
