@@ -48,8 +48,8 @@ export async function POST(req: NextRequest) {
     const serviceNames: Record<(typeof VALID_SERVICE_TYPES)[number], string> = {
       "elo-boost": "Elo Boost",
       "duo-boost": "Duo Boost",
-      "md10": "MD10 (Placement)",
-      "wins": "Vitórias",
+      "md5": "MD5 (Partidas de Colocação)",
+      "vitorias": "Vitórias",
       "coach": "Coach",
     };
 

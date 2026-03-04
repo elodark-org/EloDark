@@ -12,7 +12,6 @@ import type { Order } from "@/types";
 
 const STATUS_TABS = [
   "all",
-  "pending",
   "active",
   "available",
   "in_progress",
@@ -36,7 +35,7 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState<string>("active");
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [assignInputs, setAssignInputs] = useState<Record<number, string>>({});
   const [statusMenuOpen, setStatusMenuOpen] = useState<number | null>(null);

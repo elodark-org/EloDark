@@ -25,12 +25,14 @@ export async function GET(req: NextRequest) {
         ORDER BY o.created_at DESC
       `;
     } else {
+      // Por padrão, exibe apenas pedidos pagos (status != pending)
       orders = await sql`
         SELECT o.*, u.name as user_name, u.email as user_email,
                b.game_name as booster_name
         FROM orders o
         LEFT JOIN users u ON u.id = o.user_id
         LEFT JOIN boosters b ON b.id = o.booster_id
+        WHERE o.status != 'pending'
         ORDER BY o.created_at DESC
       `;
     }

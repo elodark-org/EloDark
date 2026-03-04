@@ -1,8 +1,8 @@
 export const VALID_SERVICE_TYPES = [
   "elo-boost",
   "duo-boost",
-  "md10",
-  "wins",
+  "md5",
+  "vitorias",
   "coach",
 ] as const;
 
