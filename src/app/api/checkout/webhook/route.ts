@@ -35,11 +35,41 @@ export async function POST(req: NextRequest) {
 
     if (orderId !== null && session.payment_status === "paid") {
       try {
+        // Buscar pedido no banco para validar o valor
+        const [order] = await sql`
+          SELECT id, price, status FROM orders WHERE id = ${orderId}
+        `;
+
+        if (!order) {
+          logger.error("Webhook: pedido não encontrado", { orderId });
+          return NextResponse.json({ received: true }); // retorna 200 para Stripe não reenviar
+        }
+
+        // Validar valor pago (Stripe envia em centavos)
+        const paidAmountCents = session.amount_total ?? 0;
+        const expectedAmountCents = Math.round(parseFloat(order.price) * 100);
+        const diff = Math.abs(paidAmountCents - expectedAmountCents);
+
+        if (diff > 1) { // tolerancia de 1 centavo para arredondamento
+          logger.error("Webhook: valor pago diverge do pedido", {
+            orderId,
+            paidAmountCents,
+            expectedAmountCents,
+          });
+          // Marcar como suspeito em vez de ativar
+          await sql`
+            UPDATE orders SET status = 'cancelled', notes = ${'FRAUDE: valor pago (' + (paidAmountCents / 100).toFixed(2) + ') difere do pedido (' + (expectedAmountCents / 100).toFixed(2) + ')'}, updated_at = NOW()
+            WHERE id = ${orderId} AND status = 'pending'
+          `;
+          return NextResponse.json({ received: true });
+        }
+
+        // Valor confere — ativar pedido
         await sql`
           UPDATE orders SET status = 'active', updated_at = NOW()
           WHERE id = ${orderId} AND status = 'pending'
         `;
-        logger.info("Pedido pago confirmado via Stripe", { orderId });
+        logger.info("Pedido pago confirmado via Stripe", { orderId, amountBRL: paidAmountCents / 100 });
       } catch (err) {
         logger.error("Falha ao atualizar pedido após webhook Stripe", err, { orderId });
         return NextResponse.json({ error: "Falha ao processar webhook" }, { status: 500 });
