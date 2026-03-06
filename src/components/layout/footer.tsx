@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 
 const footerLinks = [
-  { href: "#", label: "Termos de Serviço" },
-  { href: "#", label: "Política de Privacidade" },
+  { href: "/termos", label: "Termos de Uso" },
+  { href: "/privacidade", label: "Política de Privacidade" },
   { href: "#", label: "Política de Reembolso" },
   { href: "#", label: "Suporte" },
 ];
@@ -55,6 +55,19 @@ export function Footer() {
           &copy; {new Date().getFullYear()} EloDark Elite Boosting. O padrão
           premium em excelência gamer.
         </p>
+
+        {/* Riot Games Disclaimer */}
+        <div className="border-t border-white/5 pt-6 w-full flex flex-col sm:flex-row items-center gap-4 max-w-2xl mx-auto">
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/assets/logo.png" alt="EloDark" className="w-8 h-8 rounded-lg object-cover opacity-60" style={{ objectPosition: "center 20%" }} />
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">EloDark</span>
+          </div>
+          <p className="text-gray-600 text-xs leading-relaxed text-center sm:text-left">
+            League of Legends and Valorant are registered trademarks of Riot Games, Inc.
+            We are in no way affiliated with, associated with or endorsed by Riot Games, Inc.
+          </p>
+        </div>
       </div>
     </footer>
   );

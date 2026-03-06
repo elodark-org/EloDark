@@ -28,7 +28,7 @@ const faqItems: FAQItem[] = [
   {
     question: "Quais métodos de pagamento vocês aceitam?",
     answer:
-      "Aceitamos todos os principais cartões de Crédito/Débito, PayPal e diversas Criptomoedas (BTC, ETH, USDT). Todas as transações são processadas por gateways seguros e criptografados para garantir que seus dados financeiros nunca sejam armazenados em nossos servidores.",
+      "Aceitamos cartões de Crédito e Débito (Visa, Mastercard, American Express, Elo), Apple Pay, Google Pay, Link e carteiras digitais. Todos os pagamentos são processados pela Stripe, uma das plataformas de pagamento mais seguras do mundo, com criptografia de nível bancário. Seus dados financeiros nunca são armazenados em nossos servidores."
   },
 ];
 
