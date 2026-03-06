@@ -4,7 +4,7 @@ import { Icon } from "@/components/ui/icon";
 const footerLinks = [
   { href: "/termos", label: "Termos de Uso" },
   { href: "/privacidade", label: "Política de Privacidade" },
-  { href: "#", label: "Política de Reembolso" },
+  { href: "/reembolso", label: "Política de Reembolso" },
   { href: "#", label: "Suporte" },
 ];
 
