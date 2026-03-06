@@ -19,10 +19,9 @@ export function Footer() {
     <footer className="border-t border-white/5 bg-[#050508] py-12">
       <div className="max-w-7xl mx-auto px-6 flex flex-col items-center gap-8">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center size-8 rounded-lg bg-gradient-to-br from-primary to-accent-purple">
-            <Icon name="bolt" className="text-white" size={18} />
-          </div>
+        <div className="flex items-center gap-2.5">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assets/logo.png" alt="EloDark" className="w-9 h-9 rounded-xl object-cover shadow-[0_0_12px_rgba(168,85,247,0.4)]" style={{ objectPosition: "center 20%" }} />
           <span className="text-lg font-bold text-white">EloDark</span>
         </div>
 

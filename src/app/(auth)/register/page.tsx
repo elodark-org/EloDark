@@ -59,10 +59,9 @@ export default function RegisterPage() {
 
       <div className="w-full max-w-md relative z-10">
         {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-3 mb-10">
-          <div className="flex items-center justify-center size-10 rounded-lg bg-gradient-to-br from-primary to-accent-purple shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-            <Icon name="bolt" className="text-white" size={24} />
-          </div>
+        <Link href="/" className="flex items-center justify-center gap-2.5 mb-10">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assets/logo.png" alt="EloDark" className="w-10 h-10 rounded-xl object-cover shadow-[0_0_16px_rgba(168,85,247,0.5)]" style={{ objectPosition: "center 20%" }} />
           <span className="text-2xl font-bold text-white">EloDark</span>
         </Link>
 

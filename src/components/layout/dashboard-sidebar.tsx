@@ -51,17 +51,12 @@ export function DashboardSidebar() {
   return (
     <aside className="w-64 border-r border-white/5 bg-bg-primary/80 backdrop-blur-xl flex flex-col shrink-0 hidden lg:flex">
       {/* Logo */}
-      <div className="p-6 flex items-center gap-3">
-        <div className="size-10 bg-primary flex items-center justify-center rounded-lg shadow-[0_0_15px_rgba(46,123,255,0.5)]">
-          <Icon name="bolt" className="text-bg-primary font-bold" />
-        </div>
+      <div className="p-6 flex items-center gap-2.5">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/logo.png" alt="EloDark" className="w-10 h-10 rounded-xl object-cover shadow-[0_0_14px_rgba(168,85,247,0.5)]" style={{ objectPosition: "center 20%" }} />
         <div>
-          <Link href="/" className="text-xl font-bold tracking-tighter">
-            EloDark
-          </Link>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-primary/80 font-semibold">
-            Elite Boosting
-          </p>
+          <Link href="/" className="text-xl font-bold tracking-tighter">EloDark</Link>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-primary/80 font-semibold">Elite Boosting</p>
         </div>
       </div>
 

@@ -35,19 +35,19 @@ const faqItems: FAQItem[] = [
 function FAQAccordion({ item, defaultOpen }: { item: FAQItem; defaultOpen?: boolean }) {
   return (
     <details
-      className="group glass-panel rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_20px_rgba(46,123,255,0.2)] hover:border-primary/40"
+      className="group glass-panel rounded-xl overflow-hidden transition-all duration-300 hover:border-primary/30 hover:shadow-[0_0_20px_rgba(236,19,236,0.1)] border border-white/5"
       open={defaultOpen}
     >
       <summary className="flex cursor-pointer items-center justify-between p-6 list-none">
-        <span className="text-white text-lg font-semibold tracking-wide pr-4">
+        <span className="text-white text-base font-semibold tracking-wide pr-4">
           {item.question}
         </span>
-        <div className="text-primary group-open:rotate-180 transition-transform duration-300 flex items-center justify-center shrink-0">
-          <Icon name="expand_more" size={24} />
+        <div className="text-primary group-open:rotate-180 transition-transform duration-300 flex items-center justify-center shrink-0 w-8 h-8 rounded-full bg-primary/10 border border-primary/20">
+          <Icon name="expand_more" size={20} />
         </div>
       </summary>
       <div className="px-6 pb-6">
-        <p className="text-gray-400 leading-relaxed border-t border-white/5 pt-4">
+        <p className="text-gray-400 leading-relaxed border-t border-white/5 pt-4 text-sm">
           {item.answer}
         </p>
       </div>
@@ -57,46 +57,19 @@ function FAQAccordion({ item, defaultOpen }: { item: FAQItem; defaultOpen?: bool
 
 export function FAQ() {
   return (
-    <section id="faq" className="relative z-10 py-16 lg:py-24 px-6">
-      {/* Ambient */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent-purple/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent-cyan/10 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="max-w-4xl mx-auto relative z-10 flex flex-col items-center">
+    <section id="faq" className="relative z-10 py-14 px-6 border-t border-white/5">
+      <div className="max-w-3xl mx-auto relative z-10 flex flex-col gap-6">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-gradient bg-gradient-to-r from-accent-purple to-accent-cyan text-4xl lg:text-6xl font-black mb-4 tracking-tighter">
-            Perguntas Frequentes
-          </h2>
-          <p className="text-gray-400 text-lg lg:text-xl max-w-2xl mx-auto font-light">
-            Tudo o que você precisa saber sobre nossos serviços de boost de elite. Seguro,
-            rápido e profissional.
-          </p>
+        <div>
+          <h2 className="text-2xl lg:text-3xl font-black text-white tracking-tight mb-1">FAQ</h2>
+          <p className="text-gray-400 text-sm">Dúvidas frequentes sobre nossos serviços.</p>
         </div>
 
         {/* Accordions */}
-        <div className="w-full flex flex-col gap-4">
+        <div className="w-full flex flex-col gap-2">
           {faqItems.map((item, i) => (
             <FAQAccordion key={i} item={item} defaultOpen={i === 0} />
           ))}
-        </div>
-
-        {/* Footer CTA */}
-        <div className="mt-12 text-center">
-          <p className="text-gray-400 text-base flex items-center justify-center gap-2">
-            Ainda tem dúvidas?
-            <Link
-              href="#"
-              className="text-primary font-bold hover:text-accent-cyan transition-colors flex items-center gap-1 group"
-            >
-              Fale com nosso Suporte 24/7
-              <Icon
-                name="arrow_forward"
-                size={14}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </Link>
-          </p>
         </div>
       </div>
     </section>

@@ -1,29 +1,27 @@
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import type { Step } from "@/types";
 
 const steps: Step[] = [
   {
     number: "01",
     title: "Escolha Seu Boost",
-    description:
-      "Selecione seu rank atual, objetivo desejado e personalize seu pedido. Escolha agentes, campeões ou opções de duo queue específicos.",
+    description: "Escolha seu rank atual e o rank desejado.",
     icon: "ads_click",
     color: "purple",
   },
   {
     number: "02",
     title: "Encontramos Seu Pro",
-    description:
-      "Nosso algoritmo inteligente designa instantaneamente um booster Challenger de alto nível. Sua conta é 100% anônima e protegida por VPN.",
+    description: "Encontramos Seu Pro",
     icon: "shield_person",
     color: "cyan",
   },
   {
     number: "03",
     title: "Acompanhe e Domine",
-    description:
-      "Veja seu rank subir em tempo real pelo seu painel privado. Converse com seu booster e reconquiste seu lugar merecido no ranking.",
+    description: "Acompanhe e Domine",
     icon: "rocket_launch",
     color: "gold",
   },
@@ -32,125 +30,103 @@ const steps: Step[] = [
 const colorMap = {
   purple: {
     text: "text-accent-purple",
-    border: "border-accent-purple",
-    hoverBorder: "hover:border-accent-purple/50",
-    bg: "from-[#2a1a35] to-bg-primary",
-    shadow: "shadow-[0_0_20px_rgba(168,85,247,0.3)]",
-    glow: "bg-accent-purple/20",
+    border: "border-accent-purple/40",
+    iconBg: "bg-accent-purple/15",
+    glow: "rgba(168,85,247,0.3)",
   },
   cyan: {
     text: "text-accent-cyan",
-    border: "border-accent-cyan",
-    hoverBorder: "hover:border-accent-cyan/50",
-    bg: "from-[#1a2a35] to-bg-primary",
-    shadow: "shadow-[0_0_20px_rgba(0,212,255,0.3)]",
-    glow: "bg-accent-cyan/20",
+    border: "border-accent-cyan/40",
+    iconBg: "bg-accent-cyan/15",
+    glow: "rgba(0,212,255,0.3)",
   },
   gold: {
     text: "text-accent-gold",
-    border: "border-accent-gold",
-    hoverBorder: "hover:border-accent-gold/50",
-    bg: "from-[#352a1a] to-bg-primary",
-    shadow: "shadow-[0_0_20px_rgba(255,215,0,0.3)]",
-    glow: "bg-accent-gold/20",
+    border: "border-accent-gold/40",
+    iconBg: "bg-accent-gold/15",
+    glow: "rgba(255,215,0,0.25)",
   },
 };
 
 const trustBadges = [
-  { icon: "vpn_key", label: "Proteção VPN", color: "text-accent-cyan" },
-  { icon: "support_agent", label: "Suporte 24/7", color: "text-accent-purple" },
-  { icon: "currency_exchange", label: "Garantia de Reembolso", color: "text-accent-gold" },
-  { icon: "lock", label: "Criptografia SSL", color: "text-green-400" },
+  { icon: "vpn_key", label: "Proteção VPN" },
+  { icon: "support_agent", label: "Suporte 24/7" },
+  { icon: "currency_exchange", label: "Garantia de Reembolso" },
 ];
-
-function StepCard({ step }: { step: Step }) {
-  const c = colorMap[step.color];
-
-  return (
-    <div className="group relative">
-      <div
-        className={`absolute inset-0 ${c.glow} blur-[40px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-      />
-      <div
-        className={`relative h-full glass-panel rounded-2xl p-8 flex flex-col items-center text-center ${c.hoverBorder} transition-colors duration-300`}
-      >
-        {/* Hexagon Icon */}
-        <div className="absolute -top-10">
-          <div
-            className={`hexagon w-20 h-24 bg-gradient-to-b ${c.bg} border-2 ${c.border} flex items-center justify-center ${c.shadow}`}
-          >
-            <Icon name={step.icon} className={`${c.text} text-4xl`} />
-          </div>
-        </div>
-
-        <div className="mt-12 space-y-4">
-          <span className={`${c.text} font-bold tracking-widest text-sm uppercase`}>
-            Passo {step.number}
-          </span>
-          <h3 className="text-2xl font-bold text-white">{step.title}</h3>
-          <p className="text-gray-400 leading-relaxed">{step.description}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative z-10 py-20 px-4 overflow-hidden"
+      className="relative z-10 py-16 px-4 overflow-hidden border-t border-white/5"
     >
-      {/* Ambient Glows */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent-purple/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-accent-cyan/5 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="max-w-7xl w-full mx-auto relative z-10 flex flex-col gap-16">
+      <div className="max-w-7xl mx-auto relative z-10 flex flex-col gap-10">
         {/* Header */}
-        <div className="text-center space-y-4">
-          <h2 className="text-5xl md:text-6xl font-bold tracking-tight">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent-purple via-primary to-accent-cyan">
-              COMO FUNCIONA
+        <div className="text-center space-y-2">
+          <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight uppercase">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent-purple">
+              Como Funciona
             </span>
           </h2>
-          <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto font-light">
-            Suba de elo em 3 passos simples. Seguro, anônimo e mais rápido que a
-            velocidade da luz.
+          <p className="text-gray-400 text-base max-w-xl mx-auto font-light">
+            Suba de elo em 3 passos simples. Seguro, rápido e anônimo.
           </p>
         </div>
 
-        {/* Steps */}
-        <div className="relative mt-10">
-          {/* Connecting Line (Desktop) */}
-          <div className="hidden lg:block absolute top-1/2 left-0 w-full h-[2px] -translate-y-1/2 z-0">
-            <div className="w-full h-full bg-white/5 rounded-full" />
-            <div className="absolute top-0 left-0 h-full w-full animated-gradient-line opacity-50 blur-[1px]" />
-          </div>
+        {/* Steps — horizontal */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
+          {steps.map((step, i) => {
+            const c = colorMap[step.color];
+            return (
+              <div key={step.number} className="group relative flex flex-col items-center text-center gap-4">
+                {/* Icon */}
+                <div
+                  className={`w-16 h-16 rounded-xl ${c.iconBg} border ${c.border} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                  style={{ boxShadow: `0 0 20px ${c.glow}` }}
+                >
+                  <Icon name={step.icon} className={`${c.text} text-2xl`} />
+                </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
-            {steps.map((step) => (
-              <StepCard key={step.number} step={step} />
-            ))}
-          </div>
+                {/* Label */}
+                <div>
+                  <p className={`text-xs font-bold uppercase tracking-widest ${c.text} mb-1`}>
+                    Passo {step.number}
+                  </p>
+                  <h3 className="text-lg font-bold text-white">{step.title}</h3>
+                </div>
+
+                {/* Arrow connector (not last) */}
+                {i < 2 && (
+                  <div className="hidden lg:block absolute top-8 left-[calc(50%+3rem)] w-[calc(100%-6rem)] h-px">
+                    <div className="w-full h-full animated-gradient-line opacity-25" />
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 border-r border-t border-primary/40" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* CTA + Trust */}
-        <div className="flex flex-col items-center gap-12 mt-8">
-          <Button
-            size="lg"
-            iconRight="arrow_forward"
-            className="shadow-[0_0_40px_rgba(46,123,255,0.3)] hover:shadow-[0_0_60px_rgba(46,123,255,0.5)] text-lg px-12 py-5"
-          >
-            Comece Seu Boost Agora
-          </Button>
+        {/* CTA */}
+        <div className="flex flex-col items-center gap-6">
+          <Link href="/boost/league-of-legends">
+            <Button
+              size="lg"
+              iconRight="arrow_forward"
+              className="glow-primary shadow-[0_0_30px_rgba(236,19,236,0.3)] hover:shadow-[0_0_50px_rgba(236,19,236,0.5)] text-base px-10 font-bold"
+            >
+              Comece Seu Boost Agora
+            </Button>
+          </Link>
 
-          <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+          {/* Trust badges */}
+          <div className="flex flex-wrap justify-center gap-3">
             {trustBadges.map((badge) => (
               <div
                 key={badge.label}
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-gray-300"
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/4 border border-white/8 hover:border-primary/20 transition-colors text-sm font-medium text-gray-300"
               >
-                <Icon name={badge.icon} className={badge.color} size={18} />
+                <Icon name={badge.icon} className="text-primary" size={15} />
                 {badge.label}
               </div>
             ))}
