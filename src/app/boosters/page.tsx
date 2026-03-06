@@ -131,14 +131,10 @@ export default function BoostersPage() {
                     </div>
 
                     {/* Stats */}
-                    <div className="w-full grid grid-cols-2 gap-2 pt-3 border-t border-white/5">
+                    <div className="w-full pt-3 border-t border-white/5">
                       <div className="bg-white/5 rounded-xl py-2.5">
                         <p className="text-[10px] text-white/30 uppercase font-bold mb-0.5">Win Rate</p>
                         <p className="text-sm font-black text-accent-cyan">{b.win_rate}%</p>
-                      </div>
-                      <div className="bg-white/5 rounded-xl py-2.5">
-                        <p className="text-[10px] text-white/30 uppercase font-bold mb-0.5">Pedidos</p>
-                        <p className="text-sm font-black text-white">{b.games_played ?? 0}</p>
                       </div>
                     </div>
                   </div>
