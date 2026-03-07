@@ -9,7 +9,9 @@ interface JWTPayload {
   role: "user" | "booster" | "admin";
 }
 
-const JWT_SECRET = "elodark-jwt-secret-2025-internal";
+const _jwtSecret = process.env.JWT_SECRET;
+if (!_jwtSecret) throw new Error("JWT_SECRET não configurado nas variáveis de ambiente");
+const JWT_SECRET: string = _jwtSecret;
 
 export function verifyToken(req: NextRequest): JWTPayload | null {
   const header = req.headers.get("authorization");
@@ -46,4 +48,8 @@ export function requireRole(
 
 export function isUser(result: JWTPayload | NextResponse): result is JWTPayload {
   return !(result instanceof NextResponse);
+}
+
+export function signToken(payload: JWTPayload): string {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
 }

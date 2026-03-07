@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { signToken } from "@/lib/auth";
 import { sql } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { isPlainObject, parseNonEmptyString } from "@/lib/validation";
-
-const JWT_SECRET = "elodark-jwt-secret-2025-internal";
 
 export async function POST(req: NextRequest) {
   try {
@@ -51,11 +49,7 @@ export async function POST(req: NextRequest) {
 
     await sql`DELETE FROM pending_registrations WHERE email = ${email}`;
 
-    const token = jwt.sign(
-      { id: user.id, name: user.name, email: user.email, role: user.role },
-      JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = signToken({ id: user.id, name: user.name, email: user.email, role: user.role });
 
     logger.info("Conta criada após verificação de email", { userId: user.id, email });
 

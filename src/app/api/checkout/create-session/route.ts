@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { getPaymentMethodTypes, getStripe } from "@/lib/stripe";
 import { logger } from "@/lib/logger";
+import { calculatePrice } from "@/lib/pricing";
 import {
   isPlainObject,
   isValidServiceType,
   parseOptionalString,
-  parsePrice,
   sanitizeConfig,
   VALID_SERVICE_TYPES,
 } from "@/lib/validation";
@@ -26,12 +26,11 @@ export async function POST(req: NextRequest) {
 
     const serviceType = payload.service_type;
     const config = sanitizeConfig(payload.config);
-    const price = parsePrice(payload.price);
     const customerEmail = parseOptionalString(payload.customer_email, { maxLength: 255 });
     const customerName = parseOptionalString(payload.customer_name, { maxLength: 100 });
 
-    if (!serviceType || price === null) {
-      return NextResponse.json({ error: "service_type e price são obrigatórios" }, { status: 400 });
+    if (!serviceType) {
+      return NextResponse.json({ error: "service_type é obrigatório" }, { status: 400 });
     }
 
     if (!isValidServiceType(serviceType)) {
@@ -41,8 +40,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (price <= 0 || price > 50000) {
-      return NextResponse.json({ error: "Preço inválido. Deve ser entre R$ 0,01 e R$ 50.000,00" }, { status: 400 });
+    // Preço calculado inteiramente no servidor — valor do cliente é ignorado
+    const price = calculatePrice(serviceType, config);
+    if (price === null || price <= 0) {
+      return NextResponse.json(
+        { error: "Configuração de serviço inválida. Verifique o jogo, ranks e opções selecionados." },
+        { status: 400 }
+      );
     }
 
     const serviceNames: Record<(typeof VALID_SERVICE_TYPES)[number], string> = {
