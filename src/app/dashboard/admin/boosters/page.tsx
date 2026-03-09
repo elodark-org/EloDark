@@ -16,7 +16,7 @@ export default function AdminBoostersPage() {
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [addForm, setAddForm] = useState({ user_id: "", game_name: "", rank: "" });
+  const [addForm, setAddForm] = useState({ name: "", email: "", password: "", rank: "" });
   const [addLoading, setAddLoading] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({ game_name: "", rank: "" });
@@ -36,16 +36,17 @@ export default function AdminBoostersPage() {
   }, [authorized, fetchBoosters]);
 
   async function handleAdd() {
-    if (!addForm.user_id || !addForm.game_name || !addForm.rank) return;
+    if (!addForm.name || !addForm.email || !addForm.password || !addForm.rank) return;
     setAddLoading(true);
     try {
       const { booster } = await api.post<{ booster: Booster }>("/admin/boosters", {
-        user_id: Number(addForm.user_id),
-        game_name: addForm.game_name,
+        name: addForm.name,
+        email: addForm.email,
+        password: addForm.password,
         rank: addForm.rank,
       });
       setBoosters((prev) => [booster, ...prev]);
-      setAddForm({ user_id: "", game_name: "", rank: "" });
+      setAddForm({ name: "", email: "", password: "", rank: "" });
       setShowAddForm(false);
     } catch (err) {
       alert(err instanceof Error ? err.message : "Falha ao adicionar booster");
@@ -330,24 +331,34 @@ export default function AdminBoostersPage() {
             <h3 className="text-sm font-bold text-white/60 uppercase tracking-wider">
               Novo Booster
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs text-white/40 mb-1.5">ID do Usuário</label>
+                <label className="block text-xs text-white/40 mb-1.5">Nome</label>
                 <input
-                  type="number"
-                  placeholder="ex: 42"
-                  value={addForm.user_id}
-                  onChange={(e) => setAddForm((f) => ({ ...f, user_id: e.target.value }))}
+                  type="text"
+                  placeholder="ex: João Silva"
+                  value={addForm.name}
+                  onChange={(e) => setAddForm((f) => ({ ...f, name: e.target.value }))}
                   className="w-full px-4 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
                 />
               </div>
               <div>
-                <label className="block text-xs text-white/40 mb-1.5">Nome do Jogo</label>
+                <label className="block text-xs text-white/40 mb-1.5">Email</label>
                 <input
-                  type="text"
-                  placeholder="ex: ShadowStrike"
-                  value={addForm.game_name}
-                  onChange={(e) => setAddForm((f) => ({ ...f, game_name: e.target.value }))}
+                  type="email"
+                  placeholder="ex: booster@email.com"
+                  value={addForm.email}
+                  onChange={(e) => setAddForm((f) => ({ ...f, email: e.target.value }))}
+                  className="w-full px-4 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-white/40 mb-1.5">Senha</label>
+                <input
+                  type="password"
+                  placeholder="mínimo 6 caracteres"
+                  value={addForm.password}
+                  onChange={(e) => setAddForm((f) => ({ ...f, password: e.target.value }))}
                   className="w-full px-4 py-2.5 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
                 />
               </div>
@@ -367,7 +378,7 @@ export default function AdminBoostersPage() {
                 variant="primary"
                 size="sm"
                 icon="add"
-                disabled={addLoading || !addForm.user_id || !addForm.game_name || !addForm.rank}
+                disabled={addLoading || !addForm.name || !addForm.email || !addForm.password || !addForm.rank}
                 onClick={handleAdd}
               >
                 {addLoading ? "Adicionando..." : "Adicionar Booster"}
