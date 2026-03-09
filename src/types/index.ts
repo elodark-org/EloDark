@@ -12,7 +12,7 @@ export interface Game {
 export interface Review {
   id: string;
   name: string;
-  avatar: string;
+  avatar?: string;
   game: string;
   gameColor: string;
   rating: number;

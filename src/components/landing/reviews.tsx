@@ -1,13 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import type { Review } from "@/types";
+
+const avatarColors = ["bg-primary", "bg-accent-cyan", "bg-accent-purple", "bg-accent-gold"];
 
 const reviews: Review[] = [
   {
     id: "1",
     name: "Lucas M.",
-    avatar: "https://api.dicebear.com/9.x/initials/svg?seed=LM&backgroundColor=6366f1&fontFamily=Arial&fontSize=40",
     game: "League of Legends",
     gameColor: "purple",
     rating: 5,
@@ -18,7 +18,6 @@ const reviews: Review[] = [
   {
     id: "2",
     name: "Gabriel S.",
-    avatar: "https://api.dicebear.com/9.x/initials/svg?seed=GS&backgroundColor=06b6d4&fontFamily=Arial&fontSize=40",
     game: "League of Legends",
     gameColor: "purple",
     rating: 5,
@@ -29,7 +28,6 @@ const reviews: Review[] = [
   {
     id: "3",
     name: "Matheus R.",
-    avatar: "https://api.dicebear.com/9.x/initials/svg?seed=MR&backgroundColor=a855f7&fontFamily=Arial&fontSize=40",
     game: "Valorant",
     gameColor: "cyan",
     rating: 5,
@@ -40,7 +38,6 @@ const reviews: Review[] = [
   {
     id: "4",
     name: "Felipe A.",
-    avatar: "https://api.dicebear.com/9.x/initials/svg?seed=FA&backgroundColor=8b5cf6&fontFamily=Arial&fontSize=40",
     game: "Coach",
     gameColor: "purple",
     rating: 5,
@@ -50,7 +47,8 @@ const reviews: Review[] = [
   },
 ];
 
-function ReviewCard({ review }: { review: Review }) {
+function ReviewCard({ review, colorClass }: { review: Review; colorClass: string }) {
+  const initials = review.name.split(" ").map((n) => n[0]).join("").toUpperCase();
   return (
     <div className="flex flex-col p-5 rounded-xl glass-panel border border-white/8 hover:border-primary/20 transition-all duration-300 gap-3">
       {/* Stars */}
@@ -67,8 +65,8 @@ function ReviewCard({ review }: { review: Review }) {
 
       {/* Author */}
       <div className="flex items-center gap-2 pt-2 border-t border-white/5">
-        <div className="relative w-8 h-8 rounded-full overflow-hidden">
-          <Image src={review.avatar} alt={review.name} fill className="object-cover" />
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 ${colorClass}`}>
+          {initials}
         </div>
         <div>
           <p className="text-white text-xs font-bold">{review.name}</p>
@@ -110,8 +108,8 @@ export function Reviews() {
 
           {/* Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
-            {reviews.map((review) => (
-              <ReviewCard key={review.id} review={review} />
+            {reviews.map((review, i) => (
+              <ReviewCard key={review.id} review={review} colorClass={avatarColors[i % avatarColors.length]} />
             ))}
           </div>
 
