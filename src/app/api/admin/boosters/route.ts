@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const name = parseNonEmptyString(payload.name, { minLength: 2, maxLength: 100 });
     const email = parseNonEmptyString(payload.email, { maxLength: 255 })?.toLowerCase();
     const password = parseNonEmptyString(payload.password, { minLength: 6, maxLength: 255 });
-    const gameName = parseNonEmptyString(payload.game_name, { maxLength: 100 });
+    const gameName = parseOptionalString(payload.game_name, { maxLength: 100 }) ?? "";
     const rank = parseNonEmptyString(payload.rank, { maxLength: 50 });
     const winRateParsed =
       payload.win_rate === undefined
@@ -40,8 +40,8 @@ export async function POST(req: NextRequest) {
         ? "🎮"
         : parseOptionalString(payload.avatar_emoji, { maxLength: 10 });
 
-    if (!name || !email || !password || !gameName || !rank) {
-      return NextResponse.json({ error: "name, email, password, game_name e rank são obrigatórios" }, { status: 400 });
+    if (!name || !email || !password || !rank) {
+      return NextResponse.json({ error: "name, email, password e rank são obrigatórios" }, { status: 400 });
     }
     if (
       winRateParsed === null ||
