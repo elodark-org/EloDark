@@ -6,26 +6,46 @@ import type { Review } from "@/types";
 const reviews: Review[] = [
   {
     id: "1",
-    name: "Renaldo Outer",
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuA98Cu7q6XJmUX1ZoGnkkZ_O-dxzfDVEliaK0WkmK1UmHviNxHJqK4goZAfEEDYkjG5ZYvfVMiOg7f0dphaoApTO60d6hyheU4pezTvS8_9rjzpKVN78sDCPgqgYfLS9pOYteccfZPHroSnioHcNfCYPncW4wCQB9whr7xSnmGRNEA9mWFyJEwLqvFc0sD4odxiBKoFmNH8sAgJIHPi2x_Z5_y3NtyrKiwX_oPZe6C4ufyfVUWedfic9kW3zEZ8dA4DFGmFuuJMSTj2",
+    name: "Lucas M.",
+    avatar: "https://api.dicebear.com/9.x/initials/svg?seed=LM&backgroundColor=6366f1&fontFamily=Arial&fontSize=40",
     game: "League of Legends",
     gameColor: "purple",
     rating: 5,
-    text: "Velocidade insana. Me levou do Prata ao Platina em uma semana. O booster foi super tranquilo e me deu dicas durante o processo.",
-    date: "2 dias atrás",
+    text: "No início tive um pouco de dúvida... Mas o trabalho foi feito 100% de confiança.",
+    date: "via Instagram",
     verified: true,
   },
   {
     id: "2",
-    name: "Catharina L.",
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDodNiWoNS4IKPx127R0Nb4Qpi5BGm3Wdvrs6dNHKuYWzIQlX-YjALYp9lgVWKbGV-AKAyG1lrz7NCeGvAQOhEcnu6T4_584QJhG-wOEV8l06_2gehdjLBn7EUrBIlQnQDRbPN_qIC_TOfV44DbJnj1PDJjsaShwN9ZKQiaw2pi3jFPYbRAGAIqsAqnAMiSXPoTx5S260muwUM81_PSQN5Xc9gMgpUSFuh-Z374O9vQs-dOG874cHj8UelhC8Fc96N3ZK5zEOXa1Ll7",
+    name: "Gabriel S.",
+    avatar: "https://api.dicebear.com/9.x/initials/svg?seed=GS&backgroundColor=06b6d4&fontFamily=Arial&fontSize=40",
+    game: "League of Legends",
+    gameColor: "purple",
+    rating: 5,
+    text: "O booster era muito educado e me deu dicas durante o jogo. Pretendo comprar de novo, adorei o serviço.",
+    date: "via Instagram",
+    verified: true,
+  },
+  {
+    id: "3",
+    name: "Matheus R.",
+    avatar: "https://api.dicebear.com/9.x/initials/svg?seed=MR&backgroundColor=a855f7&fontFamily=Arial&fontSize=40",
     game: "Valorant",
     gameColor: "cyan",
     rating: 5,
-    text: "Estava cética no início, mas a opção de duo queue é real. Aprendi muito enquanto subia de rank. O suporte estava sempre disponível.",
-    date: "1 semana atrás",
+    text: "Gostei do serviço de vocês, foram rápido e discretos. Parabéns!",
+    date: "via Instagram",
+    verified: true,
+  },
+  {
+    id: "4",
+    name: "Felipe A.",
+    avatar: "https://api.dicebear.com/9.x/initials/svg?seed=FA&backgroundColor=8b5cf6&fontFamily=Arial&fontSize=40",
+    game: "Coach",
+    gameColor: "purple",
+    rating: 5,
+    text: "Essa foi minha primeira experiência com coach e foi incrível. O coach foi super atencioso e muito preocupado com a minha evolução. Isso é um diferencial enorme na empresa de vocês!",
+    date: "via Instagram",
     verified: true,
   },
 ];
@@ -95,6 +115,7 @@ export function Reviews() {
             ))}
           </div>
 
+
           {/* Arrow nav */}
           <button className="hidden lg:flex items-center justify-center w-10 h-10 rounded-full border border-white/10 hover:border-primary/40 hover:bg-primary/10 transition-all text-white/60 hover:text-white">
             <Icon name="chevron_right" size={20} />
@@ -104,11 +125,13 @@ export function Reviews() {
         {/* CTA */}
         <div className="flex justify-center">
           <Link
-            href="#"
+            href="https://www.instagram.com/elodark1/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group flex items-center gap-2 px-6 py-2.5 bg-primary/8 border border-primary/20 rounded-xl hover:bg-primary/15 hover:border-primary/40 transition-all duration-300"
           >
             <span className="text-sm font-bold text-primary group-hover:text-white transition-colors">
-              Ler Todas as Avaliações
+              Ver Todas as Avaliações no Instagram
             </span>
             <Icon
               name="arrow_forward"

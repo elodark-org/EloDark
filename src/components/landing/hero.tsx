@@ -5,24 +5,24 @@ import { Button } from "@/components/ui/button";
 
 const stats = [
   {
-    icon: "shopping_cart",
-    label: "Pedidos",
-    value: "50,000+",
+    icon: "bolt",
+    label: "Início do Boost",
+    value: "< 30 min",
   },
   {
-    icon: "group",
-    label: "Boosters Pro",
-    value: "300+",
+    icon: "military_tech",
+    label: "Rank dos Boosters",
+    value: "Radiante",
   },
   {
     icon: "verified",
     label: "Satisfação",
-    value: "99.7%",
+    value: "Garantida",
   },
 ] as const;
 
 const features = [
-  { icon: "encrypted", label: "Proteção VPN", color: "text-primary" },
+  { icon: "chat", label: "Chat Offline", color: "text-primary" },
   { icon: "schedule", label: "Suporte 24/7", color: "text-accent-cyan" },
   { icon: "money_off", label: "Garantia de Reembolso", color: "text-accent-gold" },
 ];
