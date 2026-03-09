@@ -43,6 +43,11 @@ const lolMd5Prices: Record<string, number> = {
   platinum: 74, emerald: 99, diamond: 139, master: 179,
 };
 
+const valorantMd5Prices: Record<string, number> = {
+  iron: 30, bronze: 35, silver: 45, gold: 60,
+  platinum: 65, diamond: 85, ascendant: 90, immortal: 105, radiant: 135,
+};
+
 const lolWinPrices: Record<string, number> = {
   iron: 3, bronze: 5, silver: 8, gold: 12,
   platinum: 18, emerald: 25, diamond: 40, master: 70,
@@ -275,7 +280,9 @@ export function calculatePrice(
       return lolMd5Prices[rankId] ?? null;
     }
     // Valorant MD5
-    return 45;
+    const rankId = parseRankLabelOnly(eloLabel, valorantRanks);
+    if (!rankId) return null;
+    return valorantMd5Prices[rankId] ?? null;
   }
 
   // ── Vitórias ─────────────────────────────────────────────────────────────────
