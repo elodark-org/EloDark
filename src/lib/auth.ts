@@ -9,9 +9,11 @@ interface JWTPayload {
   role: "user" | "booster" | "admin";
 }
 
-const _jwtSecret = process.env.JWT_SECRET;
-if (!_jwtSecret) throw new Error("JWT_SECRET não configurado nas variáveis de ambiente");
-const JWT_SECRET: string = _jwtSecret;
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error("JWT_SECRET não configurado nas variáveis de ambiente");
+  return secret;
+}
 
 export function verifyToken(req: NextRequest): JWTPayload | null {
   const header = req.headers.get("authorization");
@@ -19,7 +21,7 @@ export function verifyToken(req: NextRequest): JWTPayload | null {
 
   try {
     const token = header.split(" ")[1];
-    return jwt.verify(token, JWT_SECRET) as JWTPayload;
+    return jwt.verify(token, getJwtSecret()) as JWTPayload;
   } catch (error) {
     logger.warn("Falha ao validar token JWT", { error });
     return null;
@@ -51,5 +53,5 @@ export function isUser(result: JWTPayload | NextResponse): result is JWTPayload 
 }
 
 export function signToken(payload: JWTPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign(payload, getJwtSecret(), { expiresIn: "7d" });
 }
