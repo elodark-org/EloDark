@@ -49,7 +49,7 @@ const colorMap = {
 };
 
 const trustBadges = [
-  { icon: "vpn_key", label: "Proteção VPN" },
+  { icon: "chat", label: "Chat Offline" },
   { icon: "support_agent", label: "Suporte 24/7" },
   { icon: "currency_exchange", label: "Garantia de Reembolso" },
 ];
