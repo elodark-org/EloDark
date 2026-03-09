@@ -12,11 +12,11 @@
     "setup-db": "npx tsx scripts/db-setup.ts"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.2",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "jsonwebtoken": "^9.0.3",
     "next": "16.1.6",
+    "postgres": "^3.4.8",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "resend": "^6.9.3",

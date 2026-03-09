@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import postgres from "postgres";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import path from "path";
@@ -9,13 +9,13 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, "../.env.local") });
 
-const DATABASE_URL = process.env.DATABASE_URL;
+const DATABASE_URL = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 if (!DATABASE_URL) {
-  console.error("❌ DATABASE_URL não configurada no .env.local");
+  console.error("❌ POSTGRES_URL ou DATABASE_URL não configurada no .env.local");
   process.exit(1);
 }
 
-const sql = neon(DATABASE_URL);
+const sql = postgres(DATABASE_URL, { ssl: "require", max: 1 });
 
 async function createTables() {
   console.log("🔧 Criando tabelas...");
@@ -170,9 +170,11 @@ async function setup() {
     console.log("");
     await seedAdmin();
     console.log("\n✅ Setup concluído!");
+    await sql.end();
     process.exit(0);
   } catch (err) {
     console.error("❌ Erro no setup:", err);
+    await sql.end();
     process.exit(1);
   }
 }
