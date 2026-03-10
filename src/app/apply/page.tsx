@@ -11,7 +11,7 @@ interface Booster {
   id: number;
   game_name: string;
   rank: string;
-  win_rate: number;
+
   avatar_emoji: string;
 }
 
@@ -381,7 +381,6 @@ export default function ApplyPage() {
                           <p className="text-white text-sm font-medium truncate">{b.game_name}</p>
                           <p className="text-accent-gold text-xs font-bold uppercase">{b.rank}</p>
                         </div>
-                        <span className="text-xs text-green-400 font-bold">{b.win_rate}%</span>
                       </li>
                     ))}
                     {boosters.length > 6 && (

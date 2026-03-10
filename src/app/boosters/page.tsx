@@ -10,7 +10,6 @@ interface Booster {
   id: number;
   game_name: string;
   rank: string;
-  win_rate: number;
   games_played: number;
   avatar_emoji: string;
 }
@@ -130,13 +129,6 @@ export default function BoostersPage() {
                       </p>
                     </div>
 
-                    {/* Stats */}
-                    <div className="w-full pt-3 border-t border-white/5">
-                      <div className="bg-white/5 rounded-xl py-2.5">
-                        <p className="text-[10px] text-white/30 uppercase font-bold mb-0.5">Win Rate</p>
-                        <p className="text-sm font-black text-accent-cyan">{b.win_rate}%</p>
-                      </div>
-                    </div>
                   </div>
                 );
               })}
