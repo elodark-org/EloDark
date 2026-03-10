@@ -54,10 +54,8 @@ export async function POST(req: NextRequest) {
     const amountCents = Math.round(parseFloat(order.price) * 100);
     const itemName = existingConfig?.item_name ?? "EloDark — Serviço de Boost";
 
-    // Expira em 30 minutos
-    const expiresAt = new Date(Date.now() + 30 * 60 * 1000)
-      .toISOString()
-      .replace("Z", "-03:00");
+    // Expira em 3 minutos
+    const expiresAt = new Date(Date.now() + 3 * 60 * 1000).toISOString();
 
     const origin = req.headers.get("origin") || "https://elodark.com";
     const notificationUrl = `${origin}/api/checkout/webhook`;
@@ -105,6 +103,29 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     logger.error("Erro ao gerar PIX", err);
-    return NextResponse.json({ error: "Erro ao gerar pagamento PIX" }, { status: 500 });
+
+    // Tenta extrair mensagem de erro do PagBank
+    if (err instanceof Error) {
+      const match = err.message.match(/PagBank createOrder \d+: (.+)/);
+      if (match) {
+        try {
+          const pagbankError = JSON.parse(match[1]) as { error_messages?: { code: string; description: string }[] };
+          const firstError = pagbankError.error_messages?.[0];
+          if (firstError) {
+            const friendlyMessages: Record<string, string> = {
+              "40002": "O email informado não pode ser o mesmo da conta PagBank. Use um email diferente.",
+              "40001": "Dados do comprador inválidos. Verifique nome, email e CPF.",
+              "40003": "CPF inválido. Verifique o número informado.",
+            };
+            const friendly = friendlyMessages[firstError.code] ?? firstError.description;
+            return NextResponse.json({ error: friendly }, { status: 400 });
+          }
+        } catch {
+          // JSON parse falhou, usa mensagem genérica
+        }
+      }
+    }
+
+    return NextResponse.json({ error: "Erro ao gerar pagamento PIX. Tente novamente." }, { status: 500 });
   }
 }
