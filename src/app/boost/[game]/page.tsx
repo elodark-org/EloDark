@@ -7,6 +7,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Icon } from "@/components/ui/icon";
 import { Toggle } from "@/components/ui/toggle";
 import { Button } from "@/components/ui/button";
+import { api } from "@/lib/api";
 
 
 // ── Tipos ──
@@ -435,20 +436,11 @@ export default function OrderConfiguratorPage() {
         serviceConfig = { game: gameSlug, package: activeCoachPackages[coachPackageIndex].label };
       }
 
-      const res = await fetch("/api/checkout/create-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          service_type: serviceType,
-          price: Math.round(total * 100) / 100,
-          config: serviceConfig,
-        }),
+      const data = await api.post<{ order_id?: number; url?: string }>("/checkout/create-session", {
+        service_type: serviceType,
+        price: Math.round(total * 100) / 100,
+        config: serviceConfig,
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setCheckoutError(data.error || "Erro ao criar sessão de pagamento");
-        return;
-      }
       if (data.url) {
         window.location.href = data.url;
       } else if (data.order_id) {
