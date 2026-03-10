@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { verifyToken } from "@/lib/auth";
 import { calculatePrice } from "@/lib/pricing";
 import {
   isPlainObject,
@@ -57,9 +58,13 @@ export async function POST(req: NextRequest) {
         ? `EloDark — ${serviceNames[serviceType]} (${game})`
         : `EloDark — ${serviceNames[serviceType]}`;
 
+    // Vincula ao usuário logado se houver token válido
+    const authUser = verifyToken(req);
+    const userId = authUser?.id ?? null;
+
     const [order] = await sql`
-      INSERT INTO orders (service_type, config, price, status)
-      VALUES (${serviceType}, ${JSON.stringify({ ...config, item_name: itemName })}, ${price}, 'pending')
+      INSERT INTO orders (user_id, service_type, config, price, status)
+      VALUES (${userId}, ${serviceType}, ${JSON.stringify({ ...config, item_name: itemName })}, ${price}, 'pending')
       RETURNING id
     `;
 
