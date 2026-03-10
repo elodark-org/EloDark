@@ -4,7 +4,6 @@ import { sql } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import {
   isPlainObject,
-  parseBoundedNumber,
   parseNonNegativeInt,
   parseOptionalString,
   parsePositiveInt,
@@ -35,10 +34,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       payload.rank === undefined
         ? undefined
         : parseOptionalString(payload.rank, { maxLength: 50 });
-    const winRate =
-      payload.win_rate === undefined
-        ? undefined
-        : parseBoundedNumber(payload.win_rate, 0, 100);
     const gamesPlayed =
       payload.games_played === undefined
         ? undefined
@@ -57,7 +52,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (
       (payload.game_name !== undefined && gameName === null) ||
       (payload.rank !== undefined && rank === null) ||
-      (payload.win_rate !== undefined && winRate === null) ||
       (payload.games_played !== undefined && gamesPlayed === null) ||
       (payload.avatar_emoji !== undefined && avatarEmoji === null) ||
       (payload.active !== undefined && active === null)
@@ -72,7 +66,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       UPDATE boosters SET
         game_name = COALESCE(${gameName ?? null}, game_name),
         rank = COALESCE(${rank ?? null}, rank),
-        win_rate = COALESCE(${winRate ?? null}, win_rate),
         games_played = COALESCE(${gamesPlayed ?? null}, games_played),
         avatar_emoji = COALESCE(${avatarEmoji ?? null}, avatar_emoji),
         active = COALESCE(${active ?? null}, active)

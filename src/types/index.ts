@@ -80,7 +80,7 @@ export interface Booster {
   user_id: number;
   game_name: string;
   rank: string;
-  win_rate: string;
+
   games_played: number;
   avatar_emoji: string;
   active: boolean;

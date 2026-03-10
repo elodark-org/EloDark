@@ -164,11 +164,6 @@ export default function AdminBoostersPage() {
       },
     },
     {
-      key: "win_rate",
-      label: "Taxa de Vitória",
-      render: (row) => <span className="text-green-400 font-bold">{row.win_rate}%</span>,
-    },
-    {
       key: "active",
       label: "Ativo",
       render: (row) => {

@@ -13,7 +13,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
     }
 
     const [booster] = await sql`
-      SELECT b.id, b.game_name, b.rank, b.win_rate, b.games_played, b.avatar_emoji,
+      SELECT b.id, b.game_name, b.rank, b.games_played, b.avatar_emoji,
              u.name, b.created_at
       FROM boosters b
       JOIN users u ON u.id = b.user_id

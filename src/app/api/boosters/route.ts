@@ -6,10 +6,10 @@ import { logger } from "@/lib/logger";
 export async function GET() {
   try {
     const boosters = await sql`
-      SELECT b.id, b.game_name, b.rank, b.win_rate, b.games_played, b.avatar_emoji
+      SELECT b.id, b.game_name, b.rank, b.games_played, b.avatar_emoji
       FROM boosters b
       WHERE b.active = true
-      ORDER BY b.win_rate DESC
+      ORDER BY b.created_at DESC
     `;
     return NextResponse.json({ boosters });
   } catch (err) {

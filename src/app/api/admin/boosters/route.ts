@@ -5,7 +5,6 @@ import { sql } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import {
   isPlainObject,
-  parseBoundedNumber,
   parseNonEmptyString,
   parseNonNegativeInt,
   parseOptionalString,
@@ -27,10 +26,6 @@ export async function POST(req: NextRequest) {
     const password = parseNonEmptyString(payload.password, { minLength: 6, maxLength: 255 });
     const gameName = parseOptionalString(payload.game_name, { maxLength: 100 }) ?? "";
     const rank = parseNonEmptyString(payload.rank, { maxLength: 50 });
-    const winRateParsed =
-      payload.win_rate === undefined
-        ? 0
-        : parseBoundedNumber(payload.win_rate, 0, 100);
     const gamesPlayedParsed =
       payload.games_played === undefined
         ? 0
@@ -43,13 +38,9 @@ export async function POST(req: NextRequest) {
     if (!name || !email || !password || !rank) {
       return NextResponse.json({ error: "name, email, password e rank são obrigatórios" }, { status: 400 });
     }
-    if (
-      winRateParsed === null ||
-      gamesPlayedParsed === null ||
-      avatarEmojiParsed === null
-    ) {
+    if (gamesPlayedParsed === null || avatarEmojiParsed === null) {
       return NextResponse.json(
-        { error: "win_rate, games_played ou avatar_emoji inválidos" },
+        { error: "games_played ou avatar_emoji inválidos" },
         { status: 400 }
       );
     }
@@ -68,22 +59,22 @@ export async function POST(req: NextRequest) {
         RETURNING id, name, email, role
       ),
       new_booster AS (
-        INSERT INTO boosters (user_id, game_name, rank, win_rate, games_played, avatar_emoji)
-        SELECT id, ${gameName}, ${rank}, ${winRateParsed}, ${gamesPlayedParsed}, ${avatarEmojiParsed}
+        INSERT INTO boosters (user_id, game_name, rank, games_played, avatar_emoji)
+        SELECT id, ${gameName}, ${rank}, ${gamesPlayedParsed}, ${avatarEmojiParsed}
         FROM new_user
         RETURNING *
       )
       SELECT
         new_user.id as user_id, new_user.name, new_user.email, new_user.role,
         new_booster.id as booster_id, new_booster.game_name, new_booster.rank,
-        new_booster.win_rate, new_booster.games_played, new_booster.avatar_emoji, new_booster.active
+        new_booster.games_played, new_booster.avatar_emoji, new_booster.active
       FROM new_user, new_booster
     `;
 
     const newUser = { id: result.user_id, name: result.name, email: result.email, role: result.role };
     const booster = {
       id: result.booster_id, user_id: result.user_id, game_name: result.game_name,
-      rank: result.rank, win_rate: result.win_rate, games_played: result.games_played,
+      rank: result.rank, games_played: result.games_played,
       avatar_emoji: result.avatar_emoji, active: result.active,
     };
 
