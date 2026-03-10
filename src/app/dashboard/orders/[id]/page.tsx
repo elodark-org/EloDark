@@ -123,13 +123,13 @@ export default function OrderDetailPage() {
     );
   }
 
-  // Campos internos que não devem ser exibidos ao cliente
+  // Chaves internas a ocultar (case-insensitive via toLowerCase)
   const HIDDEN_KEYS = new Set([
     "pagbank_order_id", "qr_code_text", "qr_code_image",
     "pix_expires_at", "customer_email", "customer_name", "item_name",
   ]);
 
-  // Labels legíveis em português para as chaves do config
+  // Labels em português (chaves em lowercase)
   const FIELD_LABELS: Record<string, string> = {
     game: "Jogo",
     elo: "Elo Atual",
@@ -160,18 +160,30 @@ export default function OrderDetailPage() {
     cancelled: "Cancelado",
   };
 
-  // Achata config: suporta tanto objeto plano quanto array de objetos [{...}, {...}]
-  const rawConfig = order.config || {};
-  const flatConfig: Record<string, unknown> = Array.isArray(rawConfig)
-    ? Object.assign({}, ...(rawConfig as Record<string, unknown>[]))
-    : rawConfig as Record<string, unknown>;
+  // Normaliza recursivamente: string→parse, array→flatten, object→retorna
+  function normalizeConfig(raw: unknown): Record<string, unknown> {
+    if (!raw) return {};
+    if (typeof raw === "string") {
+      try { return normalizeConfig(JSON.parse(raw)); } catch { return {}; }
+    }
+    if (Array.isArray(raw)) {
+      // Mescla cada elemento (pode ser string JSON ou objeto)
+      return Object.assign({}, ...raw.map(normalizeConfig));
+    }
+    if (typeof raw === "object") return raw as Record<string, unknown>;
+    return {};
+  }
 
-  const configEntries = Object.entries(flatConfig).filter(([key, v]) => {
-    if (HIDDEN_KEYS.has(key)) return false;
-    if (v === null || v === undefined || v === "") return false;
-    if (typeof v === "object") return false; // ignora objetos aninhados
-    return true;
-  });
+  const flatConfig = normalizeConfig(order.config);
+
+  const configEntries = Object.entries(flatConfig)
+    .map(([key, v]) => [key.toLowerCase(), v] as [string, unknown]) // normaliza keys
+    .filter(([key, v]) => {
+      if (HIDDEN_KEYS.has(key)) return false;
+      if (v === null || v === undefined || v === "") return false;
+      if (typeof v === "object") return false;
+      return true;
+    });
 
   const showReviewForm =
     order.status === "completed" && !reviewSubmitted;
