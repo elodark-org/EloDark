@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Navbar } from "@/components/layout/navbar";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/use-auth";
 import Image from "next/image";
 
 type Step = "form" | "qrcode" | "paid";
@@ -31,7 +30,6 @@ function PixContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("order_id");
-  const { user } = useAuth();
 
   const [step, setStep] = useState<Step>("form");
   const [name, setName] = useState("");
@@ -43,14 +41,6 @@ function PixContent() {
   const [copied, setCopied] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // Pré-preenche nome e email do usuário logado
-  useEffect(() => {
-    if (user) {
-      setName((prev) => prev || user.name);
-      setEmail((prev) => prev || user.email);
-    }
-  }, [user]);
 
   useEffect(() => {
     if (!orderId) {
@@ -276,6 +266,7 @@ function PixContent() {
             placeholder="João Silva"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            autoComplete="off"
             className="w-full px-4 py-3 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
           />
         </div>
@@ -286,6 +277,7 @@ function PixContent() {
             placeholder="seu@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="off"
             className="w-full px-4 py-3 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
           />
         </div>
@@ -297,6 +289,7 @@ function PixContent() {
             value={cpf}
             onChange={(e) => setCpf(formatCPF(e.target.value))}
             maxLength={14}
+            autoComplete="off"
             className="w-full px-4 py-3 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
           />
         </div>
