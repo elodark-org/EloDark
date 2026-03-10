@@ -145,6 +145,19 @@ async function createTables() {
   console.log("🎉 Todas as tabelas criadas com sucesso!");
 }
 
+async function migrateServiceTypes() {
+  // Atualiza o CHECK constraint de service_type para os nomes atuais do app
+  // (md10 → md5, wins → vitorias)
+  await sql`
+    ALTER TABLE orders DROP CONSTRAINT IF EXISTS orders_service_type_check
+  `;
+  await sql`
+    ALTER TABLE orders ADD CONSTRAINT orders_service_type_check
+      CHECK (service_type IN ('elo-boost', 'duo-boost', 'md5', 'vitorias', 'coach'))
+  `;
+  console.log("  ✅ Constraint service_type atualizado (md5, vitorias)");
+}
+
 async function seedAdmin() {
   const email = process.env.ADMIN_EMAIL || "admin@elodark.com";
   const password = process.env.ADMIN_PASSWORD || "admin123";
@@ -167,6 +180,8 @@ async function setup() {
   try {
     console.log("🚀 EloDark - Configurando banco de dados...\n");
     await createTables();
+    console.log("");
+    await migrateServiceTypes();
     console.log("");
     await seedAdmin();
     console.log("\n✅ Setup concluído!");
