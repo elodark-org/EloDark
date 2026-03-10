@@ -451,6 +451,8 @@ export default function OrderConfiguratorPage() {
       }
       if (data.url) {
         window.location.href = data.url;
+      } else if (data.order_id) {
+        window.location.href = `/checkout/pix?order_id=${data.order_id}`;
       } else {
         setCheckoutError("Erro ao criar sessão de pagamento");
       }
