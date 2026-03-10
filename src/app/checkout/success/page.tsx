@@ -13,15 +13,15 @@ type VerifyResult =
 
 function SuccessContent() {
   const searchParams = useSearchParams();
-  const sessionId = searchParams.get("session_id");
+  const orderId = searchParams.get("order_id") ?? searchParams.get("session_id");
   const [result, setResult] = useState<VerifyResult>({ state: "loading" });
 
   useEffect(() => {
-    if (!sessionId) {
-      setResult({ state: "error", message: "Sessão de pagamento não encontrada." });
+    if (!orderId) {
+      setResult({ state: "error", message: "Pedido não encontrado." });
       return;
     }
-    fetch(`/api/checkout/verify/${sessionId}`)
+    fetch(`/api/checkout/verify/${orderId}`)
       .then((r) => r.json())
       .then((data) => {
         if (data.error) {
@@ -37,7 +37,7 @@ function SuccessContent() {
       .catch(() => {
         setResult({ state: "error", message: "Erro ao conectar ao servidor." });
       });
-  }, [sessionId]);
+  }, [orderId]);
 
   if (result.state === "loading") {
     return (

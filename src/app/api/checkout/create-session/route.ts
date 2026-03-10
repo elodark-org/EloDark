@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
-import { getStripe } from "@/lib/stripe";
 import { logger } from "@/lib/logger";
 import { calculatePrice } from "@/lib/pricing";
 import {
@@ -11,14 +10,9 @@ import {
   VALID_SERVICE_TYPES,
 } from "@/lib/validation";
 
-// POST /api/checkout/create-session — guest checkout, no auth required
+// POST /api/checkout/create-session — cria pedido no banco e retorna order_id para a página de PIX
 export async function POST(req: NextRequest) {
   try {
-    const stripe = getStripe();
-    if (!stripe) {
-      return NextResponse.json({ error: "Stripe não configurado." }, { status: 500 });
-    }
-
     const payload = await req.json();
     if (!isPlainObject(payload)) {
       return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
@@ -26,8 +20,6 @@ export async function POST(req: NextRequest) {
 
     const serviceType = payload.service_type;
     const config = sanitizeConfig(payload.config);
-    const customerEmail = parseOptionalString(payload.customer_email, { maxLength: 255 });
-    const customerName = parseOptionalString(payload.customer_name, { maxLength: 100 });
 
     if (!serviceType) {
       return NextResponse.json({ error: "service_type é obrigatório" }, { status: 400 });
@@ -40,7 +32,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Preço calculado inteiramente no servidor — valor do cliente é ignorado
     const price = calculatePrice(serviceType, config);
     if (price === null || price <= 0) {
       return NextResponse.json(
@@ -57,61 +48,30 @@ export async function POST(req: NextRequest) {
       "coach": "Coach",
     };
 
-    // Build a human-readable description from config
     const currentRank = parseOptionalString(config.current_rank, { maxLength: 50 });
     const desiredRank = parseOptionalString(config.desired_rank, { maxLength: 50 });
     const game = parseOptionalString(config.game, { maxLength: 50 });
-    const productDescription = currentRank && desiredRank
-      ? `${currentRank} → ${desiredRank}`
+    const itemName = currentRank && desiredRank
+      ? `EloDark — ${serviceNames[serviceType]}: ${currentRank} → ${desiredRank}`
       : game
-        ? `Serviço para ${game}`
-        : `Serviço de ${serviceNames[serviceType]}`;
+        ? `EloDark — ${serviceNames[serviceType]} (${game})`
+        : `EloDark — ${serviceNames[serviceType]}`;
 
-    // Create order in DB (no user_id for guest)
     const [order] = await sql`
       INSERT INTO orders (service_type, config, price, status)
-      VALUES (${serviceType}, ${JSON.stringify(config)}, ${price}, 'pending')
+      VALUES (${serviceType}, ${JSON.stringify({ ...config, item_name: itemName })}, ${price}, 'pending')
       RETURNING id
     `;
 
-    const origin = req.headers.get("origin") || "http://localhost:3000";
+    logger.info("Pedido criado, aguardando pagamento PIX", { orderId: order.id, price });
 
-    const session = await stripe.checkout.sessions.create({
-      line_items: [{
-        price_data: {
-          currency: "brl",
-          product_data: {
-            name: `EloDark — ${serviceNames[serviceType]}`,
-            description: productDescription,
-          },
-          unit_amount: Math.round(price * 100),
-        },
-        quantity: 1,
-      }],
-      mode: "payment",
-      success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/checkout/cancel?game=${encodeURIComponent(String(config.game || "league-of-legends"))}`,
-      metadata: {
-        order_id: order.id.toString(),
-        service_type: serviceType,
-      },
-      locale: "pt-BR",
-      custom_text: {
-        submit: { message: "Ao finalizar, um booster será atribuído ao seu pedido em breve." },
-      },
-      ...(customerEmail ? { customer_email: customerEmail } : {}),
-      payment_intent_data: {
-        description: `EloDark — ${serviceNames[serviceType]} — Pedido #${order.id}`,
-        statement_descriptor: "ELODARK BOOST",
-      },
+    return NextResponse.json({
+      order_id: order.id,
+      amount: price,
+      url: `/checkout/pix?order_id=${order.id}`,
     });
-
-    // Store stripe session id on the order
-    await sql`UPDATE orders SET config = config || ${JSON.stringify({ stripe_session_id: session.id })} WHERE id = ${order.id}`;
-
-    return NextResponse.json({ sessionId: session.id, url: session.url, order_id: order.id });
   } catch (err) {
-    logger.error("Erro ao criar sessão Stripe", err);
-    return NextResponse.json({ error: "Erro ao criar sessão de pagamento" }, { status: 500 });
+    logger.error("Erro ao criar pedido", err);
+    return NextResponse.json({ error: "Erro ao criar pedido" }, { status: 500 });
   }
 }
