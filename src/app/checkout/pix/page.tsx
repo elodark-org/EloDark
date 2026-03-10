@@ -276,6 +276,7 @@ function PixContent() {
             placeholder="João Silva"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            autoComplete="off"
             className="w-full px-4 py-3 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
           />
         </div>
@@ -286,6 +287,7 @@ function PixContent() {
             placeholder="seu@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="off"
             className="w-full px-4 py-3 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
           />
         </div>
@@ -297,6 +299,7 @@ function PixContent() {
             value={cpf}
             onChange={(e) => setCpf(formatCPF(e.target.value))}
             maxLength={14}
+            autoComplete="off"
             className="w-full px-4 py-3 text-sm bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary/50"
           />
         </div>
