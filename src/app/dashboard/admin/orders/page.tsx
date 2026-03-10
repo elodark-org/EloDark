@@ -12,6 +12,7 @@ import type { Order } from "@/types";
 
 const STATUS_TABS = [
   "all",
+  "pending",
   "active",
   "available",
   "in_progress",
@@ -19,6 +20,17 @@ const STATUS_TABS = [
   "completed",
   "cancelled",
 ] as const;
+
+const STATUS_TAB_LABELS: Record<string, string> = {
+  all: "Todos",
+  pending: "Pendente",
+  active: "Ativo",
+  available: "Disponível",
+  in_progress: "Em Andamento",
+  awaiting_approval: "Aguard. Aprovação",
+  completed: "Concluído",
+  cancelled: "Cancelado",
+};
 
 const STATUS_TRANSITIONS: Record<string, string[]> = {
   pending: ["active", "available", "cancelled"],
@@ -35,7 +47,7 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("active");
+  const [activeTab, setActiveTab] = useState<string>("all");
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [assignInputs, setAssignInputs] = useState<Record<number, string>>({});
   const [statusMenuOpen, setStatusMenuOpen] = useState<number | null>(null);
@@ -239,7 +251,7 @@ export default function AdminOrdersPage() {
                         onClick={() => handleStatusChange(row.id, s)}
                         className="w-full px-4 py-2 text-left text-sm text-white/70 hover:bg-white/5 hover:text-white capitalize transition-colors"
                       >
-                        {s.replace("_", " ")}
+                        {STATUS_TAB_LABELS[s] ?? s.replace(/_/g, " ")}
                       </button>
                     ))}
                   </div>
@@ -358,7 +370,7 @@ export default function AdminOrdersPage() {
                     : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10 hover:text-white/60"
                 }`}
               >
-                {tab.replace("_", " ")} ({count})
+                {STATUS_TAB_LABELS[tab] ?? tab.replace("_", " ")} ({count})
               </button>
             );
           })}
