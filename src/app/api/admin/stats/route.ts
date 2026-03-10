@@ -12,8 +12,14 @@ export async function GET(req: NextRequest) {
     const [usersCount] = await sql`SELECT COUNT(*) as count FROM users WHERE role = 'user'`;
     const [boostersCount] = await sql`SELECT COUNT(*) as count FROM boosters WHERE active = true`;
     const [ordersCount] = await sql`SELECT COUNT(*) as count FROM orders`;
-    const [pendingCount] = await sql`SELECT COUNT(*) as count FROM orders WHERE status = 'pending'`;
-    const [revenue] = await sql`SELECT COALESCE(SUM(price), 0) as total FROM orders WHERE status = 'completed'`;
+    // Pedidos aguardando booster = status 'active' (pago, sem booster atribuído)
+    const [pendingCount] = await sql`SELECT COUNT(*) as count FROM orders WHERE status = 'active'`;
+    // Receita = soma de todos os pedidos pagos (exceto pending e cancelled)
+    const [revenue] = await sql`
+      SELECT COALESCE(SUM(price), 0) as total
+      FROM orders
+      WHERE status NOT IN ('pending', 'cancelled')
+    `;
 
     return NextResponse.json({
       stats: {
