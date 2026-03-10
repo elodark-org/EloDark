@@ -123,10 +123,55 @@ export default function OrderDetailPage() {
     );
   }
 
-  const config = order.config || {};
-  const configEntries = Object.entries(config).filter(
-    ([, v]) => v !== null && v !== undefined && v !== ""
-  );
+  // Campos internos que não devem ser exibidos ao cliente
+  const HIDDEN_KEYS = new Set([
+    "pagbank_order_id", "qr_code_text", "qr_code_image",
+    "pix_expires_at", "customer_email", "customer_name", "item_name",
+  ]);
+
+  // Labels legíveis em português para as chaves do config
+  const FIELD_LABELS: Record<string, string> = {
+    game: "Jogo",
+    elo: "Elo Atual",
+    current_rank: "Rank Atual",
+    desired_rank: "Rank Desejado",
+    quantity: "Quantidade",
+    price_per_win: "Preço por Vitória",
+    wins: "Vitórias",
+    sessions: "Sessões",
+    coach_type: "Tipo de Coach",
+    queue_type: "Tipo de Fila",
+    lane: "Lane",
+    champions: "Campeões",
+    extras: "Extras",
+    notes: "Observações",
+    duo_rank: "Rank Duo",
+    num_games: "Nº de Partidas",
+  };
+
+  // Tradução de status
+  const STATUS_LABELS: Record<string, string> = {
+    pending: "Pendente",
+    active: "Ativo",
+    available: "Disponível",
+    in_progress: "Em Andamento",
+    awaiting_approval: "Aguardando Aprovação",
+    completed: "Concluído",
+    cancelled: "Cancelado",
+  };
+
+  // Achata config: suporta tanto objeto plano quanto array de objetos [{...}, {...}]
+  const rawConfig = order.config || {};
+  const flatConfig: Record<string, unknown> = Array.isArray(rawConfig)
+    ? Object.assign({}, ...(rawConfig as Record<string, unknown>[]))
+    : rawConfig as Record<string, unknown>;
+
+  const configEntries = Object.entries(flatConfig).filter(([key, v]) => {
+    if (HIDDEN_KEYS.has(key)) return false;
+    if (v === null || v === undefined || v === "") return false;
+    if (typeof v === "object") return false; // ignora objetos aninhados
+    return true;
+  });
 
   const showReviewForm =
     order.status === "completed" && !reviewSubmitted;
@@ -181,7 +226,7 @@ export default function OrderDetailPage() {
               <DetailRow label="Preço" value={`R$ ${parseFloat(order.price).toFixed(2)}`} highlight />
               <DetailRow
                 label="Status"
-                value={order.status.replace("_", " ")}
+                value={STATUS_LABELS[order.status] ?? order.status.replace(/_/g, " ")}
               />
               <DetailRow
                 label="Booster"
@@ -228,7 +273,7 @@ export default function OrderDetailPage() {
                   className="bg-white/5 rounded-xl p-4 border border-white/5"
                 >
                   <p className="text-[10px] text-white/40 uppercase font-bold mb-1">
-                    {key.replace(/_/g, " ")}
+                    {FIELD_LABELS[key] ?? key.replace(/_/g, " ")}
                   </p>
                   <p className="text-sm font-bold capitalize">
                     {String(value)}

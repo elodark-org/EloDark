@@ -78,17 +78,18 @@ export async function POST(req: NextRequest) {
 
     const qrCodeImage = qrCode.links?.find((l) => l.rel === "QRCODE.PNG")?.href ?? null;
 
-    // Salva dados do PagBank no config do pedido
+    // Salva dados do PagBank no config do pedido (cast explícito para JSONB garante merge de objeto)
+    const pagbankData = JSON.stringify({
+      pagbank_order_id: pagbankOrder.id,
+      qr_code_text: qrCode.text,
+      qr_code_image: qrCodeImage,
+      pix_expires_at: qrCode.expiration_date,
+      customer_email: customerEmail,
+      customer_name: customerName,
+    });
     await sql`
       UPDATE orders
-      SET config = config || ${JSON.stringify({
-        pagbank_order_id: pagbankOrder.id,
-        qr_code_text: qrCode.text,
-        qr_code_image: qrCodeImage,
-        pix_expires_at: qrCode.expiration_date,
-        customer_email: customerEmail,
-        customer_name: customerName,
-      })}
+      SET config = config || ${pagbankData}::jsonb
       WHERE id = ${orderId}
     `;
 
