@@ -40,7 +40,10 @@ function PixContent() {
   const [pixData, setPixData] = useState<PixData | null>(null);
   const [copied, setCopied] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [pollError, setPollError] = useState(false);
+  const [verifying, setVerifying] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollErrorCount = useRef(0);
 
   useEffect(() => {
     if (!orderId) {
@@ -60,30 +63,63 @@ function PixContent() {
     return () => clearInterval(t);
   }, [pixData]);
 
+  // Função de verificação reutilizada pelo polling e pelo botão manual
+  const checkPayment = async (): Promise<boolean> => {
+    const res = await fetch(`/api/checkout/verify/${orderId}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.payment_status === "paid") {
+      clearInterval(pollRef.current!);
+      setStep("paid");
+      setTimeout(() => {
+        router.push(`/checkout/success?order_id=${orderId}`);
+      }, 2000);
+      return true;
+    }
+    return false;
+  };
+
   // Polling para verificar pagamento
   useEffect(() => {
     if (step !== "qrcode" || !orderId) return;
 
+    pollErrorCount.current = 0;
     pollRef.current = setInterval(async () => {
       try {
-        const res = await fetch(`/api/checkout/verify/${orderId}`);
-        const data = await res.json();
-        if (data.payment_status === "paid") {
-          clearInterval(pollRef.current!);
-          setStep("paid");
-          setTimeout(() => {
-            router.push(`/checkout/success?order_id=${orderId}`);
-          }, 2000);
-        }
+        await checkPayment();
+        pollErrorCount.current = 0;
+        setPollError(false);
       } catch {
-        // ignora erros de rede no polling
+        pollErrorCount.current += 1;
+        if (pollErrorCount.current >= 5) {
+          setPollError(true);
+        }
       }
     }, 4000);
 
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [step, orderId, router]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, orderId]);
+
+  // Verificação manual pelo botão "Já paguei"
+  async function handleManualVerify() {
+    if (!orderId) return;
+    setVerifying(true);
+    setPollError(false);
+    try {
+      const paid = await checkPayment();
+      if (!paid) {
+        setPollError(false);
+        // Volta a mostrar "verificando" por mais alguns segundos
+      }
+    } catch {
+      setPollError(true);
+    } finally {
+      setVerifying(false);
+    }
+  }
 
   async function handleGeneratePix() {
     if (!orderId || !name.trim() || !email.trim() || cpf.replace(/\D/g, "").length !== 11) return;
@@ -240,9 +276,39 @@ function PixContent() {
           ))}
         </div>
 
-        <p className="text-xs text-white/30 text-center">
-          Verificando pagamento automaticamente...
-        </p>
+        {/* Botão de verificação manual */}
+        <div className="flex flex-col items-center gap-2 w-full">
+          <button
+            onClick={handleManualVerify}
+            disabled={verifying}
+            className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white/70 text-sm font-bold hover:bg-white/10 hover:text-white transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {verifying ? (
+              <>
+                <Icon name="hourglass_top" size={16} className="animate-spin" />
+                Verificando...
+              </>
+            ) : (
+              <>
+                <Icon name="check_circle" size={16} />
+                Já paguei — verificar agora
+              </>
+            )}
+          </button>
+
+          {pollError ? (
+            <p className="text-xs text-yellow-400/80 text-center">
+              Problemas ao verificar automaticamente.{" "}
+              <button onClick={handleManualVerify} className="underline hover:text-yellow-400">
+                Clique aqui para tentar novamente
+              </button>
+            </p>
+          ) : (
+            <p className="text-xs text-white/30 text-center">
+              Verificando pagamento automaticamente...
+            </p>
+          )}
+        </div>
       </div>
     );
   }

@@ -95,5 +95,6 @@ export async function getOrderStatus(pagbankOrderId: string): Promise<PagBankOrd
 }
 
 export function isPaid(order: PagBankOrderStatus): boolean {
-  return order.charges?.some((c) => c.status === "PAID") ?? false;
+  // PagBank PIX pode retornar PAID ou AUTHORIZED após pagamento confirmado
+  return order.charges?.some((c) => c.status === "PAID" || c.status === "AUTHORIZED") ?? false;
 }
