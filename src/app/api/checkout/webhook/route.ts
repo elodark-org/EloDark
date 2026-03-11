@@ -1,81 +1,82 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
-import { getStripe } from "@/lib/stripe";
-import Stripe from "stripe";
+import { getOrder, isPaid } from "@/lib/pagbank";
 import { logger } from "@/lib/logger";
-import { parsePositiveInt } from "@/lib/validation";
 
-// POST /api/checkout/webhook — Stripe webhook (payment confirmation)
+// POST /api/checkout/webhook — PagBank notification (payment confirmation)
 export async function POST(req: NextRequest) {
-  const stripe = getStripe();
-  if (!stripe) return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
-
-  const sig = req.headers.get("stripe-signature");
-  const body = await req.text();
-  let event: Stripe.Event;
-
   try {
-    if (!process.env.STRIPE_WEBHOOK_SECRET) {
-      logger.error("STRIPE_WEBHOOK_SECRET não configurado. Webhook rejeitado.");
-      return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 });
+    const body = await req.json();
+
+    // PagBank envia { id: "ORDE_..." } ou { reference_id: "...", charges: [...] }
+    const pagbankOrderId: string | undefined = body?.id ?? body?.reference_id;
+
+    if (!pagbankOrderId) {
+      logger.error("Webhook PagBank: payload sem id", { body });
+      return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
     }
-    if (!sig) {
-      return NextResponse.json({ error: "Missing stripe-signature header" }, { status: 400 });
+
+    // Buscar pedido no banco pelo pagbank_order_id
+    const [order] = await sql`
+      SELECT id, status, price
+      FROM orders
+      WHERE config->>'pagbank_order_id' = ${pagbankOrderId}
+      LIMIT 1
+    `;
+
+    if (!order) {
+      // Pode ser notificação de outro recurso — retorna 200 para o PagBank não reenviar
+      logger.info("Webhook PagBank: pedido não encontrado para", { pagbankOrderId });
+      return NextResponse.json({ received: true });
     }
-    event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+
+    if (order.status !== "pending") {
+      // Já processado
+      return NextResponse.json({ received: true });
+    }
+
+    // Consultar status atualizado na API PagBank
+    const pagbankOrder = await getOrder(pagbankOrderId);
+
+    if (!isPaid(pagbankOrder)) {
+      return NextResponse.json({ received: true });
+    }
+
+    // Validar valor pago
+    const charge = pagbankOrder.charges?.[0] as unknown as { amount?: { value?: number } } | undefined;
+    const paidCents = charge?.amount?.value ?? 0;
+    const expectedCents = Math.round(parseFloat(String(order.price)) * 100);
+    const diff = Math.abs(paidCents - expectedCents);
+
+    if (paidCents > 0 && diff > 1) {
+      logger.error("Webhook PagBank: valor pago diverge", {
+        orderId: order.id,
+        paidCents,
+        expectedCents,
+      });
+      await sql`
+        UPDATE orders
+        SET status = 'cancelled',
+            updated_at = NOW()
+        WHERE id = ${order.id} AND status = 'pending'
+      `;
+      return NextResponse.json({ received: true });
+    }
+
+    // Ativar pedido
+    await sql`
+      UPDATE orders SET status = 'active', updated_at = NOW()
+      WHERE id = ${order.id} AND status = 'pending'
+    `;
+    logger.info("Pedido ativado via webhook PagBank", {
+      orderId: order.id,
+      pagbankOrderId,
+      amountBRL: paidCents / 100,
+    });
+
+    return NextResponse.json({ received: true });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    logger.error("Erro de assinatura no webhook Stripe", err);
-    return NextResponse.json({ error: `Webhook Error: ${message}` }, { status: 400 });
+    logger.error("Erro ao processar webhook PagBank", err);
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
-
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const orderId = parsePositiveInt(session.metadata?.order_id);
-
-    if (orderId !== null && session.payment_status === "paid") {
-      try {
-        // Buscar pedido no banco para validar o valor
-        const [order] = await sql`
-          SELECT id, price, status FROM orders WHERE id = ${orderId}
-        `;
-
-        if (!order) {
-          logger.error("Webhook: pedido não encontrado", { orderId });
-          return NextResponse.json({ received: true }); // retorna 200 para Stripe não reenviar
-        }
-
-        // Validar valor pago (Stripe envia em centavos)
-        const paidAmountCents = session.amount_total ?? 0;
-        const expectedAmountCents = Math.round(parseFloat(order.price) * 100);
-        const diff = Math.abs(paidAmountCents - expectedAmountCents);
-
-        if (diff > 1) { // tolerancia de 1 centavo para arredondamento
-          logger.error("Webhook: valor pago diverge do pedido", {
-            orderId,
-            paidAmountCents,
-            expectedAmountCents,
-          });
-          // Marcar como suspeito em vez de ativar
-          await sql`
-            UPDATE orders SET status = 'cancelled', notes = ${'FRAUDE: valor pago (' + (paidAmountCents / 100).toFixed(2) + ') difere do pedido (' + (expectedAmountCents / 100).toFixed(2) + ')'}, updated_at = NOW()
-            WHERE id = ${orderId} AND status = 'pending'
-          `;
-          return NextResponse.json({ received: true });
-        }
-
-        // Valor confere — ativar pedido
-        await sql`
-          UPDATE orders SET status = 'active', updated_at = NOW()
-          WHERE id = ${orderId} AND status = 'pending'
-        `;
-        logger.info("Pedido pago confirmado via Stripe", { orderId, amountBRL: paidAmountCents / 100 });
-      } catch (err) {
-        logger.error("Falha ao atualizar pedido após webhook Stripe", err, { orderId });
-        return NextResponse.json({ error: "Falha ao processar webhook" }, { status: 500 });
-      }
-    }
-  }
-
-  return NextResponse.json({ received: true });
 }

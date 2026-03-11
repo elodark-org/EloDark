@@ -1,54 +1,82 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
-import { getStripe } from "@/lib/stripe";
+import { getOrder, isPaid } from "@/lib/pagbank";
 import { logger } from "@/lib/logger";
 import { parsePositiveInt } from "@/lib/validation";
 import { sendOrderConfirmation } from "@/lib/email";
 
-// GET /api/checkout/verify/:sessionId — no auth required (guest checkout)
-export async function GET(req: NextRequest, { params }: { params: Promise<{ sessionId: string }> }) {
+// GET /api/checkout/verify/:orderId — no auth required (guest checkout)
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ sessionId: string }> }
+) {
   try {
-    const stripe = getStripe();
-    if (!stripe) return NextResponse.json({ error: "Stripe não configurado" }, { status: 500 });
-
-    const { sessionId } = await params;
-    if (!sessionId) {
-      return NextResponse.json({ error: "sessionId inválido" }, { status: 400 });
+    const { sessionId: orderIdStr } = await params;
+    const orderId = parsePositiveInt(orderIdStr);
+    if (orderId === null) {
+      return NextResponse.json({ error: "orderId inválido" }, { status: 400 });
     }
 
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const orderId = parsePositiveInt(session.metadata?.order_id);
+    const [order] = await sql`
+      SELECT id, status, price, config FROM orders WHERE id = ${orderId}
+    `;
+    if (!order) {
+      return NextResponse.json({ error: "Pedido não encontrado" }, { status: 404 });
+    }
 
-    if (session.payment_status === "paid" && orderId !== null) {
-      const [order] = await sql`SELECT status FROM orders WHERE id = ${orderId}`;
-      if (order && order.status === "pending") {
-        await sql`UPDATE orders SET status = 'active', updated_at = NOW() WHERE id = ${orderId}`;
-        logger.info("Pedido ativado após pagamento confirmado", { orderId });
+    // Se já foi ativado, retorna imediatamente
+    if (order.status !== "pending") {
+      const config =
+        typeof order.config === "string" ? JSON.parse(order.config) : order.config ?? {};
+      return NextResponse.json({
+        payment_status: "paid",
+        order_id: orderId,
+        customer_email: config.customer_email ?? null,
+      });
+    }
 
-        // Enviar email de confirmação ao cliente
-        const customerEmail = session.customer_details?.email;
-        if (customerEmail) {
-          const [orderData] = await sql`SELECT service_type, price, config FROM orders WHERE id = ${orderId}`;
-          if (orderData) {
-            sendOrderConfirmation(customerEmail, {
-              orderId,
-              serviceType: orderData.service_type,
-              price: orderData.price,
-              config: typeof orderData.config === "string" ? JSON.parse(orderData.config) : orderData.config,
-            });
-          }
-        }
+    // Extrair pagbank_order_id do config (qualquer formato)
+    const config =
+      typeof order.config === "string" ? JSON.parse(order.config) : order.config ?? {};
+    const pagbankOrderId: string | undefined =
+      config?.pagbank_order_id ?? config?.Pagbank_order_id;
+
+    if (!pagbankOrderId) {
+      return NextResponse.json({ payment_status: "pending", order_id: orderId });
+    }
+
+    // Consultar PagBank
+    const pagbankOrder = await getOrder(pagbankOrderId);
+
+    if (isPaid(pagbankOrder)) {
+      // Ativar pedido
+      await sql`
+        UPDATE orders SET status = 'active', updated_at = NOW()
+        WHERE id = ${orderId} AND status = 'pending'
+      `;
+      logger.info("Pedido ativado via polling PagBank", { orderId, pagbankOrderId });
+
+      // Email de confirmação
+      const customerEmail = config.customer_email;
+      if (customerEmail) {
+        sendOrderConfirmation(customerEmail, {
+          orderId,
+          serviceType: order.service_type ?? "",
+          price: order.price,
+          config,
+        }).catch(() => {});
       }
+
+      return NextResponse.json({
+        payment_status: "paid",
+        order_id: orderId,
+        customer_email: customerEmail ?? null,
+      });
     }
 
-    return NextResponse.json({
-      payment_status: session.payment_status,
-      status: session.status,
-      order_id: orderId,
-      customer_email: session.customer_details?.email ?? null,
-    });
+    return NextResponse.json({ payment_status: "pending", order_id: orderId });
   } catch (err) {
-    logger.error("Erro ao verificar sessão de checkout", err);
+    logger.error("Erro ao verificar pagamento PagBank", err);
     return NextResponse.json({ error: "Erro ao verificar pagamento" }, { status: 500 });
   }
 }

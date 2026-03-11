@@ -13,15 +13,15 @@ export default function CheckoutPage() {
       <main className="flex-1 flex items-center justify-center px-6 py-20">
         <div className="text-center max-w-md space-y-6">
           <div className="w-20 h-20 mx-auto rounded-full bg-primary/20 flex items-center justify-center">
-            <Icon name="shopping_cart_checkout" className="text-primary" size={48} />
+            <Icon name="pix" className="text-primary" size={48} />
           </div>
 
-          <h2 className="text-3xl font-bold">Pagamento via Stripe</h2>
+          <h2 className="text-3xl font-bold">Pagamento via PIX</h2>
 
           <p className="text-gray-400">
-            O pagamento é processado de forma segura pelo Stripe. Configure seu
+            O pagamento é processado de forma segura pelo PagBank via PIX. Configure seu
             pedido na página de boost e clique em <strong>Finalizar Compra</strong>{" "}
-            para ser redirecionado.
+            para gerar o QR Code.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
@@ -41,7 +41,7 @@ export default function CheckoutPage() {
             <div className="flex items-center gap-1">
               <Icon name="verified_user" size={14} />
               <span className="text-[10px] font-bold uppercase">
-                Segurança Norton
+                PagBank Seguro
               </span>
             </div>
             <div className="flex items-center gap-1">

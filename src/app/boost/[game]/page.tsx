@@ -449,10 +449,16 @@ export default function OrderConfiguratorPage() {
         setCheckoutError(data.error || "Erro ao criar sessão de pagamento");
         return;
       }
-      if (data.url) {
-        window.location.href = data.url;
+      if (data.pix_code && data.order_id) {
+        const params = new URLSearchParams({
+          order_id: String(data.order_id),
+          pix_code: data.pix_code,
+          ...(data.pix_image ? { pix_image: data.pix_image } : {}),
+          ...(data.expires_at ? { expires_at: data.expires_at } : {}),
+        });
+        window.location.href = `/checkout/pix?${params.toString()}`;
       } else {
-        setCheckoutError("Erro ao criar sessão de pagamento");
+        setCheckoutError("Erro ao gerar PIX. Tente novamente.");
       }
     } catch (error: any) {
       setCheckoutError(error.message || "Erro ao conectar ao servidor");

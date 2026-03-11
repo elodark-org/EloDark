@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql } from "@/lib/db";
-import { getStripe } from "@/lib/stripe";
+import { createPixOrder, extractPixData } from "@/lib/pagbank";
 import { logger } from "@/lib/logger";
 import { calculatePrice } from "@/lib/pricing";
 import {
@@ -14,11 +14,6 @@ import {
 // POST /api/checkout/create-session — guest checkout, no auth required
 export async function POST(req: NextRequest) {
   try {
-    const stripe = getStripe();
-    if (!stripe) {
-      return NextResponse.json({ error: "Stripe não configurado." }, { status: 500 });
-    }
-
     const payload = await req.json();
     if (!isPlainObject(payload)) {
       return NextResponse.json({ error: "Payload inválido" }, { status: 400 });
@@ -26,8 +21,8 @@ export async function POST(req: NextRequest) {
 
     const serviceType = payload.service_type;
     const config = sanitizeConfig(payload.config);
-    const customerEmail = parseOptionalString(payload.customer_email, { maxLength: 255 });
-    const customerName = parseOptionalString(payload.customer_name, { maxLength: 100 });
+    const customerEmail = parseOptionalString(payload.customer_email, { maxLength: 255 }) ?? "cliente@elodark.com";
+    const customerName = parseOptionalString(payload.customer_name, { maxLength: 100 }) ?? "Cliente EloDark";
 
     if (!serviceType) {
       return NextResponse.json({ error: "service_type é obrigatório" }, { status: 400 });
@@ -57,61 +52,65 @@ export async function POST(req: NextRequest) {
       "coach": "Coach",
     };
 
-    // Build a human-readable description from config
-    const currentRank = parseOptionalString(config.current_rank, { maxLength: 50 });
-    const desiredRank = parseOptionalString(config.desired_rank, { maxLength: 50 });
-    const game = parseOptionalString(config.game, { maxLength: 50 });
-    const productDescription = currentRank && desiredRank
-      ? `${currentRank} → ${desiredRank}`
-      : game
-        ? `Serviço para ${game}`
-        : `Serviço de ${serviceNames[serviceType]}`;
-
-    // Create order in DB (no user_id for guest)
+    // Criar pedido no banco
     const [order] = await sql`
       INSERT INTO orders (service_type, config, price, status)
       VALUES (${serviceType}, ${JSON.stringify(config)}, ${price}, 'pending')
       RETURNING id
     `;
 
-    const origin = req.headers.get("origin") || "http://localhost:3000";
+    const amountCents = Math.round(price * 100);
+    const currentRank = parseOptionalString(config.current_rank, { maxLength: 50 });
+    const desiredRank = parseOptionalString(config.desired_rank, { maxLength: 50 });
+    const description = currentRank && desiredRank
+      ? `EloDark ${serviceNames[serviceType]} ${currentRank}→${desiredRank}`
+      : `EloDark ${serviceNames[serviceType]} #${order.id}`;
 
-    const session = await stripe.checkout.sessions.create({
-      line_items: [{
-        price_data: {
-          currency: "brl",
-          product_data: {
-            name: `EloDark — ${serviceNames[serviceType]}`,
-            description: productDescription,
-          },
-          unit_amount: Math.round(price * 100),
-        },
-        quantity: 1,
-      }],
-      mode: "payment",
-      success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/checkout/cancel?game=${encodeURIComponent(String(config.game || "league-of-legends"))}`,
-      metadata: {
-        order_id: order.id.toString(),
-        service_type: serviceType,
-      },
-      locale: "pt-BR",
-      custom_text: {
-        submit: { message: "Ao finalizar, um booster será atribuído ao seu pedido em breve." },
-      },
-      ...(customerEmail ? { customer_email: customerEmail } : {}),
-      payment_intent_data: {
-        description: `EloDark — ${serviceNames[serviceType]} — Pedido #${order.id}`,
-        statement_descriptor: "ELODARK BOOST",
-      },
+    const origin = req.headers.get("origin") || "https://elodark.com";
+    const notificationUrl = `${origin}/api/checkout/webhook`;
+
+    // Criar pedido PIX no PagBank
+    const pagbankOrder = await createPixOrder({
+      orderId: order.id,
+      amountCents,
+      description,
+      customerName,
+      customerEmail,
+      notificationUrl,
+      expiresInMinutes: 30,
     });
 
-    // Store stripe session id on the order
-    await sql`UPDATE orders SET config = config || ${JSON.stringify({ stripe_session_id: session.id })} WHERE id = ${order.id}`;
+    const { qrCodeText, qrCodeImageUrl, expirationDate, chargeId } = extractPixData(pagbankOrder);
 
-    return NextResponse.json({ sessionId: session.id, url: session.url, order_id: order.id });
+    // Salvar dados do PagBank no config do pedido (objeto limpo)
+    const mergedConfig = {
+      ...config,
+      pagbank_order_id: pagbankOrder.id,
+      pagbank_charge_id: chargeId,
+      qr_code_text: qrCodeText,
+      qr_code_image: qrCodeImageUrl,
+      pix_expires_at: expirationDate,
+      customer_email: customerEmail,
+      customer_name: customerName,
+    };
+    await sql`UPDATE orders SET config = ${JSON.stringify(mergedConfig)}::jsonb WHERE id = ${order.id}`;
+
+    logger.info("Pedido PIX criado no PagBank", {
+      orderId: order.id,
+      pagbankOrderId: pagbankOrder.id,
+      amountBRL: price,
+    });
+
+    return NextResponse.json({
+      order_id: order.id,
+      pagbank_order_id: pagbankOrder.id,
+      pix_code: qrCodeText,
+      pix_image: qrCodeImageUrl,
+      expires_at: expirationDate,
+      amount: price,
+    });
   } catch (err) {
-    logger.error("Erro ao criar sessão Stripe", err);
+    logger.error("Erro ao criar sessão de pagamento PIX", err);
     return NextResponse.json({ error: "Erro ao criar sessão de pagamento" }, { status: 500 });
   }
 }

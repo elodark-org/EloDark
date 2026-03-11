@@ -37,7 +37,7 @@ function CancelContent() {
       <div className="w-full glass-card rounded-2xl border border-white/5 p-6 space-y-4">
         <h3 className="text-sm font-bold text-white/40 uppercase tracking-widest text-left">Por que continuar?</h3>
         {[
-          { icon: "verified_user", label: "100% Seguro", desc: "Pagamento processado pela Stripe com criptografia total." },
+          { icon: "verified_user", label: "100% Seguro", desc: "Pagamento PIX processado pelo PagBank com criptografia total." },
           { icon: "schedule", label: "Entrega Rápida", desc: "Boosters disponíveis 24h. Início em até 1 hora após o pagamento." },
           { icon: "emoji_events", label: "Garantia de Entrega", desc: "Se não entregarmos, devolvemos seu dinheiro." },
         ].map((item, i) => (
